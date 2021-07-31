@@ -1,0 +1,27 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+# Linting/Formatting
+flake8 = "*"
+black = "*"
+# Requirements
+fastapi = "*"
+hypercorn = "*"
+pydantic = {extras = ["email"], version = "*"}
+asyncpg = "*"
+sqlalchemy = "*"
+python-multipart = "*"
+alembic = "*"
+
+[dev-packages]
+icecream = "*"
+ipython = "*"
+
+[requires]
+python_version = "3.9"
+
+[pipenv]
+allow_prereleases = true
