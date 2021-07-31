@@ -27,10 +27,6 @@ class Manga(Base):
     status = Column(Enum(Status), nullable=False)
     version = Column(Integer, default=1)
 
-    def __init__(self, name: str, description: str,):
-        self.name = name
-        self.description = description
-
     @classmethod
     async def find(cls, db_session: AsyncSession, _id: uuid.UUID):
         stmt = select(cls).where(cls.id == _id)
