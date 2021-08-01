@@ -1,17 +1,19 @@
+import uuid
 from typing import Any
 
-from sqlalchemy import func
+from sqlalchemy import func, Column, Integer, select
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.ext.declarative import as_declarative, declared_attr
 
-from ..exceptions import UnprocessableEntityHTTPException
+from ..exceptions import UnprocessableEntityHTTPException, NotFoundHTTPException
 
 
 @as_declarative()
 class Base:
     id: Any
     __name__: str
+    version = Column(Integer, default=0)
 
     # Generate __tablename__ automatically
     @declared_attr
@@ -24,6 +26,7 @@ class Base:
         :return:
         """
         try:
+            self.version = self.version + 1 if self.version else 1
             db_session.add(self)
             return await db_session.commit()
         except SQLAlchemyError as ex:
@@ -50,6 +53,16 @@ class Base:
         for k, v in kwargs.items():
             setattr(self, k, v)
         await self.save(db_session)
+
+    @classmethod
+    async def find(cls, db_session: AsyncSession, _id: uuid.UUID):
+        stmt = select(cls).where(cls.id == _id)
+        result = await db_session.execute(stmt)
+        instance = result.scalars().first()
+        if instance is None:
+            raise NotFoundHTTPException()
+        else:
+            return instance
 
     @staticmethod
     async def pagination(db_session, stmt, limit, offset):

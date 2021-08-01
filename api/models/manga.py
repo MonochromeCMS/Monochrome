@@ -1,12 +1,12 @@
 import uuid
 import enum
 
-from sqlalchemy import Column, String, select, Numeric, Enum, Integer
+from sqlalchemy import Column, String, select, Numeric, Enum
+from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from .base import Base
-from ..exceptions import NotFoundHTTPException
 
 
 class Status(str, enum.Enum):
@@ -17,7 +17,6 @@ class Status(str, enum.Enum):
 
 
 class Manga(Base):
-    __tablename__ = "manga"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     title = Column(String, nullable=False)
     description = Column(String, nullable=False)
@@ -25,17 +24,7 @@ class Manga(Base):
     artist = Column(String, nullable=False)
     year = Column(Numeric(4, 0))
     status = Column(Enum(Status), nullable=False)
-    version = Column(Integer, default=1)
-
-    @classmethod
-    async def find(cls, db_session: AsyncSession, _id: uuid.UUID):
-        stmt = select(cls).where(cls.id == _id)
-        result = await db_session.execute(stmt)
-        instance = result.scalars().first()
-        if instance is None:
-            raise NotFoundHTTPException()
-        else:
-            return instance
+    chapters = relationship("Chapter", back_populates="manga")
 
     @classmethod
     async def search(cls, db_session: AsyncSession, title: str, limit: int = 20, offset: int = 0):
