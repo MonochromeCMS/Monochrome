@@ -1,14 +1,10 @@
 import os
 import shutil
 
-from PIL import Image
-
 from uuid import UUID
-from typing import Optional
-from fastapi import APIRouter, Depends, status, Query, File, UploadFile, BackgroundTasks
+from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from ..exceptions import BadRequestHTTPException
 from ..config import get_settings
 from ..db import get_db
 from ..models.chapter import Chapter
@@ -44,4 +40,3 @@ async def update_chapter(
     chapter = await Chapter.find(db_session, id)
     await chapter.update(db_session, **payload.dict())
     return chapter
-

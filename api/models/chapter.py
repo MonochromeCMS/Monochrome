@@ -13,5 +13,5 @@ class Chapter(Base):
     volume = Column(Integer, nullable=True)
     number = Column(String, nullable=False)
     length = Column(Integer, nullable=False)
-    manga_id = Column(UUID(as_uuid=True), ForeignKey('manga.id', ondelete="CASCADE"), nullable=False)
+    manga_id = Column(UUID(as_uuid=True), ForeignKey("manga.id", ondelete="CASCADE"), nullable=False)
     manga = relationship("Manga", back_populates="chapters")

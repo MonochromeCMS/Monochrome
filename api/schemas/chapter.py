@@ -9,10 +9,7 @@ class ChapterSchema(BaseModel):
     volume: Optional[int] = Field(
         description="Volume this chapter comes from",
     )
-    chapter: str = Field(
-        description="Number of the chapter",
-        regex="/[0-9.]+/"
-    )
+    chapter: str = Field(description="Number of the chapter", regex="/[0-9.]+/")
     length: int = Field(
         description="Amount of pages of the chapter",
         ge=1,
@@ -42,7 +39,6 @@ class ChapterResponse(ChapterSchema):
         description="Manga this chapter comes from",
     )
 
-
     class Config:
         orm_mode = True
         schema_extra = {
@@ -53,6 +49,6 @@ class ChapterResponse(ChapterSchema):
                 "length": 15,
                 "manga_id": "1e01d7f6-c4e1-4102-9dd0-a6fccc065978",
                 "version": 2,
-                "id": "4abe53f4-0eaa-4f31-9210-a625fa665e23"
+                "id": "4abe53f4-0eaa-4f31-9210-a625fa665e23",
             }
         }

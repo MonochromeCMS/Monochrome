@@ -72,7 +72,7 @@ async def update_manga(
 
 def save_cover(manga_id: UUID, file: File):
     im = Image.open(file)
-    im.convert('RGB').save(os.path.join(global_settings.media_path, str(manga_id), "cover.jpg"))
+    im.convert("RGB").save(os.path.join(global_settings.media_path, str(manga_id), "cover.jpg"))
 
 
 @router.put("/{id}/cover")
