@@ -1,5 +1,3 @@
-from . import base
-from . import manga
-from . import chapter
+from . import base, manga, chapter, upload
 
 metadata = base.Base.metadata

@@ -20,7 +20,7 @@ async def setup_media():
     async for session in get_db():
         await UploadSession.flush(session)
 
-    rmtree(os.path.join(global_settings.media_path, "blobs"))
+    rmtree(os.path.join(global_settings.media_path, "blobs"), ignore_errors=True)
     os.mkdir(os.path.join(global_settings.media_path, "blobs"))
 
 
