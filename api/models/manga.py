@@ -9,11 +9,11 @@ from .base import Base
 from ..exceptions import NotFoundHTTPException
 
 
-class Status(enum.Enum):
-    ongoing = 1
-    completed = 2
-    hiatus = 3
-    cancelled = 4
+class Status(str, enum.Enum):
+    ongoing = "ongoing"
+    completed = "completed"
+    hiatus = "hiatus"
+    cancelled = "cancelled"
 
 
 class Manga(Base):
@@ -36,3 +36,9 @@ class Manga(Base):
             raise NotFoundHTTPException()
         else:
             return instance
+
+    @classmethod
+    async def search(cls, db_session: AsyncSession, title: str, limit: int = 20, offset: int = 0):
+        escaped_title = title.replace("%", "\\%")
+        stmt = select(cls).where(cls.title.ilike(f"%{escaped_title}%"))
+        return await cls.pagination(db_session, stmt, limit, offset)

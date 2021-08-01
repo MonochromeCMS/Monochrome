@@ -1,33 +1,26 @@
-from typing import Optional
+from typing import Optional, List
 from uuid import UUID
+
 from ..models.manga import Status
 
 from pydantic import BaseModel, Field
 
 
 class MangaSchema(BaseModel):
-    title: str = Field(
-        title="Title",
-        description="Title of the manga",
-    )
+    title: str = Field(description="Title of the manga")
     description: str = Field(
-        title="Description",
         description="Short description of the manga",
     )
     author: str = Field(
-        title="Author",
         description="Author of the manga",
     )
     artist: str = Field(
-        title="Artist",
         description="Artist of the manga",
     )
     year: Optional[int] = Field(
-        title="Year",
         description="Year of release of the manga",
     )
     status: Status = Field(
-        title="Status",
         description="Status of the manga",
     )
 
@@ -51,7 +44,6 @@ class MangaResponse(MangaSchema):
         description="ID of the manga",
     )
     version: int = Field(
-        title="Version",
         description="Version of the manga",
     )
 
@@ -69,3 +61,10 @@ class MangaResponse(MangaSchema):
                 "version": 2,
             }
         }
+
+
+class SearchResponse(BaseModel):
+    offset: int = Field(..., ge=0)
+    limit: int = Field(..., ge=1, le=100)
+    results: List[MangaResponse]
+    total: int = Field(..., ge=0)

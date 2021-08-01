@@ -1,23 +1,40 @@
 from uuid import UUID
-from fastapi import APIRouter, Depends, status
+from typing import List, Optional
+from fastapi import APIRouter, Depends, status, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..db import get_db
 from ..models.manga import Manga
-from ..schemas.manga import MangaSchema, MangaResponse
+from ..schemas.manga import MangaSchema, MangaResponse, SearchResponse
 
-router = APIRouter(prefix="/manga")
+router = APIRouter(prefix="/manga", tags=["Manga"])
 
 
 @router.post("", status_code=status.HTTP_201_CREATED, response_model=MangaResponse)
-async def create_stuff(payload: MangaSchema, db_session: AsyncSession = Depends(get_db)):
+async def create_manga(payload: MangaSchema, db_session: AsyncSession = Depends(get_db)):
     manga = Manga(**payload.dict())
     await manga.save(db_session)
     return manga
 
 
+@router.get("", response_model=SearchResponse)
+async def search_manga(
+    title: str,
+    limit: Optional[int] = Query(10, ge=1, le=100),
+    offset: Optional[int] = Query(0, ge=0),
+    db_session: AsyncSession = Depends(get_db),
+):
+    count, page = await Manga.search(db_session, title, limit, offset)
+    return {
+        "offset": offset,
+        "limit": limit,
+        "results": page,
+        "total": count,
+    }
+
+
 @router.get("/{id}", response_model=MangaResponse)
-async def find_stuff(
+async def get_manga(
     id: UUID,
     db_session: AsyncSession = Depends(get_db),
 ):
@@ -25,13 +42,13 @@ async def find_stuff(
 
 
 @router.delete("/{id}")
-async def delete_stuff(id: UUID, db_session: AsyncSession = Depends(get_db)):
-    stuff = await Manga.find(db_session, id)
-    return await Manga.delete(stuff, db_session)
+async def delete_manga(id: UUID, db_session: AsyncSession = Depends(get_db)):
+    manga = await Manga.find(db_session, id)
+    return await Manga.delete(manga, db_session)
 
 
 @router.put("/{id}", response_model=MangaResponse)
-async def update_stuff(
+async def update_manga(
     payload: MangaSchema,
     id: UUID,
     db_session: AsyncSession = Depends(get_db),

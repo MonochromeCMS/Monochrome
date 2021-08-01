@@ -27,6 +27,8 @@ class Settings(BaseSettings):
     jwt_algorithm: str = os.getenv("ALGORITHM", "")
     jwt_access_toke_expire_minutes: int = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 30)
 
+    media_path: str = os.getenv("MEDIA_PATH", "/media")
+
 
 @lru_cache()
 def get_settings():

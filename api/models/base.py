@@ -1,5 +1,6 @@
 from typing import Any
 
+from sqlalchemy import func
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.ext.declarative import as_declarative, declared_attr
@@ -49,3 +50,11 @@ class Base:
         for k, v in kwargs.items():
             setattr(self, k, v)
         await self.save(db_session)
+
+    @staticmethod
+    async def pagination(db_session, stmt, limit, offset):
+        count_stmt = stmt.with_only_columns(func.count())
+        count_result = await db_session.execute(count_stmt)
+        page_stmt = stmt.offset(offset).limit(limit)
+        page_result = await db_session.execute(page_stmt)
+        return count_result.scalars().first(), page_result.scalars().all()
