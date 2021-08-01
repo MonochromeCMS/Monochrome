@@ -1,11 +1,21 @@
+import os
+import shutil
+
+from PIL import Image
+
 from uuid import UUID
-from typing import List, Optional
-from fastapi import APIRouter, Depends, status, Query
+from typing import Optional
+from fastapi import APIRouter, Depends, status, Query, File, UploadFile, BackgroundTasks
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from ..exceptions import BadRequestHTTPException
+from ..config import get_settings
 from ..db import get_db
 from ..models.manga import Manga
 from ..schemas.manga import MangaSchema, MangaResponse, SearchResponse
+
+
+global_settings = get_settings()
 
 router = APIRouter(prefix="/manga", tags=["Manga"])
 
@@ -14,6 +24,7 @@ router = APIRouter(prefix="/manga", tags=["Manga"])
 async def create_manga(payload: MangaSchema, db_session: AsyncSession = Depends(get_db)):
     manga = Manga(**payload.dict())
     await manga.save(db_session)
+    os.mkdir(os.path.join(global_settings.media_path, str(manga.id)))
     return manga
 
 
@@ -44,6 +55,7 @@ async def get_manga(
 @router.delete("/{id}")
 async def delete_manga(id: UUID, db_session: AsyncSession = Depends(get_db)):
     manga = await Manga.find(db_session, id)
+    shutil.rmtree(os.path.join(global_settings.media_path, str(manga.id)))
     return await Manga.delete(manga, db_session)
 
 
@@ -55,4 +67,24 @@ async def update_manga(
 ):
     manga = await Manga.find(db_session, id)
     await manga.update(db_session, **payload.dict())
+    return manga
+
+
+def save_cover(manga_id: UUID, file: File):
+    im = Image.open(file)
+    im.convert('RGB').save(os.path.join(global_settings.media_path, str(manga_id), "cover.jpg"))
+
+
+@router.put("/{id}/cover")
+async def set_manga_cover(
+    id: UUID,
+    tasks: BackgroundTasks,
+    payload: UploadFile = File(...),
+    db_session: AsyncSession = Depends(get_db),
+):
+    if not payload.content_type.startswith("image/"):
+        raise BadRequestHTTPException(f"'{payload.filename}' is not an image")
+
+    manga = await Manga.find(db_session, id)
+    tasks.add_task(save_cover, manga.id, payload.file)
     return manga

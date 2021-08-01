@@ -1,3 +1,5 @@
+user ?= `id -u`
+
 compose_file ?= "docker-compose.yml"
 project ?= "Monochrome"
 
@@ -33,7 +35,7 @@ sh-%: ## Open a shell in a container running container.
 
 .PHONY: lock
 lock:	## Refresh pipfile.lock
-	pipenv lock --pre
+	$(DC) run --rm -w /api api pipenv lock --pre
 
 .PHONY: lint
 lint:  ## Lint project code.
@@ -45,14 +47,14 @@ format:  ## Format project code.
 	$(DC) run --rm -w /api api black .
 
 .PHONY: upgrade
-upgrade: start ## Update the database.
-	$(DC) exec -T --workdir /api api alembic upgrade head
+upgrade: ## Update the database.
+	$(DC) run --rm -T --workdir /api api alembic upgrade head
 
 .PHONY: downgrade
-downgrade: start ## Downgrade the database.
-	$(DC) exec -T --workdir /api api alembic downgrade -1
+downgrade: ## Downgrade the database.
+	$(DC) run --rm -T --workdir /api api alembic downgrade -1
 
 .PHONY: revision
-revision rev: start ## Create a new database revision.
+revision rev: ## Create a new database revision.
 	@read -p "Revision name: " rev; \
-	$(DC) exec --workdir /api api alembic revision --autogenerate -m "$$rev"
+	$(DC) run --rm --workdir /api api bash -c "alembic revision --autogenerate -m '$$rev' && chown -R $(user) ./alembic/versions"

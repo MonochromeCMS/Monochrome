@@ -15,14 +15,15 @@ services:
   api:
     build: ./api
     command: hypercorn api.main:app -b 0.0.0.0:3000 --reload
-    user: ${USER_ID}
     volumes:
       - ./api:/api
+      - ./media:/media
     ports:
       - "3000:3000"
     environment:
       DB_URL: postgresql+asyncpg://${DB_USER}:${DB_PASS}@db:5432/${DB_NAME}
       SECRET_KEY: ${SECRET_KEY}
+      MEDIA_PATH: /media
     depends_on:
       - db
 
