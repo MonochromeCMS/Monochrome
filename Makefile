@@ -19,6 +19,18 @@ start up:	## Run project with compose
 down: ## Reset project containers with compose
 	$(DC) down
 
+.PHONY: logs
+logs:	## Read the containers' logs.
+	$(DC) logs -f
+
+.PHONY: logs-%
+logs-%: ## Read a container's logs.
+	$(DC) logs -f $*
+
+.PHONY: sh-%
+sh-%: ## Open a shell in a container running container.
+	$(DC) exec $* sh
+
 .PHONY: lock
 lock:	## Refresh pipfile.lock
 	pipenv lock --pre
