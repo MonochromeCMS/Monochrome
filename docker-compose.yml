@@ -15,6 +15,7 @@ services:
   api:
     build: ./api
     command: hypercorn api.main:app -b 0.0.0.0:3000 --reload
+    user: ${USER_ID}
     volumes:
       - ./api:/api
     ports:
