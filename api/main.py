@@ -2,9 +2,10 @@ from .app import app
 
 from starlette.responses import RedirectResponse
 
-from api.routers import manga
+from api.routers import manga, chapter
 
 app.include_router(manga.router)
+app.include_router(chapter.router)
 
 
 @app.get("/", include_in_schema=False)
