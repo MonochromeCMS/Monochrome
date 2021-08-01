@@ -21,7 +21,7 @@ fileConfig(config.config_file_name)
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-sys.path.append('..')
+sys.path.append("..")
 
 from api.models import metadata
 target_metadata = metadata
@@ -33,7 +33,8 @@ target_metadata = metadata
 
 url = os.getenv("DB_URL", "")
 configSection = config.get_section(config.config_ini_section)
-configSection['sqlalchemy.url'] = url
+configSection["sqlalchemy.url"] = url
+
 
 def run_migrations_offline():
     """Run migrations in 'offline' mode.

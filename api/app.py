@@ -3,7 +3,6 @@ import logging
 from fastapi import FastAPI
 
 from .db import engine
-from .models.base import Base
 
 log = logging.getLogger(__name__)
 
