@@ -1,7 +1,9 @@
-from typing import Optional
+from typing import Optional, List
 from uuid import UUID
 
 from pydantic import BaseModel, Field
+
+from .base import PaginationResponse
 
 
 class ChapterSchema(BaseModel):
@@ -51,3 +53,7 @@ class ChapterResponse(ChapterSchema):
                 "id": "4abe53f4-0eaa-4f31-9210-a625fa665e23",
             }
         }
+
+
+class LatestChaptersResponse(PaginationResponse):
+    results: List[ChapterResponse]

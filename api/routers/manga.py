@@ -4,14 +4,16 @@ import shutil
 from PIL import Image
 
 from uuid import UUID
-from typing import Optional
+from typing import Optional, List
 from fastapi import APIRouter, Depends, status, Query, File, UploadFile, BackgroundTasks
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..exceptions import BadRequestHTTPException
 from ..config import get_settings
 from ..db import get_db
+from ..models.chapter import Chapter
 from ..models.manga import Manga
+from ..schemas.chapter import ChapterResponse
 from ..schemas.manga import MangaSchema, MangaResponse, SearchResponse
 
 
@@ -50,6 +52,15 @@ async def get_manga(
     db_session: AsyncSession = Depends(get_db),
 ):
     return await Manga.find(db_session, id)
+
+
+@router.get("/{id}/chapters", response_model=List[ChapterResponse])
+async def get_manga_chapters(
+    id: UUID,
+    db_session: AsyncSession = Depends(get_db),
+):
+    await Manga.find(db_session, id)
+    return await Chapter.from_manga(db_session, id)
 
 
 @router.delete("/{id}")

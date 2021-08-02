@@ -1,19 +1,35 @@
 import os
 import shutil
 
+from typing import Optional, List
 from uuid import UUID
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..config import get_settings
 from ..db import get_db
 from ..models.chapter import Chapter
-from ..schemas.chapter import ChapterSchema, ChapterResponse
+from ..schemas.chapter import ChapterSchema, ChapterResponse, LatestChaptersResponse
 
 
 global_settings = get_settings()
 
 router = APIRouter(prefix="/chapter", tags=["Chapter"])
+
+
+@router.get("", response_model=LatestChaptersResponse)
+async def get_latest_chapters(
+        limit: Optional[int] = Query(10, ge=1, le=100),
+        offset: Optional[int] = Query(0, ge=0),
+        db_session: AsyncSession = Depends(get_db),
+):
+    count, page = await Chapter.latest(db_session, limit, offset)
+    return {
+        "offset": offset,
+        "limit": limit,
+        "results": page,
+        "total": count,
+    }
 
 
 @router.get("/{id}", response_model=ChapterResponse)

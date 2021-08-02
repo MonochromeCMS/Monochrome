@@ -28,26 +28,26 @@ class UploadedBlobResponse(BaseModel):
         description="Name the blob was uploaded as",
     )
 
+    class Config:
+        orm_mode = True
+
 
 class UploadSessionResponse(BeginUploadSession):
     id: UUID = Field(
         description="ID of the upload session",
     )
-    blobs: List = Field(
+    blobs: List[UploadedBlobResponse] = Field(
         (),
         description="Images uploaded to the session",
     )
 
     class Config:
         orm_mode = True
-        schema_extra = {
-            "example": {
-                "manga_id": "1e01d7f6-c4e1-4102-9dd0-a6fccc065978",
-                "id": "73c981e6-4267-4f35-8e41-0d124ebcb6a2",
-            }
-        }
 
 
 class CommitUploadSession(BaseModel):
     chapterDraft: ChapterSchema = Field(description="Details of the chapter")
     page_order: List[UUID] = Field(description="Order the pages should be uploaded in")
+
+    class Config:
+        orm_mode = True

@@ -33,4 +33,4 @@ class Manga(Base):
     async def search(cls, db_session: AsyncSession, title: str, limit: int = 20, offset: int = 0):
         escaped_title = title.replace("%", "\\%")
         stmt = select(cls).where(cls.title.ilike(f"%{escaped_title}%"))
-        return await cls.pagination(db_session, stmt, limit, offset)
+        return await cls.pagination(db_session, stmt, limit, offset, (cls.title,))

@@ -2,6 +2,7 @@ from typing import Optional, List
 from uuid import UUID
 
 from ..models.manga import Status
+from .base import PaginationResponse
 
 from pydantic import BaseModel, Field
 
@@ -63,8 +64,5 @@ class MangaResponse(MangaSchema):
         }
 
 
-class SearchResponse(BaseModel):
-    offset: int = Field(..., ge=0)
-    limit: int = Field(..., ge=1, le=100)
+class SearchResponse(PaginationResponse):
     results: List[MangaResponse]
-    total: int = Field(..., ge=0)

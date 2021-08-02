@@ -22,7 +22,7 @@ global_settings = get_settings()
 router = APIRouter(prefix="/upload", tags=["Upload"])
 
 
-@router.post("/begin", status_code=status.HTTP_201_CREATED)
+@router.post("/begin", status_code=status.HTTP_201_CREATED, response_model=UploadSessionResponse)
 async def begin_upload_session(
     payload: BeginUploadSession,
     db_session: AsyncSession = Depends(get_db),
@@ -48,7 +48,7 @@ def save_session_image(files: List[Tuple[str, File]]):
         im.convert("RGB").save(os.path.join(global_settings.media_path, "blobs", f"{blob_id}.jpg"))
 
 
-@router.post("/{id}", status_code=status.HTTP_201_CREATED)
+@router.post("/{id}", status_code=status.HTTP_201_CREATED, response_model=List[UploadedBlobResponse])
 async def upload_pages_to_upload_session(
     id: UUID,
     tasks: BackgroundTasks,
