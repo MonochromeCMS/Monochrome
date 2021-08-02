@@ -17,6 +17,10 @@ build:	## Build project with compose
 start up:	## Run project with compose
 	$(DC) up --remove-orphans -d
 
+.PHONY: up-%
+up-%: ## Start a container
+	$(DC) up -d $*
+
 .PHONY: down
 down: ## Reset project containers with compose
 	$(DC) down
@@ -47,14 +51,14 @@ format:  ## Format project code.
 	$(DC) run --rm -w /api api black .
 
 .PHONY: upgrade
-upgrade: ## Update the database.
+upgrade: up-db ## Update the database.
 	$(DC) run --rm -T --workdir /api api alembic upgrade head
 
 .PHONY: downgrade
-downgrade: ## Downgrade the database.
+downgrade: up-db ## Downgrade the database.
 	$(DC) run --rm -T --workdir /api api alembic downgrade -1
 
 .PHONY: revision
-revision rev: ## Create a new database revision.
+revision rev: up-db ## Create a new database revision.
 	@read -p "Revision name: " rev; \
 	$(DC) run --rm --workdir /api api bash -c "alembic revision --autogenerate -m '$$rev' && chown -R $(user) ./alembic/versions"

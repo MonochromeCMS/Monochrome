@@ -30,7 +30,7 @@ async def create_manga(payload: MangaSchema, db_session: AsyncSession = Depends(
 
 @router.get("", response_model=SearchResponse)
 async def search_manga(
-    title: str,
+    title: str = "",
     limit: Optional[int] = Query(10, ge=1, le=100),
     offset: Optional[int] = Query(0, ge=0),
     db_session: AsyncSession = Depends(get_db),

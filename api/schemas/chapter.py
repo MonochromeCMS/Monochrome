@@ -9,11 +9,7 @@ class ChapterSchema(BaseModel):
     volume: Optional[int] = Field(
         description="Volume this chapter comes from",
     )
-    chapter: str = Field(description="Number of the chapter", regex="/[0-9.]+/")
-    length: int = Field(
-        description="Amount of pages of the chapter",
-        ge=1,
-    )
+    number: str = Field(description="Number of the chapter", regex="[0-9.]+")
 
     class Config:
         orm_mode = True
@@ -22,7 +18,6 @@ class ChapterSchema(BaseModel):
                 "name": "A World That Won't Reject Me",
                 "volume": None,
                 "number": "19.5",
-                "length": 15,
             }
         }
 
@@ -37,6 +32,10 @@ class ChapterResponse(ChapterSchema):
     )
     manga_id: UUID = Field(
         description="Manga this chapter comes from",
+    )
+    length: int = Field(
+        description="Amount of pages of the chapter",
+        ge=1,
     )
 
     class Config:

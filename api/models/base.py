@@ -3,6 +3,7 @@ from typing import Any
 
 from sqlalchemy import func, Column, Integer, select
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.orm import joinedload
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.ext.declarative import as_declarative, declared_attr
 
@@ -57,6 +58,16 @@ class Base:
     @classmethod
     async def find(cls, db_session: AsyncSession, _id: uuid.UUID):
         stmt = select(cls).where(cls.id == _id)
+        result = await db_session.execute(stmt)
+        instance = result.scalars().first()
+        if instance is None:
+            raise NotFoundHTTPException()
+        else:
+            return instance
+
+    @classmethod
+    async def find_rel(cls, db_session: AsyncSession, _id: uuid.UUID, relationship):
+        stmt = select(cls).where(cls.id == _id).options(joinedload(relationship))
         result = await db_session.execute(stmt)
         instance = result.scalars().first()
         if instance is None:

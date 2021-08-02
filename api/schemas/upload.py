@@ -20,9 +20,22 @@ class BeginUploadSession(BaseModel):
         }
 
 
+class UploadedBlobResponse(BaseModel):
+    id: UUID = Field(
+        description="ID of the uploaded blob",
+    )
+    name: str = Field(
+        description="Name the blob was uploaded as",
+    )
+
+
 class UploadSessionResponse(BeginUploadSession):
     id: UUID = Field(
         description="ID of the upload session",
+    )
+    blobs: List = Field(
+        (),
+        description="Images uploaded to the session",
     )
 
     class Config:
@@ -36,8 +49,5 @@ class UploadSessionResponse(BeginUploadSession):
 
 
 class CommitUploadSession(BaseModel):
-    id: UUID = Field(
-        description="ID of the upload session",
-    )
-    chapterDraft: ChapterSchema
-    page_order: List[UUID]
+    chapterDraft: ChapterSchema = Field(description="Details of the chapter")
+    page_order: List[UUID] = Field(description="Order the pages should be uploaded in")
