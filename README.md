@@ -33,25 +33,25 @@ unique username and password is very recommended.*
 
 ## Progress
 * API
-  * Creation <span style="color: green">100%</span>
-  * Documentation <span style="color: yellow">42%</span>
-    * OpenAPI <span style="color: orange">33%</span>
-    * Cleaner code <span style="color: yellow">50%</span>
-  * Testing <span style="color: red">0%</span>
-    * Unit <span style="color: red">0%</span>
-    * Integration <span style="color: red">0%</span>
+  * Creation 🟢100%
+  * Documentation 🟡42%
+    * OpenAPI 🟠33%
+    * Cleaner code 🟡50%
+  * Testing 0%
+    * Unit 🔴0%
+    * Integration 🔴0%
 * Frontend 
-  * Creation <span style="color: red">0%</span>
-    * Latest chapters <span style="color: red">0%</span>
-    * Search <span style="color: red">0%</span>
-    * Manga page <span style="color: red">0%</span>
-      * Chapter list <span style="color: red">0%</span>
-    * Chapter reader <span style="color: red">0%</span>
+  * Creation 🔴0%
+    * Latest chapters 🔴0%
+    * Search 🔴0%
+    * Manga page 🔴0%
+      * Chapter list 🔴0%
+    * Chapter reader 🔴0%
 * Reverse proxy 
-  * Creation <span style="color: red">0%</span>
-    * Serve frontend <span style="color: red">0%</span>
-    * Serve media <span style="color: red">0%</span>
-    * Reverse proxy the API <span style="color: red">0%</span>
+  * Creation 🔴0%
+    * Serve frontend 🔴0%
+    * Serve media 🔴0%
+    * Reverse proxy the API 🔴0%
 * Find a way to deploy this more easily
   * Heroku?
   * Docker swarm?
