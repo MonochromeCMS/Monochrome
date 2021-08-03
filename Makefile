@@ -62,3 +62,10 @@ downgrade: up-db ## Downgrade the database.
 revision rev: up-db ## Create a new database revision.
 	@read -p "Revision name: " rev; \
 	$(DC) run --rm --workdir /api api bash -c "alembic revision --autogenerate -m '$$rev' && chown -R $(user) ./alembic/versions"
+
+.PHONY: secret
+secret: ## Generate a secret.
+	openssl rand -base64 31
+
+.PHONY: install
+install: build upgrade up ## Create a new instance from scratch.
