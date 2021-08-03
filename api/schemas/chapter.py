@@ -4,6 +4,7 @@ from uuid import UUID
 from pydantic import BaseModel, Field
 
 from .base import PaginationResponse
+from .manga import MangaResponse
 
 
 class ChapterSchema(BaseModel):
@@ -55,5 +56,9 @@ class ChapterResponse(ChapterSchema):
         }
 
 
+class DetailedChapterResponse(ChapterResponse):
+    manga: MangaResponse
+
+
 class LatestChaptersResponse(PaginationResponse):
-    results: List[ChapterResponse]
+    results: List[DetailedChapterResponse]

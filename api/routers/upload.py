@@ -22,14 +22,36 @@ global_settings = get_settings()
 router = APIRouter(prefix="/upload", tags=["Upload"])
 
 
+def copy_chapter_to_session(chapter: Chapter, blobs: List[UUID]):
+    chapter_path = os.path.join(global_settings.media_path, str(chapter.manga_id), str(chapter.id))
+    blob_path = os.path.join(global_settings.media_path, "blobs")
+    for i in range(chapter.length):
+        shutil.copy(os.path.join(chapter_path, f"{i + 1}.jpg"), os.path.join(blob_path, f"{blobs[i]}.jpg"))
+
+
 @router.post("/begin", status_code=status.HTTP_201_CREATED, response_model=UploadSessionResponse)
 async def begin_upload_session(
     payload: BeginUploadSession,
+    tasks: BackgroundTasks,
     db_session: AsyncSession = Depends(get_db),
 ):
     await Manga.find(db_session, payload.manga_id)
+    if payload.chapter_id:
+        chapter = await Chapter.find(db_session, payload.chapter_id)
+        if chapter.manga_id != payload.manga_id:
+            raise BadRequestHTTPException("The provided chapter doesn't belong to this manga")
+
     session = UploadSession(**payload.dict())
     await session.save(db_session)
+
+    if payload.chapter_id:
+        blobs = []
+        for i in range(1, chapter.length + 1):
+            blob = UploadedBlob(session_id=session.id, name=f"{i}.jpg")
+            await blob.save(db_session)
+            blobs.append(blob.id)
+        tasks.add_task(copy_chapter_to_session, chapter, blobs)
+
     return await UploadSession.find_rel(db_session, session.id, UploadSession.blobs)
 
 
@@ -90,9 +112,14 @@ async def delete_upload_session(
     return True
 
 
-def commit_session_images(manga_id: UUID, chapter_id: UUID, pages: List[UUID]):
+def commit_session_images(chapter: Chapter, pages: List[UUID], edit: bool):
     blob_path = os.path.join(global_settings.media_path, "blobs")
-    chapter_path = os.path.join(global_settings.media_path, str(manga_id), str(chapter_id))
+    chapter_path = os.path.join(global_settings.media_path, str(chapter.manga_id), str(chapter.id))
+
+    if edit:
+        shutil.rmtree(chapter_path)
+    os.mkdir(chapter_path)
+
     page_number = 1
     for page in pages:
         shutil.move(os.path.join(blob_path, f"{page}.jpg"), os.path.join(chapter_path, f"{page_number}.jpg"))
@@ -107,17 +134,22 @@ async def commit_upload_session(
     db_session: AsyncSession = Depends(get_db),
 ):
     session = await UploadSession.find_rel(db_session, id, UploadSession.blobs)
-    blobs = (b.id for b in session.blobs)
+    blobs = [b.id for b in session.blobs]
+    edit = session.chapter_id is not None
     if not len(payload.page_order) > 0:
         raise BadRequestHTTPException("At least one page needs to be provided")
     if len(set(payload.page_order).difference(blobs)) > 0:
         raise BadRequestHTTPException("Some pages provided don't belong to this session.")
 
-    chapter = Chapter(manga_id=session.manga_id, length=len(payload.page_order), **payload.chapterDraft.dict())
-    await chapter.save(db_session)
+    if session.chapter_id:
+        chapter = await Chapter.find(db_session, session.chapter_id)
+        await chapter.update(db_session, length=len(payload.page_order), **payload.chapterDraft.dict())
+    else:
+        chapter = Chapter(manga_id=session.manga_id, length=len(payload.page_order), **payload.chapterDraft.dict())
+        await chapter.save(db_session)
+
     await session.delete(db_session)
-    os.mkdir(os.path.join(global_settings.media_path, str(chapter.manga_id), str(chapter.id)))
-    tasks.add_task(commit_session_images, chapter.manga_id, chapter.id, payload.page_order)
+    tasks.add_task(commit_session_images, chapter, payload.page_order, edit)
     tasks.add_task(delete_session_images, set(blobs).difference(payload.page_order))
     return chapter
 

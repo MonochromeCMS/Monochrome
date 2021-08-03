@@ -11,7 +11,7 @@ global_settings = config.get_settings()
 engine = create_async_engine(
     global_settings.db_url,
     future=True,
-    echo=True,
+    # echo=True, # To debug SQL queries
 )
 
 # expire_on_commit=False will prevent attributes from being expired

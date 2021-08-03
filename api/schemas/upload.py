@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from uuid import UUID
 
 from pydantic import BaseModel, Field
@@ -9,6 +9,10 @@ from .chapter import ChapterSchema
 class BeginUploadSession(BaseModel):
     manga_id: UUID = Field(
         description="Manga this session is linked to",
+    )
+    chapter_id: Optional[UUID] = Field(
+        None,
+        description="Chapter to edit, if in edition mode"
     )
 
     class Config:
