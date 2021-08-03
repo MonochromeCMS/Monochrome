@@ -1,3 +1,4 @@
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
@@ -8,3 +9,9 @@ env/
 venv/
 
 media/
+
+# Node
+.DS_Store
+node_modules
+/dist
+npm-debug.log*
