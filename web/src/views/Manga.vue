@@ -9,7 +9,7 @@
           elevation="0"
         >
           <v-card-title class="justify-center"
-            >This is the about page</v-card-title
+            >This is the manga list</v-card-title
           >
         </v-card>
       </v-col>

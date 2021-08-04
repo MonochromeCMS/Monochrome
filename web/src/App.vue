@@ -1,52 +1,49 @@
 <template>
-  <v-app>
-    <v-app-bar app color="primary" dark>
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
-
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
-      </div>
-
-      <v-spacer></v-spacer>
-
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
-    </v-app-bar>
-
-    <v-main>
+  <v-app id="monochrome" class="v-application">
+    <nav-bar />
+    <v-main class="background">
       <router-view />
     </v-main>
+    <v-btn
+      elevation="3"
+      fab
+      color="backgroundAlt"
+      class="theme-toggle"
+      @click="toggleTheme"
+    >
+      <v-icon large> mdi-lightbulb </v-icon>
+    </v-btn>
   </v-app>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import NavBar from "./components/NavBar.vue";
 
 export default Vue.extend({
   name: "App",
 
-  data: () => ({
-    //
-  }),
+  components: {
+    NavBar,
+  },
+  methods: {
+    toggleTheme: function (): void {
+      console.debug(this.$vuetify);
+      this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
+    },
+  },
+  },
 });
 </script>
+
+<style lang="scss">
+.v-application {
+  font-family: Roboto, serif;
+}
+
+.theme-toggle {
+  position: absolute;
+  left: 1rem;
+  bottom: 1rem;
+}
+</style>

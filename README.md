@@ -41,17 +41,19 @@ unique username and password is very recommended.*
     * Unit 🔴0%
     * Integration 🔴0%
 * Frontend 
-  * Creation 🔴0%
+  * Creation 🟠10%
     * Latest chapters 🔴0%
     * Search 🔴0%
     * Manga page 🔴0%
       * Chapter list 🔴0%
     * Chapter reader 🔴0%
+    * Admin 🔴0%
+      * Login 🟢80%
+      * User management 🔴0%
 * Reverse proxy 
-  * Creation 🔴0%
-    * Serve frontend 🔴0%
-    * Serve media 🔴0%
-    * Reverse proxy the API 🔴0%
+  * Creation 🟡50%
+    * Developpement build 🟢100%
+    * Production build with frontend compilation 🔴0%
 * Find a way to deploy this more easily
   * Heroku?
   * Docker swarm?

@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from typing import Optional
 from uuid import UUID
 
-from fastapi import Depends, APIRouter
+from fastapi import Depends, APIRouter, Request
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt, ExpiredSignatureError
 from passlib.context import CryptContext
@@ -65,7 +65,9 @@ async def is_connected(db_session: AsyncSession = Depends(get_db), token: str = 
 @router.post("/token", response_model=TokenResponse)
 @limiter.limit("3/minute")
 async def login_for_access_token(
-    form_data: OAuth2PasswordRequestForm = Depends(), db_session: AsyncSession = Depends(get_db)
+    request: Request,
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    db_session: AsyncSession = Depends(get_db),
 ):
     """Provides an OAuth2 token if the credentials are right."""
     user = await authenticate_user(db_session, form_data.username, form_data.password)
