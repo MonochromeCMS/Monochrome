@@ -8,6 +8,8 @@
       <v-tab v-for="link in links" :key="link.text" :to="link.to">
         {{ link.text }}
       </v-tab>
+      <v-tab v-if="!isConnected" to="/login" class="login-tab"> Login </v-tab>
+    </v-tabs>
   </v-app-bar>
 </template>
 
@@ -33,6 +35,11 @@ export default Vue.extend({
       },
     ],
   }),
+  computed: {
+    isConnected: function () {
+      return this.$store.getters.isConnected;
+    },
+  },
 });
 </script>
 

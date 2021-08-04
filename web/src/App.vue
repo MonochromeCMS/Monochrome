@@ -32,6 +32,15 @@ export default Vue.extend({
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
     },
   },
+  computed: {
+    isConnected: function () {
+      return this.$store.getters.isConnected;
+    },
+  },
+  watch: {
+    isConnected: function () {
+      this.$router.replace("/");
+    },
   },
 });
 </script>
