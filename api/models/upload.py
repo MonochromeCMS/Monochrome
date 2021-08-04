@@ -14,8 +14,7 @@ class UploadSession(Base):
     manga_id = Column(UUID(as_uuid=True), ForeignKey("manga.id", ondelete="CASCADE"), nullable=False)
     manga = relationship("Manga", back_populates="sessions")
     chapter = relationship("Chapter", back_populates="sessions")
-    blobs = relationship("UploadedBlob", back_populates="session",
-                         cascade="all, delete", passive_deletes=True)
+    blobs = relationship("UploadedBlob", back_populates="session", cascade="all, delete", passive_deletes=True)
 
     @classmethod
     async def flush(cls, db_session: AsyncSession):

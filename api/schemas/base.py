@@ -7,3 +7,6 @@ class PaginationResponse(BaseModel):
     limit: int = Field(..., ge=1, le=100)
     results: List
     total: int = Field(..., ge=0)
+
+    class Config:
+        orm_mode = True

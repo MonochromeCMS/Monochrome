@@ -7,10 +7,16 @@ name = "pypi"
 # Linting/Formatting
 flake8 = "*"
 black = "*"
+# Testing
+pytest-asyncio = "*"
+pytest-cov = "*"
 # Requirements
 fastapi = "*"
+slowapi = "*"
 hypercorn = "*"
 pydantic = {extras = ["email"], version = "*"}
+python-jose = {extras = ["cryptography"], version = "*"}
+passlib = {extras = ["bcrypt"], version = "*"}
 asyncpg = "*"
 sqlalchemy = "*"
 python-multipart = "*"

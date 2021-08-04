@@ -26,7 +26,6 @@ class MangaSchema(BaseModel):
     )
 
     class Config:
-        orm_mode = True
         schema_extra = {
             "example": {
                 "title": "Monochrome Lovers",

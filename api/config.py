@@ -24,7 +24,7 @@ class Settings(BaseSettings):
     db_url: str = os.getenv("DB_URL", "")
 
     jwt_secret_key: str = os.getenv("SECRET_KEY", "")
-    jwt_algorithm: str = os.getenv("ALGORITHM", "")
+    jwt_algorithm: str = os.getenv("ALGORITHM", "HS256")
     jwt_access_toke_expire_minutes: int = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 30)
 
     media_path: str = os.getenv("MEDIA_PATH", "/media")

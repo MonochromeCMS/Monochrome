@@ -10,13 +10,9 @@ class BeginUploadSession(BaseModel):
     manga_id: UUID = Field(
         description="Manga this session is linked to",
     )
-    chapter_id: Optional[UUID] = Field(
-        None,
-        description="Chapter to edit, if in edition mode"
-    )
+    chapter_id: Optional[UUID] = Field(None, description="Chapter to edit, if in edition mode")
 
     class Config:
-        orm_mode = True
         schema_extra = {
             "example": {
                 "manga_id": "1e01d7f6-c4e1-4102-9dd0-a6fccc065978",
@@ -52,6 +48,3 @@ class UploadSessionResponse(BeginUploadSession):
 class CommitUploadSession(BaseModel):
     chapterDraft: ChapterSchema = Field(description="Details of the chapter")
     page_order: List[UUID] = Field(description="Order the pages should be uploaded in")
-
-    class Config:
-        orm_mode = True

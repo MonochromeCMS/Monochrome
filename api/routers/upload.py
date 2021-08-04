@@ -8,6 +8,7 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, File, UploadFile, status, BackgroundTasks
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from .auth import is_connected
 from ..exceptions import BadRequestHTTPException
 from ..config import get_settings
 from ..db import get_db
@@ -19,7 +20,7 @@ from ..schemas.upload import BeginUploadSession, CommitUploadSession, UploadSess
 
 global_settings = get_settings()
 
-router = APIRouter(prefix="/upload", tags=["Upload"])
+router = APIRouter(prefix="/upload", tags=["Upload"], dependencies=[Depends(is_connected)])
 
 
 def copy_chapter_to_session(chapter: Chapter, blobs: List[UUID]):
@@ -55,7 +56,7 @@ async def begin_upload_session(
     return await UploadSession.find_rel(db_session, session.id, UploadSession.blobs)
 
 
-@router.get("/{id}", response_model=UploadSessionResponse)
+@router.get("/{id}", response_model=UploadSessionResponse, dependencies=[Depends(is_connected)])
 async def get_upload_session(
     id: UUID,
     db_session: AsyncSession = Depends(get_db),

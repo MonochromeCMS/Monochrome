@@ -24,10 +24,8 @@ class Manga(Base):
     artist = Column(String, nullable=False)
     year = Column(Numeric(4, 0))
     status = Column(Enum(Status), nullable=False)
-    chapters = relationship("Chapter", back_populates="manga",
-                            cascade="all, delete", passive_deletes=True)
-    sessions = relationship("UploadSession", back_populates="manga",
-                            cascade="all, delete", passive_deletes=True)
+    chapters = relationship("Chapter", back_populates="manga", cascade="all, delete", passive_deletes=True)
+    sessions = relationship("UploadSession", back_populates="manga", cascade="all, delete", passive_deletes=True)
 
     @classmethod
     async def search(cls, db_session: AsyncSession, title: str, limit: int = 20, offset: int = 0):

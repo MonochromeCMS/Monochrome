@@ -15,7 +15,6 @@ class ChapterSchema(BaseModel):
     number: str = Field(description="Number of the chapter", regex="[0-9.]+")
 
     class Config:
-        orm_mode = True
         schema_extra = {
             "example": {
                 "name": "A World That Won't Reject Me",

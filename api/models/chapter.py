@@ -17,8 +17,7 @@ class Chapter(Base):
     upload_time = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     manga_id = Column(UUID(as_uuid=True), ForeignKey("manga.id", ondelete="CASCADE"), nullable=False)
     manga = relationship("Manga", back_populates="chapters")
-    sessions = relationship("UploadSession", back_populates="chapter",
-                             cascade="all, delete", passive_deletes=True)
+    sessions = relationship("UploadSession", back_populates="chapter", cascade="all, delete", passive_deletes=True)
 
     __mapper_args__ = {"eager_defaults": True}
 

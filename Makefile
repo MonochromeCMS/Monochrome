@@ -1,3 +1,5 @@
+include .env
+
 user ?= `id -u`
 
 compose_file ?= "docker-compose.yml"
@@ -39,33 +41,51 @@ sh-%: ## Open a shell in a container running container.
 
 .PHONY: lock
 lock:	## Refresh pipfile.lock
-	$(DC) run --rm -w /api api pipenv lock --pre
+	@$(DC) run --rm -w /api api pipenv lock --pre
 
 .PHONY: lint
 lint:  ## Lint project code.
-	$(DC) run --rm -w /api api flake8 .
-	$(DC) run --rm -w /api api black . --check --diff
+	@$(DC) run --rm -w /api api flake8 .
+	@$(DC) run --rm -w /api api black . --check --diff
 
 .PHONY: format
 format:  ## Format project code.
-	$(DC) run --rm -w /api api black .
+	@$(DC) run --rm -w /api api black .
 
 .PHONY: upgrade
 upgrade: up-db ## Update the database.
-	$(DC) run --rm -T --workdir /api api alembic upgrade head
+	@$(DC) run --rm -T --workdir /api api alembic upgrade head
 
 .PHONY: downgrade
 downgrade: up-db ## Downgrade the database.
-	$(DC) run --rm -T --workdir /api api alembic downgrade -1
+	@$(DC) run --rm -T --workdir /api api alembic downgrade -1
 
 .PHONY: revision
+.ONESHELL: revision
 revision rev: up-db ## Create a new database revision.
-	@read -p "Revision name: " rev; \
-	$(DC) run --rm --workdir /api api bash -c "alembic revision --autogenerate -m '$$rev' && chown -R $(user) ./alembic/versions"
+	@read -p "Revision name: " rev
+	@$(DC) run --rm --workdir /api api bash -c "alembic revision --autogenerate -m '$$rev' && chown -R $(user) ./alembic/versions"
 
 .PHONY: secret
 secret: ## Generate a secret.
-	openssl rand -base64 31
+	@openssl rand -base64 31
+
+.PHONY: create_admin
+.ONESHELL: create_admin
+create_admin: up-db ## Creates a new admin user.
+	@read -p "Username: " user
+	@read -p "Password: " pass
+	@hash=`$(DC) run -T api python -c "from passlib.hash import bcrypt;print(bcrypt.hash('$$pass'), end='')"`
+	@id=`$(DC) run -T api python -c "from uuid import uuid4;print(uuid4(), end='')"`
+	@$(DC) exec -T db psql $(DB_NAME) $(DB_USER) -c "    \
+		INSERT INTO \"user\"                             \
+		(version, id, username, hashed_password)         \
+		VALUES(                                          \
+            1,                                           \
+			'$$id',                                      \
+			'$$user',                                    \
+			'$$hash'                                     \
+		);"
 
 .PHONY: install
 install: build upgrade up ## Create a new instance from scratch.

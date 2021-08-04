@@ -11,24 +11,6 @@ class BadRequestHTTPException(HTTPException):
         )
 
 
-class AuthFailedHTTPException(HTTPException):
-    def __init__(self):
-        super().__init__(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Not authenticated",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-
-
-class AuthTokenExpiredHTTPException(HTTPException):
-    def __init__(self):
-        super().__init__(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Expired token",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-
-
 class ForbiddenHTTPException(HTTPException):
     def __init__(self, msg: Optional[str] = None):
         super().__init__(
@@ -66,4 +48,13 @@ class UnprocessableEntityHTTPException(HTTPException):
         super().__init__(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail=msg if msg else "The entity couldn't be processed",
+        )
+
+
+class AuthFailedHTTPException(HTTPException):
+    def __init__(self, msg: Optional[str] = None):
+        super().__init__(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=msg if msg else "Could not validate credentials",
+            headers={"WWW-Authenticate": "Bearer"},
         )
