@@ -3,18 +3,18 @@
     <v-row>
       <v-col v-if="isConnected" cols="12" md="2" class="hidden-sm-and-down">
         <v-sheet rounded="lg" color="backgroundAlt">
-          <admin-actions />
+          <admin-actions :left="false" />
         </v-sheet>
       </v-col>
 
-      <v-col cols="12" md="8">
+      <v-col cols="12" :md="isConnected ? 6 : 8">
         <v-sheet min-height="70vh" rounded="lg" color="backgroundAlt">
           <latest-chapters />
         </v-sheet>
       </v-col>
 
-      <v-col cols="12" :md="isConnected ? 2 : 4">
-        <v-sheet rounded="lg" min-height="268" color="backgroundAlt">
+      <v-col cols="12" md="4">
+        <v-sheet rounded="lg" color="backgroundAlt">
           <latest-manga />
         </v-sheet>
       </v-col>

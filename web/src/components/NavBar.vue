@@ -1,6 +1,6 @@
 <template>
   <v-app-bar app flat color="backgroundAlt">
-    <router-link to="/" class="logo">
+    <router-link to="/" class="logo lemon-milk">
       Mono<span class="text--secondary">chrome</span>
     </router-link>
 
@@ -9,16 +9,24 @@
         {{ link.text }}
       </v-tab>
       <v-tab v-if="!isConnected" to="/login" class="login-tab"> Login </v-tab>
+      <v-menu v-else offset-y>
+        <template v-slot:activator="{ on, attrs }">
+          <v-tab v-on="on" v-bind="attrs" class="login-tab"> Admin </v-tab>
+        </template>
+
+        <admin-actions :left="true" />
+      </v-menu>
     </v-tabs>
   </v-app-bar>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import AdminActions from "@/components/AdminActions.vue";
 
 export default Vue.extend({
   name: "NavBar",
-
+  components: { AdminActions },
   data: (): Record<string, any> => ({
     links: [
       {
@@ -45,7 +53,6 @@ export default Vue.extend({
 
 <style lang="scss">
 .logo {
-  font-family: LemonMilk, Roboto, serif;
   font-size: 2em;
   text-decoration: none;
 }

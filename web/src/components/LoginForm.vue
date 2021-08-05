@@ -30,7 +30,9 @@
         ></v-text-field>
       </validation-provider>
       <div class="text-center">
-        <v-btn type="submit" block color="background" class="text--primary"> Sign In </v-btn>
+        <v-btn type="submit" block color="background" class="text--primary">
+          Sign In
+        </v-btn>
       </div>
     </v-form>
   </validation-observer>
@@ -78,13 +80,13 @@ export default Vue.extend({
     async submit(): Promise<void> {
       const valid = await this.$refs.observer.validate();
       if (valid) {
-        await this.login(this.params); // action to login
+        await this.login(this.params);
       }
     },
     clear(): void {
-      this.alert= "";
+      this.alert = "";
       this.username = "";
-      this.password = null;
+      this.password = "s";
       this.$refs.observer.reset();
     },
     async login(params: UserLogin): Promise<void> {

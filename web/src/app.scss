@@ -9,3 +9,7 @@
   src: local("LemonMilk"), url("/fonts/LemonMilk/LemonMilk.woff2") format("woff2"),
     url("/fonts/LemonMilk/LemonMilk.woff") format("woff");
 }
+
+.lemon-milk {
+  font-family: LemonMilk, Roboto, serif;
+}

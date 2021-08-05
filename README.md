@@ -41,14 +41,17 @@ unique username and password is very recommended.*
     * Unit 🔴0%
     * Integration 🔴0%
 * Frontend 
-  * Creation 🟠10%
+  * Creation 🟠20%
     * Latest chapters 🔴0%
-    * Search 🔴0%
+    * Manga list 🟢100%
+      * Index preview 🟢100%
+      * Search 🟢100%
+      * Pagination 🟢100%
     * Manga page 🔴0%
       * Chapter list 🔴0%
     * Chapter reader 🔴0%
-    * Admin 🔴0%
-      * Login 🟢80%
+    * Admin 🟠10%
+      * Login 🟢90%
       * User management 🔴0%
 * Reverse proxy 
   * Creation 🟡50%

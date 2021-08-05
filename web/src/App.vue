@@ -4,33 +4,21 @@
     <v-main class="background">
       <router-view />
     </v-main>
-    <v-btn
-      elevation="3"
-      fab
-      color="backgroundAlt"
-      class="theme-toggle"
-      @click="toggleTheme"
-    >
-      <v-icon large> mdi-lightbulb </v-icon>
-    </v-btn>
+    <theme-toggler />
   </v-app>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import NavBar from "./components/NavBar.vue";
+import ThemeToggler from "@/components/ThemeToggler.vue";
 
 export default Vue.extend({
   name: "App",
 
   components: {
+    ThemeToggler,
     NavBar,
-  },
-  methods: {
-    toggleTheme: function (): void {
-      console.debug(this.$vuetify);
-      this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
-    },
   },
   computed: {
     isConnected: function () {
@@ -48,11 +36,5 @@ export default Vue.extend({
 <style lang="scss">
 .v-application {
   font-family: Roboto, serif;
-}
-
-.theme-toggle {
-  position: absolute;
-  left: 1rem;
-  bottom: 1rem;
 }
 </style>
