@@ -1,5 +1,6 @@
 from typing import Optional, List
 from uuid import UUID
+from datetime import datetime
 
 from ..models.manga import Status
 from .base import PaginationResponse
@@ -45,6 +46,9 @@ class MangaResponse(MangaSchema):
     )
     version: int = Field(
         description="Version of the manga",
+    )
+    create_time: datetime = Field(
+        description="Time this manga was created",
     )
 
     class Config:

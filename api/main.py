@@ -1,5 +1,6 @@
 from .app import app
 
+from fastapi import Request
 from starlette.responses import RedirectResponse
 
 from api.routers import manga, chapter, upload, user, auth
@@ -13,8 +14,8 @@ app.include_router(auth.router)
 
 
 @app.get("/", include_in_schema=False)
-async def root():
-    return RedirectResponse("/docs")
+async def root(request: Request):
+    return RedirectResponse(f"{request.scope.get('root_path')}/docs")
 
 
 @app.get("/ping", tags=["Status"])

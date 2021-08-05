@@ -1,5 +1,6 @@
 from typing import Optional, List
 from uuid import UUID
+from datetime import datetime
 
 from pydantic import BaseModel, Field
 
@@ -38,6 +39,9 @@ class ChapterResponse(ChapterSchema):
     length: int = Field(
         description="Amount of pages of the chapter",
         ge=1,
+    )
+    upload_time: datetime = Field(
+        description="Time this chapter was uploaded",
     )
 
     class Config:
