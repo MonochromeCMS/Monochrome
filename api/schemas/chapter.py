@@ -14,6 +14,7 @@ class ChapterSchema(BaseModel):
         description="Volume this chapter comes from",
     )
     number: str = Field(description="Number of the chapter", regex="[0-9.]+")
+    scan_group: str = Field("no group", description="Scanlation group publishing this chapter")
 
     class Config:
         schema_extra = {
@@ -21,6 +22,7 @@ class ChapterSchema(BaseModel):
                 "name": "A World That Won't Reject Me",
                 "volume": None,
                 "number": "19.5",
+                "scan_group": "Monochrome Scans",
             }
         }
 
@@ -55,6 +57,7 @@ class ChapterResponse(ChapterSchema):
                 "manga_id": "1e01d7f6-c4e1-4102-9dd0-a6fccc065978",
                 "version": 2,
                 "id": "4abe53f4-0eaa-4f31-9210-a625fa665e23",
+                "scan_group": "Monochrome Scans",
             }
         }
 
