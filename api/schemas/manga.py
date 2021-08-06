@@ -20,6 +20,7 @@ class MangaSchema(BaseModel):
         description="Artist of the manga",
     )
     year: Optional[int] = Field(
+        None,
         description="Year of release of the manga",
     )
     status: Status = Field(
