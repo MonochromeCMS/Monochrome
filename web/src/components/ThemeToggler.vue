@@ -2,7 +2,8 @@
   <v-btn
     elevation="3"
     fab
-    color="backgroundAlt"
+    outlined
+    color="primary"
     class="theme-toggle"
     @click="toggleTheme"
   >
@@ -31,7 +32,7 @@ export default Vue.extend({
 
 <style lang="scss">
 .theme-toggle {
-  position: absolute;
+  position: fixed;
   left: 1rem;
   bottom: 1rem;
 }

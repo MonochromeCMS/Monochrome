@@ -4,6 +4,7 @@
       hide-details
       clearable
       solo
+      :value="value"
       color="primary"
       background-color="background"
       prepend-inner-icon="mdi-magnify"

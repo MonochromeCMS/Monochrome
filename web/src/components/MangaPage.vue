@@ -7,8 +7,10 @@
     </v-row>
     <v-row v-if="loading">
       <v-col cols="12" sm="6" md="4" lg="3" v-for="i in limit" :key="i">
-        <v-skeleton-loader type="image, article, divider" />
-        <v-skeleton-loader type="chip" class="skeleton-chip"/>
+        <v-card color="background" height="100%" class="d-flex flex-column">
+          <v-skeleton-loader type="image, article, divider" />
+          <v-skeleton-loader type="chip" class="skeleton-chip" />
+        </v-card>
       </v-col>
     </v-row>
     <v-row v-else>
@@ -17,7 +19,7 @@
           {{ alert }}
         </v-alert>
       </v-col>
-      <v-col v-else-if="manga.length === 0" class="text-center">
+      <v-col v-else-if="manga.length === 0" class="text-center text-body-1">
         {{
           search ? "No manga could be found." : "No manga has been added yet."
         }}
@@ -78,7 +80,7 @@ export default Vue.extend({
     total: 0,
     statusColor: {
       ongoing: "green",
-      completed: "green darken-4",
+      completed: "green darken-3",
       hiatus: "orange",
       cancelled: "red",
     },
@@ -104,16 +106,23 @@ export default Vue.extend({
   },
   methods: {
     async getManga() {
-      if (this.loading) {
-        await new Promise((resolve, reject) => {
-          setTimeout(() => resolve("done!"), 500);
-        });
-      }
       let url = `/api/manga?limit=${this.limit}&offset=${this.offset}`;
       if (this.search) {
         url += `&title=${this.search}`;
       }
-      const response = await axios.get(url);
+
+      let response;
+      try {
+        response = await axios.get(url);
+      } catch (e) {
+        response = e.response;
+      }
+
+      if (this.loading) {
+        await new Promise((resolve) => {
+          setTimeout(() => resolve("done!"), 500);
+        });
+      }
 
       switch (response.status) {
         case 200:
@@ -143,13 +152,18 @@ export default Vue.extend({
     },
   },
   mounted() {
-    this.getManga();
+    if (this.$route.query.q) {
+      this.search = this.$route.query.q;
+    } else {
+      this.getManga();
+    }
   },
 });
 </script>
 
 <style lang="scss">
-.status-chip, .skeleton-chip .v-skeleton-loader__chip {
+.status-chip,
+.skeleton-chip .v-skeleton-loader__chip {
   margin: 0.5rem 0.5rem 0.5rem auto;
 }
 </style>
