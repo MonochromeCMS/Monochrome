@@ -17,7 +17,7 @@
           outlined
         ></v-text-field>
       </validation-provider>
-      <validation-provider v-slot="{ errors }" name="email" rules="required">
+      <validation-provider v-slot="{ errors }" name="Password" rules="required">
         <v-text-field
           v-model="password"
           :error-messages="errors"
@@ -80,13 +80,13 @@ export default Vue.extend({
     async submit(): Promise<void> {
       const valid = await this.$refs.observer.validate();
       if (valid) {
-        await this.login(this.params);
+        await this.login(this.params); // action to login
       }
     },
     clear(): void {
       this.alert = "";
       this.username = "";
-      this.password = "s";
+      this.password = "";
       this.$refs.observer.reset();
     },
     async login(params: UserLogin): Promise<void> {

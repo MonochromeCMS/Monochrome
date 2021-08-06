@@ -62,6 +62,9 @@ const getters = {
   isConnected(state: UserState): boolean {
     return !!state.user.token;
   },
+  authStr(state: UserState): string {
+    return "Bearer ".concat(state.user.token);
+  },
 };
 
 const actions = {

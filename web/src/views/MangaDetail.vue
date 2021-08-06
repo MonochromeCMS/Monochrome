@@ -2,7 +2,7 @@
   <v-container>
     <v-row>
       <v-col>
-        <v-sheet rounded="lg" color="backgroundAlt" min-height="30vh">
+        <v-sheet rounded="lg" color="backgroundAlt">
           <manga-detail />
         </v-sheet>
       </v-col>
