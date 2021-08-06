@@ -19,7 +19,12 @@
         <v-img :src="cover" :aspect-ratio="4 / 5" />
       </v-col>
       <v-col cols="9" class="d-flex flex-column justify-center">
-        <h1 class="text-h2 pb-2 ellipsis">{{ manga.title }}</h1>
+        <v-tooltip top  open-delay="600">
+          <template v-slot:activator="{ on, attrs }">
+            <h1 class="text-h2 pb-2 ellipsis" v-bind="attrs" v-on="on">{{ manga.title }}</h1>
+          </template>
+          <span v-text="manga.title" />
+        </v-tooltip>
         <div class="d-flex flex-wrap">
           <v-chip
             class="chip-tag"

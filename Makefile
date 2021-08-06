@@ -29,11 +29,11 @@ down: ## Reset project containers with compose
 
 .PHONY: logs
 logs:	## Read the containers' logs.
-	$(DC) logs -f
+	$(DC) logs -f --tail 500
 
 .PHONY: logs-%
 logs-%: ## Read a container's logs.
-	$(DC) logs -f $*
+	$(DC) logs -f --tail 500 $*
 
 .PHONY: sh-%
 sh-%: ## Open a shell in a container running container.

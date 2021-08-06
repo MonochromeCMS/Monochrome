@@ -20,6 +20,14 @@ import Vue from "vue";
 import MangaForm from "@/components/MangaForm.vue";
 
 export default Vue.extend({
-  components: {MangaForm}
+  components: {MangaForm},
+  computed: {
+    isConnected() {
+      return this.$store.getters.isConnected;
+    }
+  },
+  mounted() {
+    if (!this.isConnected) this.$router.replace("/");
+  },
 });
 </script>

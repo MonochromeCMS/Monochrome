@@ -7,7 +7,7 @@
           <manga-page />
           <v-divider v-if="isConnected" />
           <v-card-actions>
-            <v-btn v-if="isConnected" class="my-2 mx-auto" to="/manga/new"
+            <v-btn v-if="isConnected" class="my-2 mx-auto" to="/manga/new" color="background"
               >Add a manga</v-btn
             >
           </v-card-actions>
@@ -18,7 +18,8 @@
 </template>
 <script lang="ts">
 import Vue from "vue";
-import MangaPage from "../components/MangaPage";
+import MangaPage from "@/components/MangaPage.vue";
+
 export default Vue.extend({
   components: { MangaPage },
   computed: {

@@ -26,12 +26,12 @@ export default Vue.extend({
     progress: false,
   }),
   methods: {
-    _searchInput: _debounce(function (value) {
+    _searchInput: _debounce(function (value: string) {
       this.$emit("input", value);
       this.$emit("update:value", value);
       this.progress = false;
     }, 1200),
-    searchInput(value) {
+    searchInput(value: string) {
       this.progress = true;
       this._searchInput(value);
     },

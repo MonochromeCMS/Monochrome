@@ -180,7 +180,7 @@ export default Vue.extend({
       this.password = "";
       this.$refs.observer.reset();
     },
-    async createManga(params): Promise<void> {
+    async createManga(params: any): Promise<void> {
       const config = {
         headers: {
           Accept: "*/*",
@@ -200,7 +200,7 @@ export default Vue.extend({
       //TODO: Check the status, show error if needed
       switch (response.status) {
         case 201:
-          await this.setCover(response.data.id);
+          await this.setCover(response.data.id, this.cover);
           break;
         case 401:
           this.$store.commit("logout");
@@ -209,8 +209,8 @@ export default Vue.extend({
           this.alert = response.statusText;
       }
     },
-    async setCover(manga_id) {
-      if (!this.cover) return;
+    async setCover(manga_id: string, cover: null | Blob) {
+      if (!cover) return;
 
       const config = {
         headers: {
@@ -222,7 +222,7 @@ export default Vue.extend({
       };
 
       const form = new FormData();
-      form.append("payload", this.cover);
+      form.append("payload", cover);
 
       let response;
       try {
