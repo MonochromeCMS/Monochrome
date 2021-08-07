@@ -49,8 +49,12 @@ unique username and password is very recommended.*
       * Pagination 🟢100%
     * Manga page 🟢100%
       * Chapter list 🟢100%
+      * Create manga 🟢100%
+      * Edit manga 🟢100%
+      * Delete manga 🟢100%
     * Chapter reader 🔴0%
     * Upload chapters 🔴0%
+    * Delete chapters 🟢100%
     * Admin 🟠10%
       * Login 🟢90%
       * User management 🔴0%
