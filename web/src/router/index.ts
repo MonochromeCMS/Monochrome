@@ -23,6 +23,12 @@ const routes: Array<RouteConfig> = [
       import(/* webpackChunkName: "manga_detail" */ "../views/MangaDetail.vue"),
   },
   {
+    path: "/manga/:manga/edit",
+    name: "MangaEdit",
+    component: () =>
+      import(/* webpackChunkName: "manga_edit" */ "../views/MangaEdit.vue"),
+  },
+  {
     path: "/login",
     name: "Login",
     component: () =>

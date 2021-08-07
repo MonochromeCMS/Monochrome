@@ -21,6 +21,49 @@
         >
           Add chapter
         </v-btn>
+        <v-btn
+          v-if="isConnected"
+          :to="`/manga/${mangaId}/edit`"
+          color="info"
+          max-width="20rem"
+          class="mt-5 ml-5"
+        >
+          Edit manga
+        </v-btn>
+        <v-dialog v-if="isConnected" v-model="deleteDialog" max-width="30rem">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              color="error"
+              max-width="20rem"
+              class="mt-5 ml-5"
+              v-bind="attrs"
+              v-on="on"
+            >
+              Delete manga
+            </v-btn>
+          </template>
+
+          <v-card>
+            <v-card-title class="text-h5 background mb-2">
+              Warning
+            </v-card-title>
+
+            <v-card-text class="body-1">
+              <span class="font-weight-bold">This action can't be undone!</span>
+              Are you sure you want to delete this manga?
+            </v-card-text>
+
+            <v-divider></v-divider>
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="gray" text @click="deleteDialog = false">
+                Cancel
+              </v-btn>
+              <v-btn color="error" @click="deleteManga"> Delete </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </div>
     </manga-row>
     <manga-chapters :manga-id="mangaId" v-model="chapterModel" />
@@ -43,6 +86,7 @@ export default Vue.extend({
       loading: true,
       mangaAlert: "",
       chapterModel: ["", ""],
+      deleteDialog: false,
     };
   },
   mounted() {
@@ -60,6 +104,9 @@ export default Vue.extend({
     },
     isConnected() {
       return this.$store.getters.isConnected;
+    },
+    authConfig() {
+      return this.$store.getters.authConfig;
     },
   },
   methods: {
@@ -94,6 +141,35 @@ export default Vue.extend({
       }
 
       this.loading = false;
+    },
+    async deleteManga() {
+      const config = this.authConfig;
+
+      let url = `/api/manga/${this.mangaId}`;
+
+      let response;
+      try {
+        response = await axios.delete(url, config);
+      } catch (e) {
+        response = e.response;
+      }
+
+      switch (response.status) {
+        case 200:
+        case 404:
+          await this.$router.push("/manga");
+          break;
+        case 401:
+          this.$store.commit("logout");
+          break;
+        case 422:
+          this.mangaAlert = "The ID provided isn't an UUID";
+          break;
+        default:
+          this.mangaAlert = response.statusText;
+      }
+
+      this.deleteDialog = false;
     },
   },
 });

@@ -75,7 +75,11 @@
         ></v-select>
       </validation-provider>
       <!-- COVER FIELD -->
-      <validation-provider v-slot="{ errors }" name="Cover" rules="required">
+      <validation-provider
+        v-slot="{ errors }"
+        name="Cover"
+        :rules="this.manga ? '' : 'required'"
+      >
         <v-file-input
           v-model="cover"
           :error-messages="errors"
@@ -95,7 +99,7 @@
       </v-expansion-panels>
       <div class="text-center">
         <v-btn type="submit" block color="background" class="text--primary">
-          Create Manga
+          {{ this.manga ? "Edit Manga" : "Create Manga" }}
         </v-btn>
       </div>
     </v-form>
@@ -132,6 +136,7 @@ export default Vue.extend({
     ValidationProvider,
     ValidationObserver,
   },
+  props: ["manga"],
   data: () => ({
     title: "",
     description: "",
@@ -160,18 +165,26 @@ export default Vue.extend({
         status: this.status,
       };
     },
-    authStr() {
-      return this.$store.getters.authStr;
+    authConfig() {
+      return this.$store.getters.authConfig;
     },
   },
   methods: {
     url(blob) {
-      return blob ? URL.createObjectURL(blob) : null;
+      if (blob) {
+        return blob ? URL.createObjectURL(blob) : null;
+      } else {
+        return this.manga ? `/media/${this.manga.id}/cover.jpg` : null;
+      }
     },
     async submit(): Promise<void> {
       const valid = await this.$refs.observer.validate();
       if (valid) {
-        await this.createManga(this.params);
+        if (this.manga) {
+          await this.editManga(this.params, this.manga.id);
+        } else {
+          await this.createManga(this.params);
+        }
       }
     },
     clear(): void {
@@ -181,14 +194,8 @@ export default Vue.extend({
       this.$refs.observer.reset();
     },
     async createManga(params: any): Promise<void> {
-      const config = {
-        headers: {
-          Accept: "*/*",
-          Authorization: this.authStr,
-          "Content-Type": "application/json",
-        },
-        withCredentials: true,
-      };
+      const config = this.authConfig;
+      config.headers["Content-Type"] = "application/json";
 
       let response;
       try {
@@ -209,17 +216,38 @@ export default Vue.extend({
           this.alert = response.statusText;
       }
     },
+    async editManga(params: any, id: string): Promise<void> {
+      const config = this.authConfig;
+      config.headers["Content-Type"] = "application/json";
+
+      let response;
+      try {
+        response = await axios.put(`/api/manga/${id}`, params, config);
+      } catch (e) {
+        response = e.response;
+      }
+
+      //TODO: Check the status, show error if needed
+      switch (response.status) {
+        case 200:
+          if (this.cover) {
+            await this.setCover(id, this.cover);
+          } else {
+            await this.$router.push(`/manga/${id}`);
+          }
+          break;
+        case 401:
+          this.$store.commit("logout");
+          break;
+        default:
+          this.alert = response.statusText;
+      }
+    },
     async setCover(manga_id: string, cover: null | Blob) {
       if (!cover) return;
 
-      const config = {
-        headers: {
-          Accept: "*/*",
-          Authorization: this.authStr,
-          "Content-Type": "multipart/form-data",
-        },
-        withCredentials: true,
-      };
+      const config = this.authConfig;
+      config.headers["Content-Type"] = "multipart/form-data";
 
       const form = new FormData();
       form.append("payload", cover);
@@ -246,6 +274,16 @@ export default Vue.extend({
           this.alert = response.statusText;
       }
     },
+  },
+  mounted() {
+    if (this.manga) {
+      this.title = this.manga.title;
+      this.description = this.manga.description;
+      this.author = this.manga.author;
+      this.artist = this.manga.artist;
+      this.year = this.manga.year;
+      this.status = this.manga.status;
+    }
   },
 });
 </script>

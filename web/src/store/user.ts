@@ -1,5 +1,5 @@
 import type { ActionContext } from "vuex";
-import type { AxiosResponse } from "axios";
+import type { AxiosRequestConfig, AxiosResponse } from "axios";
 import axios from "axios";
 import qs from "qs";
 
@@ -64,6 +64,15 @@ const getters = {
   },
   authStr(state: UserState): string {
     return "Bearer ".concat(state.user.token);
+  },
+  authConfig(state: UserState): AxiosRequestConfig {
+    return {
+      headers: {
+        Accept: "*/*",
+        Authorization: "Bearer ".concat(state.user.token),
+      },
+      withCredentials: true,
+    };
   },
 };
 
