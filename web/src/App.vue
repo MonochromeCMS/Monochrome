@@ -30,6 +30,9 @@ export default Vue.extend({
       this.$router.replace("/");
     },
   },
+  mounted() {
+    if (this.isConnected) this.$store.dispatch("getUserData");
+  },
 });
 </script>
 

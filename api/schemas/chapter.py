@@ -13,7 +13,7 @@ class ChapterSchema(BaseModel):
     volume: Optional[int] = Field(
         description="Volume this chapter comes from",
     )
-    number: str = Field(description="Number of the chapter", regex="[0-9.]+")
+    number: float = Field(description="Number of the chapter")
     scan_group: str = Field("no group", description="Scanlation group publishing this chapter")
 
     class Config:

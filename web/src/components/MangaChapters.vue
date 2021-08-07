@@ -23,13 +23,13 @@
         cols="12"
         v-for="(item, index) in chaptersPage"
         :key="index"
-        class="chapter-row"
+        class="chapter-row pa-1"
       >
         <router-link
           :to="`/manga/${item.manga_id}/${item.id}`"
-          class="text-decoration-none"
+          class="text-decoration-none chapter-link pa-3"
         >
-          <v-row class="justify-space-around background">
+          <v-row class="justify-space-around">
             <v-col cols="4" :md="item.volume ? 3 : 2">
               {{ item.volume ? `Vol ${item.volume} ` : "" }}Chapter
               {{ item.number }}
@@ -45,6 +45,20 @@
             </v-chip>
           </v-row>
         </router-link>
+        <v-menu v-if="isConnected" offset-y>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn icon v-on="on" v-bind="attrs" class="mr-1">
+              <v-icon>mdi-dots-vertical</v-icon>
+            </v-btn>
+          </template>
+          <v-btn
+            block
+            color="background"
+            :to="`/manga/${item.manga_id}/${item.id}/upload`"
+            >Edit chapter</v-btn
+          >
+          <chapter-delete :id="item.id" @input="popChapter(index)" />
+        </v-menu>
       </v-col>
       <v-col cols="12" v-if="pageAmount > 1">
         <v-pagination
@@ -61,9 +75,11 @@
 <script lang="ts">
 import Vue from "vue";
 import axios from "axios";
+import ChapterDelete from "@/components/ChapterDelete.vue";
 
 export default Vue.extend({
   name: "MangaChapters",
+  components: { ChapterDelete },
   props: ["value", "mangaId"],
   data: () => ({
     chapters: [],
@@ -80,8 +96,14 @@ export default Vue.extend({
       const start = this.limit * (this.page - 1);
       return this.chapters.slice(start, start + this.limit);
     },
+    isConnected() {
+      return this.$store.getters.isConnected;
+    },
   },
   methods: {
+    popChapter(index: number) {
+      this.chapters.splice(index, 1);
+    },
     dispatchValue(error = null, chapter = null) {
       const value = [
         error || this.innerValue[0],
@@ -154,9 +176,31 @@ export default Vue.extend({
 
 <style lang="scss">
 .chapter-row {
+  display: flex;
+  align-items: center;
   border-bottom: #424242 0.1rem solid;
   &:last-child {
     border-bottom: none;
+  }
+  .chapter-link {
+    width: 100%;
+    height: 100%;
+  }
+}
+.theme--dark {
+  .chapter-row {
+    background-color: black;
+    &:hover {
+      background-color: #424242;
+    }
+  }
+}
+.theme--light {
+  .chapter-row {
+    background-color: #eeeeee;
+    &:hover {
+      background-color: #e0e0e0;
+    }
   }
 }
 </style>
