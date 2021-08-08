@@ -1,7 +1,7 @@
 import os
 import shutil
 
-from typing import List, Tuple
+from typing import List, Tuple, Iterable
 from PIL import Image
 
 from uuid import UUID
@@ -33,7 +33,6 @@ def copy_chapter_to_session(chapter: Chapter, blobs: List[UUID]):
 @router.post("/begin", status_code=status.HTTP_201_CREATED, response_model=UploadSessionResponse)
 async def begin_upload_session(
     payload: BeginUploadSession,
-    tasks: BackgroundTasks,
     db_session: AsyncSession = Depends(get_db),
 ):
     await Manga.find(db_session, payload.manga_id)
@@ -51,7 +50,7 @@ async def begin_upload_session(
             blob = UploadedBlob(session_id=session.id, name=f"{i}.jpg")
             await blob.save(db_session)
             blobs.append(blob.id)
-        tasks.add_task(copy_chapter_to_session, chapter, blobs)
+        copy_chapter_to_session(chapter, blobs)
 
     return await UploadSession.find_rel(db_session, session.id, UploadSession.blobs)
 
@@ -65,7 +64,7 @@ async def get_upload_session(
     return session
 
 
-def save_session_image(files: List[Tuple[str, File]]):
+def save_session_image(files: Iterable[Tuple[str, File]]):
     for blob_id, file in files:
         im = Image.open(file)
         im.convert("RGB").save(os.path.join(global_settings.media_path, "blobs", f"{blob_id}.jpg"))
@@ -74,7 +73,6 @@ def save_session_image(files: List[Tuple[str, File]]):
 @router.post("/{id}", status_code=status.HTTP_201_CREATED, response_model=List[UploadedBlobResponse])
 async def upload_pages_to_upload_session(
     id: UUID,
-    tasks: BackgroundTasks,
     payload: List[UploadFile] = File(...),
     db_session: AsyncSession = Depends(get_db),
 ):
@@ -91,7 +89,8 @@ async def upload_pages_to_upload_session(
         await file_blob.save(db_session)
         blobs.append(file_blob)
 
-    tasks.add_task(save_session_image, zip((b.id for b in blobs), (f.file for f in payload)))
+    save_session_image(zip((b.id for b in blobs), (f.file for f in payload)))
+
     return blobs
 
 
