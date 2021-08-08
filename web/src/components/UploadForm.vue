@@ -193,7 +193,7 @@ export default Vue.extend({
       switch (response.status) {
         case 200:
         case 201:
-          await this.$router.push(`/manga/${this.manga_id}/${response.id}`);
+          await this.$router.push(`/chapters/${response.id}`);
           break;
         case 404:
           await this.$router.push("/");

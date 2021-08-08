@@ -49,7 +49,7 @@
         <v-card
           color="background"
           class="px-4"
-          :to="`/manga/${chapter.manga_id}/${chapter.id}`"
+          :to="`/chapters/${chapter.id}`"
         >
           <v-row align="center">
             <v-col cols="3">

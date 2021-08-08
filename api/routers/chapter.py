@@ -10,7 +10,7 @@ from .auth import is_connected
 from ..config import get_settings
 from ..db import get_db
 from ..models.chapter import Chapter
-from ..schemas.chapter import ChapterSchema, ChapterResponse, LatestChaptersResponse
+from ..schemas.chapter import ChapterSchema, ChapterResponse, LatestChaptersResponse, DetailedChapterResponse
 
 
 global_settings = get_settings()
@@ -33,12 +33,12 @@ async def get_latest_chapters(
     }
 
 
-@router.get("/{id}", response_model=ChapterResponse)
+@router.get("/{id}", response_model=DetailedChapterResponse)
 async def get_chapter(
     id: UUID,
     db_session: AsyncSession = Depends(get_db),
 ):
-    return await Chapter.find(db_session, id)
+    return await Chapter.find_rel(db_session, id, Chapter.manga)
 
 
 @router.delete("/{id}", dependencies=[Depends(is_connected)])

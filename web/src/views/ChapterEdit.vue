@@ -7,9 +7,9 @@
           <v-card-title class="justify-center lemon-milk"
             >EDIT CHAPTER</v-card-title
           >
-          <manga-row v-if="manga" :manga="manga" :cover="`/media/${manga_id}/cover.jpg`" class="background rounded" />
+          <manga-row v-if="manga" :manga="manga" :cover="`/media/${manga.id}/cover.jpg`" class="background rounded" />
           <v-card-text>
-            <upload-form v-if="chapter" :manga_id="manga_id" :chapter="chapter"/>
+            <upload-form v-if="chapter" :manga_id="manga.id" :chapter="chapter"/>
           </v-card-text>
         </v-card>
       </v-col>
@@ -27,7 +27,6 @@ export default Vue.extend({
   components: {UploadForm, MangaRow},
   data() {return {
     manga: null,
-    manga_id: this.$route.params.manga,
     chapter_id: this.$route.params.chapter,
     chapter: null,
     alert: "",
@@ -38,30 +37,6 @@ export default Vue.extend({
     },
   },
   methods: {
-    async getManga() {
-      let url = `/api/manga/${this.manga_id}`;
-
-      let response;
-      try {
-        response = await axios.get(url);
-      } catch (e) {
-        response = e.response;
-      }
-
-      switch (response.status) {
-        case 200:
-          this.manga = response.data;
-          break;
-        case 404:
-          this.alert = "Manga not found";
-          break;
-        case 422:
-          this.alert = "The ID provided isn't an UUID";
-          break;
-        default:
-          this.alert = response.statusText;
-      }
-    },
     async getChapter() {
       let url = `/api/chapter/${this.chapter_id}`;
 
@@ -74,11 +49,8 @@ export default Vue.extend({
 
       switch (response.status) {
         case 200:
-          if (this.manga_id !== response.data.manga_id) {
-            this.alert = "This chapter doesn't belong to this manga";
-          } else {
-            this.chapter = response.data;
-          }
+          this.chapter = response.data;
+          this.manga = response.data.manga;
           break;
         case 404:
           this.alert = "Chapter not found";
@@ -95,7 +67,6 @@ export default Vue.extend({
     if (!this.isConnected) {
       this.$router.replace("/")
     } else {
-      this.getManga();
       this.getChapter();
     }
   },

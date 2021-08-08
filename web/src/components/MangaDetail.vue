@@ -5,7 +5,7 @@
       <div v-if="isConnected || firstChapter" class="d-flex flex-wrap">
         <v-btn
           v-if="firstChapter"
-          :to="`/manga/${manga.id}/${firstChapter}`"
+          :to="`/chapters/${firstChapter}`"
           color="background"
           class="ma-2"
         >

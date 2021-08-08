@@ -4,16 +4,18 @@
       <v-col cols="12" class="text-h3 text-center" tag="h2"> Chapters </v-col>
       <v-col v-for="i in limit" :key="i">
         <v-row class="justify-space-around background">
-          <v-col cols="4" md="3">
+          <v-col cols="7" sm="4" md="3">
             <v-skeleton-loader type="heading" />
           </v-col>
-          <v-col cols="4" md="4" class="hidden-sm-and-down">
+          <v-col cols="3" md="4" class="hidden-sm-and-down">
             <v-skeleton-loader type="heading" />
           </v-col>
-          <v-col cols="4" md="3">
+          <v-col cols="5" sm="3" md="2">
             <v-skeleton-loader type="heading" />
           </v-col>
-          <v-skeleton-loader type="chip" class="ma-2" />
+          <v-col cols="3" lg="2" class="pa-0 text-right hidden-xs-only">
+            <v-skeleton-loader type="chip" class="ma-2" />
+          </v-col>
         </v-row>
       </v-col>
     </v-row>
@@ -26,23 +28,25 @@
         class="chapter-row pa-1"
       >
         <router-link
-          :to="`/manga/${item.manga_id}/${item.id}`"
+          :to="`/chapters/${item.id}`"
           class="text-decoration-none chapter-link pa-3"
         >
           <v-row class="justify-space-around">
-            <v-col cols="4" :md="item.volume ? 3 : 2">
+            <v-col cols="7" sm="4" :md="item.volume ? 3 : 2">
               {{ item.volume ? `Vol ${item.volume} ` : "" }}Chapter
               {{ item.number }}
             </v-col>
-            <v-col cols="4" md="4" class="hidden-sm-and-down">
+            <v-col cols="3" md="4" class="hidden-sm-and-down ellipsis">
               {{ item.name }}
             </v-col>
-            <v-col cols="4" md="3">
+            <v-col cols="5" sm="3" md="2" class="ellipsis">
               {{ item.scan_group }}
             </v-col>
-            <v-chip color="backgroundAlt" class="ma-2 hidden-xs-only">
-              {{ ago(new Date(item.upload_time).getTime()) }} ago
-            </v-chip>
+            <v-col cols="3" lg="2" class="pa-0 text-right hidden-xs-only">
+              <v-chip color="backgroundAlt" class="ma-2 ">
+                {{ ago(new Date(item.upload_time).getTime()) }} ago
+              </v-chip>
+            </v-col>
           </v-row>
         </router-link>
         <v-menu v-if="isConnected" offset-y>
@@ -54,7 +58,7 @@
           <v-btn
             block
             color="background"
-            :to="`/manga/${item.manga_id}/${item.id}/upload`"
+            :to="`/chapters/${item.id}/edit`"
             >Edit chapter</v-btn
           >
           <chapter-delete :id="item.id" @input="popChapter(index)" />
@@ -205,5 +209,10 @@ export default Vue.extend({
       background-color: #e0e0e0;
     }
   }
+}
+.ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>
