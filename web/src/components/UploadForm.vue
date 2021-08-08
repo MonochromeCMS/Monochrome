@@ -117,14 +117,17 @@ export default Vue.extend({
     authConfig() {
       return this.$store.getters.authConfig;
     },
-    params() {
+    chapterDraft() {
       return {
-        chapterDraft: {
           name: this.name,
           number: this.number,
           volume: this.volume,
           scan_group: this.scan_group,
-        },
+        };
+    },
+    params() {
+      return {
+        chapterDraft: this.chapterDraft,
         page_order: this.page_order,
       }
     }
@@ -132,8 +135,14 @@ export default Vue.extend({
   methods: {
     async submit() {
       const valid = await this.$refs.observer.validate();
-      if (valid && this.page_order.length > 0) {
-        await this.createChapter(this.params);
+      if (valid) {
+        switch (true) {
+          case this.chapter && !this.session:
+            await this.editChapter(this.chapterDraft);
+            break;
+          case this.session && this.page_order.length > 0:
+            await this.commitSession(this.params);
+        }
       }
     },
     async createSession(manga_id, chapter_id) {
@@ -158,6 +167,9 @@ export default Vue.extend({
         case 404:
           this.alert = "Manga not found";
           break;
+        case 401:
+          this.$store.commit("logout");
+          break;
         case 422:
           this.alert = "The ID provided isn't an UUID";
           break;
@@ -165,7 +177,7 @@ export default Vue.extend({
           this.alert = response.statusText;
       }
     },
-    async createChapter(params) {
+    async commitSession(params) {
       let url = `/api/upload/${this.session.id}/commit`;
 
       const config = this.authConfig;
@@ -179,11 +191,15 @@ export default Vue.extend({
       }
 
       switch (response.status) {
+        case 200:
         case 201:
           await this.$router.push(`/manga/${this.manga_id}/${response.id}`);
           break;
         case 404:
           await this.$router.push("/");
+          break;
+        case 401:
+          this.$store.commit("logout");
           break;
         case 422:
           this.alert = "The ID provided isn't an UUID";
@@ -192,6 +208,36 @@ export default Vue.extend({
           this.alert = response.statusText;
       }
     },
+    async editChapter(chapterDraft) {
+      let url = `/api/chapter/${this.chapter.id}`;
+
+      const config = this.authConfig;
+      config.headers["Content-Type"] = "application/json";
+
+      let response;
+      try {
+        response = await axios.put(url, chapterDraft, config);
+      } catch (e) {
+        response = e.response;
+      }
+
+      switch (response.status) {
+        case 200:
+          await this.$router.push(`/manga/${this.manga_id}/${response.id}`);
+          break;
+        case 404:
+          await this.$router.push("/");
+          break;
+        case 401:
+          this.$store.commit("logout");
+          break;
+        case 422:
+          this.alert = "The ID provided isn't an UUID";
+          break;
+        default:
+          this.alert = response.statusText;
+      }
+    }
   },
   mounted() {
     if (this.chapter) {

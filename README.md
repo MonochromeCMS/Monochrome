@@ -30,6 +30,8 @@ unique username and password is very recommended.*
   * Alembic
   * Pydantic
 * VueJS
+  * vuetify
+  * vuedraggable
 
 ## Progress
 * API
@@ -53,7 +55,7 @@ unique username and password is very recommended.*
       * Edit manga 🟢100%
       * Delete manga 🟢100%
     * Chapter reader 🔴0%
-    * Upload chapters 🔴0%
+    * Upload chapters 🟢100%
     * Delete chapters 🟢100%
     * Admin 🟠10%
       * Login 🟢90%
@@ -70,5 +72,5 @@ unique username and password is very recommended.*
   * Kubernetes?
   
 Credits:
-* Base template: https://github.com/grillazz/fastapi-sqlalchemy-asyncpg
+* Base API template: https://github.com/grillazz/fastapi-sqlalchemy-asyncpg
 * Logo font: Lemon Milk by [Marsnev](https://marsnev.com/)
