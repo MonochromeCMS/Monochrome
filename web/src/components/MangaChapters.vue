@@ -40,7 +40,7 @@
             <v-col cols="4" md="3">
               {{ item.scan_group }}
             </v-col>
-            <v-chip color="backgroundAlt" class="ma-2">
+            <v-chip color="backgroundAlt" class="ma-2 hidden-xs-only">
               {{ ago(new Date(item.upload_time).getTime()) }} ago
             </v-chip>
           </v-row>
@@ -59,6 +59,9 @@
           >
           <chapter-delete :id="item.id" @input="popChapter(index)" />
         </v-menu>
+      </v-col>
+      <v-col cols="12" class="text-body-1 text-center" v-if="chapters.length === 0">
+        No chapters have been uploaded yet.
       </v-col>
       <v-col cols="12" v-if="pageAmount > 1">
         <v-pagination

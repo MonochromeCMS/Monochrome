@@ -2,13 +2,12 @@
   <v-container>
     <v-alert type="error" v-if="alert !== ''">{{ alert }}</v-alert>
     <manga-row :loading="loading" :manga="manga" :cover="cover">
-      <div v-if="isConnected || firstChapter">
+      <div v-if="isConnected || firstChapter" class="d-flex flex-wrap">
         <v-btn
           v-if="firstChapter"
           :to="`/manga/${manga.id}/${firstChapter}`"
           color="background"
-          max-width="20rem"
-          class="mt-5"
+          class="ma-2"
         >
           Start reading
         </v-btn>
@@ -16,8 +15,7 @@
           v-if="isConnected"
           :to="`/manga/${mangaId}/upload`"
           color="background"
-          max-width="20rem"
-          class="mt-5 ml-5"
+          class="ma-2"
         >
           Add chapter
         </v-btn>
@@ -25,8 +23,7 @@
           v-if="isConnected"
           :to="`/manga/${mangaId}/edit`"
           color="info"
-          max-width="20rem"
-          class="mt-5 ml-5"
+          class="ma-2"
         >
           Edit manga
         </v-btn>
@@ -34,10 +31,9 @@
           <template v-slot:activator="{ on, attrs }">
             <v-btn
               color="error"
-              max-width="20rem"
-              class="mt-5 ml-5"
               v-bind="attrs"
               v-on="on"
+              class="ma-2"
             >
               Delete manga
             </v-btn>
