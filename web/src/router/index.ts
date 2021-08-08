@@ -29,6 +29,18 @@ const routes: Array<RouteConfig> = [
       import(/* webpackChunkName: "manga_edit" */ "../views/MangaEdit.vue"),
   },
   {
+    path: "/manga/:manga/upload",
+    name: "ChapterUpload",
+    component: () =>
+      import(/* webpackChunkName: "chapter_upload" */ "../views/ChapterUpload.vue"),
+  },
+  {
+    path: "/manga/:manga/:chapter/upload",
+    name: "ChapterEdit",
+    component: () =>
+      import(/* webpackChunkName: "chapter_edit" */ "../views/ChapterEdit.vue"),
+  },
+  {
     path: "/login",
     name: "Login",
     component: () =>
