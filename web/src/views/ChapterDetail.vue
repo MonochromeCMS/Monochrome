@@ -7,9 +7,9 @@
           <v-row  class="ma-0 pa-3">
             <v-col
                 v-bind="columnBind[readerMode]"
-                v-for="index in chapter.length - 1"
+                v-for="index in chapter.length"
                 :key="index">
-              <v-img :src="`/media/${chapter.manga_id}/${chapter_id}/${index+1}.jpg`" />
+              <v-img :src="`/media/${chapter.manga_id}/${chapter_id}/${index}.jpg`" />
             </v-col>
           </v-row>
         </v-sheet>

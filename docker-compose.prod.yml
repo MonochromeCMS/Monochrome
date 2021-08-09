@@ -13,7 +13,6 @@ services:
     build: ./api
     command: hypercorn api.main:app -b 0.0.0.0:3000 --root-path /api
     volumes:
-      - ./api:/api
       - ./media:/media
     environment:
       DB_URL: postgresql+asyncpg://${DB_USER}:${DB_PASS}@db:5432/${DB_NAME}
