@@ -23,6 +23,8 @@ unique username and password is very recommended.*
 
 *Note: Those can and are recommended to be completely random, to generate them you can use* `make secret`
 
+* `ACCESS_TOKEN_EXPIRE_MINUTES` Basically after how many minutes a user should be logged out, the default is 6 hours.
+
 ## Tools used
 * API
   * FastAPI
@@ -43,7 +45,7 @@ unique username and password is very recommended.*
     * Unit 🔴0%
     * Integration 🔴0%
 * Frontend 
-  * Creation 🟡40%
+  * Creation 🟡70%
     * Latest chapters 🟢100%
     * Manga list 🟢100%
       * Index preview 🟢100%
@@ -54,18 +56,18 @@ unique username and password is very recommended.*
       * Create manga 🟢100%
       * Edit manga 🟢100%
       * Delete manga 🟢100%
-    * Chapter reader 🔴0%
+    * Chapter reader 🟢100%
     * Upload chapters 🟢100%
     * Delete chapters 🟢100%
-    * Admin 🟠10%
-      * Login 🟢90%
+    * Admin 🟠20%
+      * Login 🟢100%
       * User management 🔴0%
       * Interface customization 🔴0%
     * About page 🔴0%
 * Reverse proxy 
-  * Creation 🟡50%
+  * Creation 🟢100%
     * Developpement build 🟢100%
-    * Production build with frontend compilation 🔴0%
+    * Production build with frontend compilation 🟢100%
 * Find a way to deploy this more easily
   * Heroku?
   * Docker swarm?

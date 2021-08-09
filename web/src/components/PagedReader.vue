@@ -1,0 +1,160 @@
+<template>
+  <div style="position: relative;">
+    <v-tabs v-model="currentPage" background-color="backgroundAlt" show-arrows centered class="reader-tabs">
+      <v-tab :key="0">
+        {{reverse ? "Next chapter" : "Previous chapter"}}
+      </v-tab>
+      <v-tab v-for="index in amountTabs" :key="index">
+        {{reverse ? amountTabs - index + 1 : index }}
+      </v-tab>
+      <v-tab :key="amountTabs + 1">
+        {{reverse ? "Previous chapter" : "Next chapter"}}
+      </v-tab>
+    </v-tabs>
+
+    <v-carousel height="auto" hide-delimiters v-model="currentPage" :continuous="false">
+      <v-carousel-item :key="0">
+        <v-sheet
+          height="20rem"
+          tile
+        >
+          <v-row
+            class="fill-height pa-3 text-center"
+            align="center"
+            justify="center"
+          >
+            <div class="text-h2">
+              {{reverse ? "This is the last chapter, for now..." : "This is the first chapter"}}
+            </div>
+          </v-row>
+        </v-sheet>
+      </v-carousel-item>
+      <v-carousel-item v-for="index in amountTabs" :key="index" >
+        <div v-if="double" class="d-flex justify-center">
+          <img
+              v-if="urls[2*index - 2]"
+              class="d-block half-page page-size"
+              :src="urls[2*index - 2]"
+              :alt="`Page ${2*index - 1}`"/>
+          <img
+            v-if="urls[2*index - 1]"
+            class="d-block half-page page-size"
+            :src="urls[2*index - 1]"
+            :alt="`Page ${2*index}`"/>
+        </div>
+        <div v-else  class="d-flex">
+          <img class="d-block mx-auto full-page" :src="urls[index - 1]" :alt="`Page ${index}`"/>
+        </div>
+      </v-carousel-item>
+      <v-carousel-item :key="amountTabs + 1">
+        <v-sheet
+          height="20rem"
+          tile
+        >
+          <v-row
+            class="fill-height pa-4 text-center"
+            align="center"
+            justify="center"
+          >
+            <div class="text-h2">
+              {{reverse ? "This is the first chapter" : "This is the last chapter, for now..."}}
+            </div>
+          </v-row>
+        </v-sheet>
+      </v-carousel-item>
+    </v-carousel>
+  </div>
+</template>
+
+<script>
+import Vue from "vue";
+
+export default Vue.extend({
+  name: "PagedReader",
+  props: ["manga", "chapter", "length", "reverse", "double"],
+  data: () => ({
+    currentPage: null,
+    test: null,
+  }),
+  methods: {
+    handleArrows(ev) {
+      switch (ev.code) {
+        case "KeyA":
+        case "ArrowLeft":
+          this.currentPage -= 1;
+          break;
+        case "KeyD":
+        case "ArrowRight":
+          this.currentPage += 1;
+      }
+    },
+  },
+  computed: {
+    amountTabs() {
+      return this.double ? Math.ceil(this.length/2) : this.length;
+    },
+    urls() {
+      const result = [];
+
+      for ( let i = 1; i <= this.length; i++ ) {
+        result.push(`/media/${this.manga}/${this.chapter}/${i}.jpg`);
+      }
+      if (this.double && this.length % 2 !== 0) result.push(null);
+
+      return this.reverse ? result.reverse() : result;
+    }
+  },
+  watch: {
+    chapter() {
+      this.currentPage = this.reverse ? this.amountTabs : 1;
+    },
+    reverse() {
+      this.currentPage = this.amountTabs - this.currentPage + 1;
+    },
+    currentPage(value) {
+      switch (true) {
+        case value === this.amountTabs +1 && !this.reverse:
+        case value === 0 && this.reverse:
+          this.$emit("next", 1);
+          break;
+        case value === this.amountTabs +1 && this.reverse:
+        case value === 0 && !this.reverse:
+          this.$emit("previous", 1);
+      }
+    },
+    double(value) {
+      if (value) {
+        console.log(this.currentPage)
+        this.currentPage = Math.ceil((this.currentPage + this.reverse)/2);
+        console.log(this.currentPage)
+      } else {
+        this.currentPage = this.currentPage * 2 - 1;
+      }
+    }
+  },
+  mounted() {
+    this.currentPage = this.reverse ? this.amountTabs : 1;
+
+    document.addEventListener("keyup", this.handleArrows);
+  }
+});
+</script>
+
+<style>
+.half-page {
+  max-width: 50%;
+}
+.full-page {
+  max-width: 100%;
+}
+.full-page, .half-page {
+  max-height: 150vh;
+}
+.reader-tabs {
+  position: sticky;
+  top: 3.7rem;
+  z-index: 1;
+  border-radius: .3rem;
+  margin-bottom: .5rem;
+}
+</style>

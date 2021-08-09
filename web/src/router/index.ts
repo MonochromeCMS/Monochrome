@@ -34,6 +34,12 @@ const routes: Array<RouteConfig> = [
     component: () =>
       import(/* webpackChunkName: "chapter_upload" */ "../views/ChapterUpload.vue"),
   },
+    {
+    path: "/chapters/:chapter",
+    name: "ChapterDetail",
+    component: () =>
+      import(/* webpackChunkName: "chapter_edit" */ "../views/ChapterDetail.vue"),
+  },
   {
     path: "/chapters/:chapter/edit",
     name: "ChapterEdit",
