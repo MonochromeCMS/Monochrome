@@ -106,7 +106,7 @@
   </validation-observer>
 </template>
 
-<script lang="ts">
+<script>
 import { required, digits } from "vee-validate/dist/rules";
 import {
   extend,
@@ -177,7 +177,7 @@ export default Vue.extend({
         return this.manga ? `/media/${this.manga.id}/cover.jpg` : null;
       }
     },
-    async submit(): Promise<void> {
+    async submit() {
       const valid = await this.$refs.observer.validate();
       if (valid) {
         if (this.manga) {
@@ -187,13 +187,13 @@ export default Vue.extend({
         }
       }
     },
-    clear(): void {
+    clear() {
       this.alert = "";
       this.username = "";
       this.password = "";
       this.$refs.observer.reset();
     },
-    async createManga(params: any): Promise<void> {
+    async createManga(params) {
       const config = this.authConfig;
       config.headers["Content-Type"] = "application/json";
 
@@ -216,7 +216,7 @@ export default Vue.extend({
           this.alert = response.statusText;
       }
     },
-    async editManga(params: any, id: string): Promise<void> {
+    async editManga(params, id) {
       const config = this.authConfig;
       config.headers["Content-Type"] = "application/json";
 
@@ -243,7 +243,7 @@ export default Vue.extend({
           this.alert = response.statusText;
       }
     },
-    async setCover(manga_id: string, cover: null | Blob) {
+    async setCover(manga_id, cover) {
       if (!cover) return;
 
       const config = this.authConfig;

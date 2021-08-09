@@ -79,7 +79,7 @@
   </v-container>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from "vue";
 import axios from "axios";
 import ChapterDelete from "@/components/ChapterDelete.vue";
@@ -108,7 +108,7 @@ export default Vue.extend({
     },
   },
   methods: {
-    popChapter(index: number) {
+    popChapter(index) {
       this.chapters.splice(index, 1);
     },
     dispatchValue(error = null, chapter = null) {

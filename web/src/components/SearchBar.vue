@@ -15,7 +15,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from "vue";
 import _debounce from "lodash/debounce";
 
@@ -26,12 +26,12 @@ export default Vue.extend({
     progress: false,
   }),
   methods: {
-    _searchInput: _debounce(function (value: string) {
+    _searchInput: _debounce(function (value) {
       this.$emit("input", value);
       this.$emit("update:value", value);
       this.progress = false;
     }, 1200),
-    searchInput(value: string) {
+    searchInput(value) {
       this.progress = true;
       this._searchInput(value);
     },

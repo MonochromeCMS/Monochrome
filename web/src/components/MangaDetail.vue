@@ -66,7 +66,7 @@
   </v-container>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from "vue";
 import axios from "axios";
 import MangaChapters from "@/components/MangaChapters.vue";

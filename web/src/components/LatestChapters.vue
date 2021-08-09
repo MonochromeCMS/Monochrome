@@ -27,7 +27,7 @@
         </v-card>
       </v-col>
     </v-row>
-    <v-row v-else class="mb-1">
+    <v-row v-else class="ma-1">
       <v-col cols="12" v-if="alert !== ''">
         <v-alert type="error">{{ alert }}</v-alert>
       </v-col>
@@ -44,7 +44,7 @@
         xl="6"
         v-for="(chapter, index) in chapters"
         :key="index"
-        class="my-1"
+        class="px-1 my-1"
       >
         <v-card
           color="background"
@@ -62,7 +62,7 @@
               <h2 class="text-subtitle-1 ellipsis">
                 {{ chapter.manga.title }}
               </h2>
-              <h3 class="text-subtitle-2">
+              <h3 class="text-subtitle-2 ellipsis">
                 {{
                   `Chapter ${chapter.number}${
                     chapter.name ? " - " + chapter.name : ""
@@ -92,7 +92,7 @@
   </v-container>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from "vue";
 import axios from "axios";
 

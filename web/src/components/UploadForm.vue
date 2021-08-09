@@ -71,7 +71,7 @@
   </validation-observer>
 </template>
 
-<script lang="ts">
+<script>
 import { required, numeric, regex } from "vee-validate/dist/rules";
 import {
   extend,
@@ -193,7 +193,7 @@ export default Vue.extend({
       switch (response.status) {
         case 200:
         case 201:
-          await this.$router.push(`/chapters/${response.id}`);
+          await this.$router.push(`/chapters/${response.data.id}`);
           break;
         case 404:
           await this.$router.push("/");

@@ -30,7 +30,7 @@
   </v-container>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from "vue";
 import draggable from "vuedraggable";
 import axios from "axios";

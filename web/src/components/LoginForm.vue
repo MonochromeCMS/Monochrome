@@ -38,7 +38,7 @@
   </validation-observer>
 </template>
 
-<script lang="ts">
+<script>
 import { required } from "vee-validate/dist/rules";
 import {
   extend,
@@ -47,7 +47,6 @@ import {
   ValidationObserver,
 } from "vee-validate";
 import Vue from "vue";
-import type { UserLogin } from "@/store/user";
 
 setInteractionMode("eager");
 
@@ -69,7 +68,7 @@ export default Vue.extend({
     alert: "",
   }),
   computed: {
-    params(): UserLogin {
+    params() {
       return {
         username: this.username,
         password: this.password,
@@ -77,19 +76,19 @@ export default Vue.extend({
     },
   },
   methods: {
-    async submit(): Promise<void> {
+    async submit() {
       const valid = await this.$refs.observer.validate();
       if (valid) {
         await this.login(this.params); // action to login
       }
     },
-    clear(): void {
+    clear() {
       this.alert = "";
       this.username = "";
       this.password = "";
       this.$refs.observer.reset();
     },
-    async login(params: UserLogin): Promise<void> {
+    async login(params) {
       const response = await this.$store.dispatch("login", params);
       console.log(response);
       //TODO: Check the status, show error if needed
