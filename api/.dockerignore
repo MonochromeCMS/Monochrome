@@ -7,10 +7,3 @@ dist/
 .venv
 env/
 venv/
-
-media/
-
-# Node
-.DS_Store
-node_modules
-npm-debug.log*

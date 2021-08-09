@@ -1,0 +1,13 @@
+http://{$DOMAIN_NAME} {
+    encode zstd gzip
+
+    handle_path /api/* {
+		reverse_proxy api:3000
+	}
+
+	handle_path /* {
+	    root * /srv
+        file_server
+        try_files {path} /
+	}
+}

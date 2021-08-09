@@ -1,0 +1,38 @@
+version: "3.6"
+
+services:
+  db:
+    image: postgres:13-alpine
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASS}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  api:
+    build: ./api
+    command: hypercorn api.main:app -b 0.0.0.0:3000 --root-path /api
+    volumes:
+      - ./api:/api
+      - ./media:/media
+    environment:
+      DB_URL: postgresql+asyncpg://${DB_USER}:${DB_PASS}@db:5432/${DB_NAME}
+      SECRET_KEY: ${SECRET_KEY}
+      ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES}
+      MEDIA_PATH: /media
+    depends_on:
+      - db
+  web:
+    build: ./web
+    volumes:
+    - ./media:/srv/media
+    - caddy_data:/data
+    environment:
+      DOMAIN_NAME: ${DOMAIN_NAME}
+    ports:
+      - 80:80
+      - 443:443
+
+volumes:
+  postgres_data:
+  caddy_data:
