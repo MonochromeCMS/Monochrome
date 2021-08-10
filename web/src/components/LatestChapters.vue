@@ -55,7 +55,7 @@
             <v-col cols="3">
               <v-img
                 :src="`/media/${chapter.manga_id}/cover.jpg`"
-                :aspect-ratio="4 / 5"
+                max-height="7rem"
               />
             </v-col>
             <v-col cols="8" class="d-flex flex-column justify-center">

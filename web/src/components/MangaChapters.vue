@@ -32,7 +32,7 @@
           class="text-decoration-none chapter-link pa-3"
         >
           <v-row class="justify-space-around">
-            <v-col cols="7" sm="4" :md="item.volume ? 3 : 2">
+            <v-col cols="7" sm="4" md="3">
               {{ item.volume ? `Vol ${item.volume} ` : "" }}Chapter
               {{ item.number }}
             </v-col>

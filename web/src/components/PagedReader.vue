@@ -1,6 +1,6 @@
 <template>
   <div style="position: relative;">
-    <v-tabs v-model="currentPage" background-color="backgroundAlt" show-arrows centered class="reader-tabs">
+    <v-tabs v-model="currentPage" background-color="backgroundAlt" show-arrows centered center-active class="reader-tabs">
       <v-tab :key="0">
         {{reverse ? "Next chapter" : "Previous chapter"}}
       </v-tab>
@@ -31,20 +31,20 @@
       </v-carousel-item>
       <v-carousel-item v-for="index in amountTabs" :key="index" >
         <div v-if="double" class="d-flex justify-center">
-          <img
-              v-if="urls[2*index - 2]"
-              class="d-block half-page page-size"
+          <v-img
+              max-width="50%"
+              max-height="150vh"
+              contain
               :src="urls[2*index - 2]"
-              :alt="`Page ${2*index - 1}`"/>
-          <img
-            v-if="urls[2*index - 1]"
-            class="d-block half-page page-size"
-            :src="urls[2*index - 1]"
-            :alt="`Page ${2*index}`"/>
+              :alt="`Page ${2*index - 1}`" />
+          <v-img
+              max-width="50%"
+              max-height="150vh"
+              contain
+              :src="urls[2*index - 1]"
+              :alt="`Page ${2*index}`" />
         </div>
-        <div v-else  class="d-flex">
-          <img class="d-block mx-auto full-page" :src="urls[index - 1]" :alt="`Page ${index}`"/>
-        </div>
+        <v-img v-else max-width="100%" max-height="150vh" contain :src="urls[index - 1]" :alt="`Page ${index}`" />
       </v-carousel-item>
       <v-carousel-item :key="amountTabs + 1">
         <v-sheet

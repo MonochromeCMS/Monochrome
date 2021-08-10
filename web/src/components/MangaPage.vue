@@ -42,7 +42,7 @@
           <v-img aspect-ratio="1" :src="item.cover"></v-img>
           <v-card-title v-text="item.title" />
           <v-card-subtitle v-text="item.subtitle" />
-          <v-card-text v-text="item.description"></v-card-text>
+          <v-card-text v-text="item.description" class="card-description"></v-card-text>
           <v-divider></v-divider>
           <v-chip
             class="status-chip"
@@ -165,5 +165,13 @@ export default Vue.extend({
 .status-chip,
 .skeleton-chip .v-skeleton-loader__chip {
   margin: 0.5rem 0.5rem 0.5rem auto;
+}
+.card-description {
+  overflow: hidden;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  display: -webkit-box;
+  padding-bottom: 0;
+  margin-bottom: 1rem;
 }
 </style>

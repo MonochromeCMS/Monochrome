@@ -16,7 +16,7 @@
         </v-col>
       </template>
       <v-col cols="6" sm="4" md="3" xl="2">
-        <v-card color="background" @click="uploadClick" :disabled="loading">
+        <v-card color="background" @click="uploadClick" :loading="!!loading">
           <v-responsive :aspect-ratio="4 / 5">
             <div class="d-flex fill-height">
               <v-icon x-large class="ma-auto d-block">mdi-plus</v-icon>
@@ -41,7 +41,7 @@ export default Vue.extend({
   props: ["value", "session"],
   components: { draggable },
   data: () => ({
-    loading: false,
+    loading: 0,
     pages: [],
     page_upload: null,
     alert: "",
@@ -74,7 +74,7 @@ export default Vue.extend({
     async uploadFiles(files) {
       let url = `/api/upload/${this.session.id}`;
 
-      this.loading = true;
+      this.loading += 1;
 
       const config = this.authConfig;
       config.headers["Content-Type"] = "text";
@@ -106,7 +106,7 @@ export default Vue.extend({
           this.mangaAlert = response.statusText;
       }
 
-      this.loading = false;
+      this.loading -= 1;
     },
     async deletePage(index, id) {
       let url = `/api/upload/${this.session.id}/${id}`;
