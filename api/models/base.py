@@ -75,9 +75,9 @@ class Base:
         else:
             return instance
 
-    @staticmethod
-    async def pagination(db_session, stmt, limit, offset, order_by):
-        count_stmt = stmt.with_only_columns(func.count())
+    @classmethod
+    async def pagination(cls, db_session, stmt, limit, offset, order_by):
+        count_stmt = stmt.with_only_columns(func.count(cls.id))
         count_result = await db_session.execute(count_stmt)
         page_stmt = stmt.order_by(*order_by).offset(offset).limit(limit)
         page_result = await db_session.execute(page_stmt)

@@ -39,7 +39,13 @@ async def update_user(id: UUID, payload: UserSchema, db_session: AsyncSession = 
     hashed_pwd = get_password_hash(payload.password)
 
     user = await User.find(db_session, id)
-    await user.update(db_session, **payload.dict(), hashed_password=hashed_pwd)
+
+    if await User.from_username_email(db_session, payload.username, payload.email, user.id):
+        raise BadRequestHTTPException("That username or email is already in use")
+
+    data = payload.dict()
+    data.pop("password")
+    await user.update(db_session, **data, hashed_password=hashed_pwd)
 
     return user
 
@@ -55,13 +61,16 @@ async def delete_user(id: UUID, user: User = Depends(is_connected), db_session: 
     return user
 
 
-@router.post("", response_model=UserResponse)
+@router.post("", response_model=UserResponse, status_code=201)
 async def create_user(payload: UserSchema, db_session: AsyncSession = Depends(get_db)):
     hashed_pwd = get_password_hash(payload.password)
 
     if await User.from_username_email(db_session, payload.username, payload.email):
         raise BadRequestHTTPException("That username or email is already in use")
-    user = User(**payload.dict(), hashed_password=hashed_pwd)
+
+    data = payload.dict()
+    data.pop("password")
+    user = User(**data, hashed_password=hashed_pwd)
     await user.save(db_session)
 
     return user
