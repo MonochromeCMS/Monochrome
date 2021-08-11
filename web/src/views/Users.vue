@@ -1,0 +1,129 @@
+<template>
+  <v-container>
+    <v-row>
+      <v-col cols="12" md="10" lg="8" class="mx-auto">
+        <v-card rounded="lg" color="backgroundAlt" elevation="0" class="pa-4">
+          <v-alert v-if="alert !== ''" type="error">{{ alert }}</v-alert>
+          <v-card-title class="justify-center lemon-milk">
+            HANDLE USERS
+          </v-card-title>
+          <v-card-text>
+            <users-list :loading="loading" :users="users" @update="getUsers">
+              <v-row class="user-row" v-if="page >= pageAmount">
+                <v-col cols="12">
+                  <v-dialog v-model="addDialog" max-width="30rem" persistent>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                        tile
+                        icon
+                        block
+                        color="primary"
+                        :loading="loading"
+                        v-bind="attrs"
+                        v-on="on"
+                      >
+                        <v-icon>mdi-plus</v-icon>
+                      </v-btn>
+                    </template>
+                    <user-form
+                      :user="null"
+                      @close="addDialog = false"
+                      @update="getUsers"
+                    />
+                  </v-dialog>
+                </v-col>
+              </v-row>
+              <v-row class="user-row" v-if="pageAmount > 1">
+                <v-pagination
+                  class="mx-auto pb-4"
+                  color="backgroundAlt"
+                  v-model="page"
+                  :length="pageAmount"
+                ></v-pagination>
+              </v-row>
+            </users-list>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
+</template>
+
+<script type="ts">
+import Vue from "vue";
+import axios from "axios";
+import UsersList from "@/components/UsersList.vue";
+import UserForm from "@/components/UserForm.vue";
+
+export default Vue.extend({
+  components: {UserForm, UsersList},
+  data() {return {
+    alert: "",
+    page: 1,
+    total: 0,
+    limit: 10,
+    users: [],
+    loading: true,
+    addDialog: false,
+  }},
+  computed: {
+    isConnected() {
+      return this.$store.getters.isConnected;
+    },
+    authConfig() {
+      return this.$store.getters.authConfig;
+    },
+    offset() {
+      return (this.page - 1) * this.limit;
+    },
+    pageAmount() {
+      return Math.ceil((this.total + 1) / this.limit);
+    },
+  },
+  watch: {
+    page() {
+      this.getUsers();
+    },
+  },
+  methods: {
+    async getUsers() {
+      let url = `/api/user?offset=${this.offset}&limit=${this.limit}`;
+
+      let config = this.authConfig;
+
+      let response;
+      try {
+        response = await axios.get(url, config);
+      } catch (e) {
+        response = e.response;
+      }
+
+      if (this.loading) {
+        await new Promise((resolve) => {
+          setTimeout(() => resolve("done!"), 500);
+        });
+      }
+
+      switch (response.status) {
+        case 200:
+          this.total = response.data.total;
+          this.users = response.data.results;
+          break;
+        case 401:
+          this.$store.commit("logout");
+          break;
+        default:
+          this.alert = response.statusText;
+      }
+      this.loading = false;
+    },
+  },
+  mounted() {
+    if (!this.isConnected) {
+      this.$router.replace("/")
+    } else {
+      this.getUsers();
+    }
+  },
+});
+</script>

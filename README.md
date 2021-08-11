@@ -41,7 +41,7 @@ unique username and password is very recommended.*
   * Documentation 🟡42%
     * OpenAPI 🟠33%
     * Cleaner code 🟡50%
-  * Testing 0%
+  * Testing 🔴0%
     * Unit 🔴0%
     * Integration 🔴0%
 * Frontend 
@@ -59,11 +59,13 @@ unique username and password is very recommended.*
     * Chapter reader 🟢100%
     * Upload chapters 🟢100%
     * Delete chapters 🟢100%
-    * Admin 🟠20%
+    * Admin 🟡66%
       * Login 🟢100%
-      * User management 🔴0%
+      * User management 🟢100%
       * Interface customization 🔴0%
     * About page 🔴0%
+  * Cleaner code 🟡??% (basically reading everything back and adding comments and modularity)
+  * Testing 🔴0% (It's a pain so no promises)
 * Reverse proxy 
   * Creation 🟢100%
     * Developpement build 🟢100%

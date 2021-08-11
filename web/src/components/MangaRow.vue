@@ -15,10 +15,10 @@
       </v-col>
     </v-row>
     <v-row v-else align="center">
-      <v-col cols="12" sm="3">
+      <v-col cols="12" md="3">
         <v-img :src="cover" contain />
       </v-col>
-      <v-col cols="12" sm="9" class="d-flex flex-column justify-center">
+      <v-col cols="12" md="9" class="d-flex flex-column justify-center">
         <v-tooltip top open-delay="600">
           <template v-slot:activator="{ on, attrs }">
             <h1 class="text-h2 pb-2 ellipsis" v-bind="attrs" v-on="on">

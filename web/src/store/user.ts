@@ -59,6 +59,9 @@ const mutations = {
 };
 
 const getters = {
+  userId(state: UserState): string | null {
+    return state.user.id ?? null;
+  },
   isConnected(state: UserState): boolean {
     return !!state.user.token;
   },
@@ -218,7 +221,7 @@ const actions = {
   },
   async createUser(
     { state, commit, dispatch }: ActionContext<UserState, any>,
-    data: User
+    data: Record<string, any>
   ): Promise<AxiosResponse> {
     const url = state.endpoints.users;
 

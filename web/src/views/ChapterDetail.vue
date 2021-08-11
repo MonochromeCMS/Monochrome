@@ -43,10 +43,15 @@
       </template>
       <v-card rounded="lg" color="backgroundAlt">
         <v-card-title>
-          {{ chapter.manga.title }}
-          <v-btn icon class="ml-auto" @click="menu = false"
-            ><v-icon>mdi-close</v-icon></v-btn
+          <router-link
+            :to="`/manga/${chapter.manga.id}`"
+            class="text-decoration-none"
           >
+            {{ chapter.manga.title }}
+          </router-link>
+          <v-btn icon class="ml-auto" @click="menu = false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
         </v-card-title>
         <v-card-text>
           <v-select

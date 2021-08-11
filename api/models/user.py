@@ -15,8 +15,9 @@ class User(Base):
     hashed_password = Column(String, nullable=False)
 
     @classmethod
-    async def from_username_email(cls, db_session: AsyncSession, username_email: str,
-                                  mail: str = "", ignore_user: uuid.UUID = None):
+    async def from_username_email(
+        cls, db_session: AsyncSession, username_email: str, mail: str = "", ignore_user: uuid.UUID = None
+    ):
         if mail == "":
             stmt = select(cls).where(or_(cls.username == username_email, cls.email == username_email))
         elif mail is None:

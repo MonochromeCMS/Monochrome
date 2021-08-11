@@ -51,6 +51,12 @@ const routes: Array<RouteConfig> = [
       import(/* webpackChunkName: "chapter_edit" */ "../views/ChapterEdit.vue"),
   },
   {
+    path: "/users",
+    name: "Users",
+    component: () =>
+      import(/* webpackChunkName: "users" */ "../views/Users.vue"),
+  },
+  {
     path: "/login",
     name: "Login",
     component: () =>

@@ -1,5 +1,5 @@
 <template>
-  <v-list>
+  <v-list color="backgroundAlt">
     <v-subheader>Admin actions</v-subheader>
     <v-list-item-group v-model="selectedItem" color="primary">
       <v-list-item
@@ -7,6 +7,7 @@
         :key="i"
         :to="item.to"
         :href="item.href"
+        :target="item.target"
       >
         <v-tooltip :right="!left" :left="left" open-delay="600">
           <template v-slot:activator="{ on, attrs }">
@@ -45,6 +46,7 @@ export default Vue.extend({
       {
         text: "API Documentation",
         href: "/api/docs",
+        target: "_blank",
       },
     ],
   }),

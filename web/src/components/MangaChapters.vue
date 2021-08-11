@@ -186,10 +186,6 @@ export default Vue.extend({
 .chapter-row {
   display: flex;
   align-items: center;
-  border-bottom: #424242 0.1rem solid;
-  &:last-child {
-    border-bottom: none;
-  }
   .chapter-link {
     width: 100%;
     height: 100%;
@@ -201,6 +197,10 @@ export default Vue.extend({
     &:hover {
       background-color: #424242;
     }
+    border-bottom: #212121 0.1rem solid;
+    &:last-child {
+      border-bottom: none;
+    }
   }
 }
 .theme--light {
@@ -208,6 +208,10 @@ export default Vue.extend({
     background-color: #eeeeee;
     &:hover {
       background-color: #e0e0e0;
+    }
+    border-bottom: #ffffff 0.1rem solid;
+    &:last-child {
+      border-bottom: none;
     }
   }
 }

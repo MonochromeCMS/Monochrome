@@ -2,7 +2,7 @@
   <v-container>
     <v-row>
       <v-col v-if="isConnected" lg="2" class="hidden-md-and-down">
-        <v-sheet rounded="lg" color="backgroundAlt">
+        <v-sheet rounded="lg" color="backgroundAlt pa-1">
           <admin-actions :left="false" />
         </v-sheet>
       </v-col>
