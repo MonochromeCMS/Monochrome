@@ -66,7 +66,7 @@ export default Vue.extend({
       let m = this.rawManga
         .map((el: any) => [
           {
-            avatar: `/media/${el.id}/cover.jpg`,
+            avatar: `/media/${el.id}/cover.jpg?version=${el.version}`,
             title: el.title,
             subtitle: el.description,
             to: `/manga/${el.id}`,

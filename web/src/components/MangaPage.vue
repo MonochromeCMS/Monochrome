@@ -92,7 +92,7 @@ export default Vue.extend({
   computed: {
     manga() {
       return this.rawManga.map((el: any) => ({
-        cover: `/media/${el.id}/cover.jpg`,
+        cover: `/media/${el.id}/cover.jpg?version=${el.version}`,
         title: el.title,
         subtitle: el.author,
         description: el.description,

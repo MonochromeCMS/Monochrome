@@ -85,7 +85,7 @@ export default Vue.extend({
   },
   computed: {
     cover() {
-      return `/media/${this.mangaId}/cover.jpg`;
+      return `/media/${this.mangaId}/cover.jpg?version=${this.manga.version}`;
     },
     alert() {
       return this.mangaAlert || this.chapterModel[0];

@@ -16,7 +16,7 @@
               :key="index"
             >
               <v-img
-                :src="`/media/${chapter.manga_id}/${chapter_id}/${index}.jpg`"
+                :src="`/media/${chapter.manga_id}/${chapter_id}/${index}.jpg?version=${chapter.version}`"
               />
             </v-col>
           </v-row>
@@ -26,6 +26,7 @@
         <paged-reader
           :manga="chapter.manga.id"
           :chapter="chapter.id"
+          :version="chapter.version"
           :length="chapter.length"
           :double="readerMode === 'Double'"
           :reverse="!direction"

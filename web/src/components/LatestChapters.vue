@@ -50,7 +50,7 @@
           <v-row align="center">
             <v-col cols="3">
               <v-img
-                :src="`/media/${chapter.manga_id}/cover.jpg`"
+                :src="`/media/${chapter.manga_id}/cover.jpg?version=${chapter.manga.version}`"
                 max-height="7rem"
               />
             </v-col>
