@@ -43,7 +43,7 @@
               {{ item.scan_group }}
             </v-col>
             <v-col cols="3" lg="2" class="pa-0 text-right hidden-xs-only">
-              <v-chip color="backgroundAlt" class="ma-2 ">
+              <v-chip color="backgroundAlt" class="ma-2">
                 {{ ago(new Date(item.upload_time).getTime()) }} ago
               </v-chip>
             </v-col>
@@ -55,16 +55,17 @@
               <v-icon>mdi-dots-vertical</v-icon>
             </v-btn>
           </template>
-          <v-btn
-            block
-            color="background"
-            :to="`/chapters/${item.id}/edit`"
+          <v-btn block color="background" :to="`/chapters/${item.id}/edit`"
             >Edit chapter</v-btn
           >
           <chapter-delete :id="item.id" @input="popChapter(index)" />
         </v-menu>
       </v-col>
-      <v-col cols="12" class="text-body-1 text-center" v-if="chapters.length === 0">
+      <v-col
+        cols="12"
+        class="text-body-1 text-center"
+        v-if="chapters.length === 0"
+      >
         No chapters have been uploaded yet.
       </v-col>
       <v-col cols="12" v-if="pageAmount > 1">

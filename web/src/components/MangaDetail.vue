@@ -29,12 +29,7 @@
         </v-btn>
         <v-dialog v-if="isConnected" v-model="deleteDialog" max-width="30rem">
           <template v-slot:activator="{ on, attrs }">
-            <v-btn
-              color="error"
-              v-bind="attrs"
-              v-on="on"
-              class="ma-2"
-            >
+            <v-btn color="error" v-bind="attrs" v-on="on" class="ma-2">
               Delete manga
             </v-btn>
           </template>

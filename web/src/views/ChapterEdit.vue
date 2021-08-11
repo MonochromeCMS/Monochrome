@@ -7,9 +7,18 @@
           <v-card-title class="justify-center lemon-milk"
             >EDIT CHAPTER</v-card-title
           >
-          <manga-row v-if="manga" :manga="manga" :cover="`/media/${manga.id}/cover.jpg`" class="background rounded" />
+          <manga-row
+            v-if="manga"
+            :manga="manga"
+            :cover="`/media/${manga.id}/cover.jpg`"
+            class="background rounded"
+          />
           <v-card-text>
-            <upload-form v-if="chapter" :manga_id="manga.id" :chapter="chapter"/>
+            <upload-form
+              v-if="chapter"
+              :manga_id="manga.id"
+              :chapter="chapter"
+            />
           </v-card-text>
         </v-card>
       </v-col>

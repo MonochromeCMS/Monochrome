@@ -6,11 +6,19 @@
       <template v-for="(item, index) in pages">
         <v-col cols="6" sm="4" md="3" xl="2" :key="index">
           <v-card color="background" class="page-card">
-            <v-img :src="`/media/blobs/${item.id}.jpg`" :aspect-ratio="4 / 5" position="relative">
-              <v-btn icon class="background text--primary page-close" @click="deletePage(index, item.id)">
+            <v-img
+              :src="`/media/blobs/${item.id}.jpg`"
+              :aspect-ratio="4 / 5"
+              position="relative"
+            >
+              <v-btn
+                icon
+                class="background text--primary page-close"
+                @click="deletePage(index, item.id)"
+              >
                 <v-icon>mdi-close</v-icon>
               </v-btn>
-              <v-chip class="page-name">{{item.name}}</v-chip>
+              <v-chip class="page-name">{{ item.name }}</v-chip>
             </v-img>
           </v-card>
         </v-col>
@@ -26,7 +34,13 @@
       </v-col>
     </draggable>
     <v-btn text @click="quickSort"> Quick sort </v-btn>
-    <input ref="fileInput" type="file" @input="updateFile" multiple style="display: none;" />
+    <input
+      ref="fileInput"
+      type="file"
+      @input="updateFile"
+      multiple
+      style="display: none"
+    />
   </v-container>
 </template>
 
@@ -51,7 +65,7 @@ export default Vue.extend({
       return this.$store.getters.authConfig;
     },
     page_order() {
-      return this.pages.map(el => el.id);
+      return this.pages.map((el) => el.id);
     },
   },
   mounted() {
@@ -61,7 +75,7 @@ export default Vue.extend({
     pages() {
       this.$emit("input", this.page_order);
       this.$emit("update:value", this.page_order);
-    }
+    },
   },
   methods: {
     uploadClick() {
@@ -80,7 +94,7 @@ export default Vue.extend({
       config.headers["Content-Type"] = "text";
 
       const form = new FormData();
-      files.forEach(file => form.append("payload", file));
+      files.forEach((file) => form.append("payload", file));
 
       let response;
       try {
@@ -123,7 +137,9 @@ export default Vue.extend({
       switch (response.status) {
         case 200:
         case 404:
-          this.pages = this.pages.slice(0, index).concat(this.pages.slice(index + 1));
+          this.pages = this.pages
+            .slice(0, index)
+            .concat(this.pages.slice(index + 1));
           break;
         case 401:
           this.$store.commit("logout");
@@ -133,7 +149,9 @@ export default Vue.extend({
       }
     },
     quickSort() {
-      this.pages = this.pages.slice().sort((a,b) => naturalCompare(a.name, b.name));
+      this.pages = this.pages
+        .slice()
+        .sort((a, b) => naturalCompare(a.name, b.name));
     },
   },
 });
@@ -145,13 +163,13 @@ export default Vue.extend({
 }
 .page-name {
   position: absolute;
-  bottom: .1rem;
-  left: .1rem;
+  bottom: 0.1rem;
+  left: 0.1rem;
 }
 .page-close {
   position: absolute;
-  right: .1rem;
-  top: .1rem;
+  right: 0.1rem;
+  top: 0.1rem;
 }
 .drag-pages {
   display: flex;

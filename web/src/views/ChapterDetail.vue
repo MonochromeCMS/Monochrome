@@ -2,28 +2,37 @@
   <v-container fluid class="reader">
     <v-alert v-if="alert !== ''" type="error">{{ alert }}</v-alert>
     <v-row v-if="chapter">
-      <v-col cols="12" md="8" class="mx-auto" v-if="['Vertical', 'Webtoon'].includes(readerMode)">
+      <v-col
+        cols="12"
+        md="8"
+        class="mx-auto"
+        v-if="['Vertical', 'Webtoon'].includes(readerMode)"
+      >
         <v-sheet rounded="lg" color="backgroundAlt mx-auto" v-if="chapter">
-          <v-row  class="ma-0 pa-3">
+          <v-row class="ma-0 pa-3">
             <v-col
-                v-bind="columnBind[readerMode]"
-                v-for="index in chapter.length"
-                :key="index">
-              <v-img :src="`/media/${chapter.manga_id}/${chapter_id}/${index}.jpg`" />
+              v-bind="columnBind[readerMode]"
+              v-for="index in chapter.length"
+              :key="index"
+            >
+              <v-img
+                :src="`/media/${chapter.manga_id}/${chapter_id}/${index}.jpg`"
+              />
             </v-col>
           </v-row>
         </v-sheet>
       </v-col>
       <v-col cols="12" v-if="['Single', 'Double'].includes(readerMode)">
         <paged-reader
-              :manga="chapter.manga.id"
-              :chapter="chapter.id"
-              :length="chapter.length"
-              :double="readerMode === 'Double'"
-              :reverse="!direction"
-              @next="goToChapter(nextChapter)"
-              @previous="goToChapter(previousChapter)"
-          />
+          :manga="chapter.manga.id"
+          :chapter="chapter.id"
+          :length="chapter.length"
+          :double="readerMode === 'Double'"
+          :reverse="!direction"
+          :parity="doubleParity"
+          @next="goToChapter(nextChapter)"
+          @previous="goToChapter(previousChapter)"
+        />
       </v-col>
     </v-row>
     <v-dialog max-width="30rem" v-if="chapter" v-model="menu">
@@ -35,21 +44,49 @@
       <v-card rounded="lg" color="backgroundAlt">
         <v-card-title>
           {{ chapter.manga.title }}
-          <v-btn icon class="ml-auto" @click="menu = false"><v-icon>mdi-close</v-icon></v-btn>
+          <v-btn icon class="ml-auto" @click="menu = false"
+            ><v-icon>mdi-close</v-icon></v-btn
+          >
         </v-card-title>
         <v-card-text>
-          <v-select label="Chapter" hide-details :value="chapter.id" :items="chapterItems" @change="goToChapter"/>
+          <v-select
+            label="Chapter"
+            hide-details
+            :value="chapter.id"
+            :items="chapterItems"
+            @change="goToChapter"
+          />
           <v-divider class="mt-3" />
           <v-subheader> Reader settings </v-subheader>
-          <v-select label="Reader Mode" hide-details v-model="readerMode" :items="modeItems" />
-          <v-row align="center" class="ma-1" v-if="['Single', 'Double'].includes(readerMode)">
-            <v-col class="text-body-1">
-              Page direction:
-            </v-col>
+          <v-select
+            label="Reader Mode"
+            hide-details
+            v-model="readerMode"
+            :items="modeItems"
+          />
+          <v-row
+            align="center"
+            class="ma-1"
+            v-if="['Single', 'Double'].includes(readerMode)"
+          >
+            <v-col class="text-body-1"> Page direction: </v-col>
             <v-col class="text-right pa-2">
               <v-btn-toggle v-model="direction" mandatory>
-                <v-btn color="background"><v-icon>mdi-arrow-left</v-icon></v-btn>
-                <v-btn color="background"><v-icon>mdi-arrow-right</v-icon></v-btn>
+                <v-btn color="background"
+                  ><v-icon>mdi-arrow-left</v-icon></v-btn
+                >
+                <v-btn color="background"
+                  ><v-icon>mdi-arrow-right</v-icon></v-btn
+                >
+              </v-btn-toggle>
+            </v-col>
+          </v-row>
+          <v-row align="center" class="ma-1" v-if="readerMode === 'Double'">
+            <v-col class="text-body-1"> Double page parity: </v-col>
+            <v-col class="text-right pa-2">
+              <v-btn-toggle v-model="doubleParity" mandatory>
+                <v-btn color="background">Even</v-btn>
+                <v-btn color="background">Odd</v-btn>
               </v-btn-toggle>
             </v-col>
           </v-row>
@@ -92,12 +129,20 @@ export default Vue.extend({
   }
   }},
   computed: {
+    doubleParity: {
+      get() {
+        return this.$store.getters.getParity;
+      },
+      set(value) {
+        this.$store.commit("setParity", !!value);
+      }
+    },
     direction: {
       get() {
         return this.$store.getters.getDirection;
       },
       set(value) {
-        this.$store.commit("setDirection", value);
+        this.$store.commit("setDirection", !!value);
       }
     },
     readerMode: {

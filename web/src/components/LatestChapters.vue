@@ -10,12 +10,12 @@
         xl="6"
         v-for="index in limit"
         :key="index"
-        class="my-1"
+        class="px-1 my-1"
       >
         <v-card color="background" class="px-4">
           <v-row align="center">
             <v-col cols="3">
-              <v-skeleton-loader type="image" />
+              <v-skeleton-loader type="image" max-height="7rem" />
             </v-col>
             <v-col cols="8">
               <v-skeleton-loader
@@ -46,11 +46,7 @@
         :key="index"
         class="px-1 my-1"
       >
-        <v-card
-          color="background"
-          class="px-4"
-          :to="`/chapters/${chapter.id}`"
-        >
+        <v-card color="background" class="px-4" :to="`/chapters/${chapter.id}`">
           <v-row align="center">
             <v-col cols="3">
               <v-img

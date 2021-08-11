@@ -27,9 +27,9 @@
       <v-col
         v-else
         cols="12"
-        :sm="manga.length >= 2 ? '6' : '12'"
-        :md="manga.length >= 3 ? '4' : '6'"
-        :lg="manga.length >= 4 ? '3' : '4'"
+        sm="6"
+        md="4"
+        lg="3"
         v-for="(item, index) in manga"
         :key="index"
       >
@@ -42,7 +42,10 @@
           <v-img aspect-ratio="1" :src="item.cover"></v-img>
           <v-card-title v-text="item.title" />
           <v-card-subtitle v-text="item.subtitle" />
-          <v-card-text v-text="item.description" class="card-description"></v-card-text>
+          <v-card-text
+            v-text="item.description"
+            class="card-description"
+          ></v-card-text>
           <v-divider></v-divider>
           <v-chip
             class="status-chip"
@@ -171,7 +174,7 @@ export default Vue.extend({
   -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
   display: -webkit-box;
-  padding-bottom: 0;
+  padding-bottom: 0 !important;
   margin-bottom: 1rem;
 }
 </style>

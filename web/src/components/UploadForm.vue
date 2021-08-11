@@ -7,7 +7,11 @@
       <v-row class="mb-3">
         <!-- VOLUME FIELD -->
         <v-col cols="12" sm="6" md="4" class="pa-3 pb-0">
-          <validation-provider v-slot="{ errors }" name="Volume Number" rules="numeric">
+          <validation-provider
+            v-slot="{ errors }"
+            name="Volume Number"
+            rules="numeric"
+          >
             <v-text-field
               v-model="volume"
               :error-messages="errors"
@@ -20,7 +24,11 @@
         </v-col>
         <!-- NUMBER FIELD -->
         <v-col cols="12" sm="6" md="4" class="pa-3 pb-0">
-          <validation-provider v-slot="{ errors }" name="Chapter Number" :rules="{required: true, regex: /^[0-9.]+$/}">
+          <validation-provider
+            v-slot="{ errors }"
+            name="Chapter Number"
+            :rules="{ required: true, regex: /^[0-9.]+$/ }"
+          >
             <v-text-field
               v-model="number"
               :error-messages="errors"
@@ -33,7 +41,11 @@
         </v-col>
         <!-- GROUP FIELD -->
         <v-col cols="12" md="4" class="pa-3 pb-0">
-          <validation-provider v-slot="{ errors }" name="Scan Group" rules="required">
+          <validation-provider
+            v-slot="{ errors }"
+            name="Scan Group"
+            rules="required"
+          >
             <v-text-field
               v-model="scan_group"
               :error-messages="errors"
@@ -58,7 +70,13 @@
 
       <v-divider class="my-3" />
 
-      <v-btn v-if="chapter && !session" color="info" @click="createSession(manga_id, chapter.id)"> Edit Pages </v-btn>
+      <v-btn
+        v-if="chapter && !session"
+        color="info"
+        @click="createSession(manga_id, chapter.id)"
+      >
+        Edit Pages
+      </v-btn>
 
       <page-input v-if="session" :session="session" v-model="page_order" />
 
@@ -98,12 +116,12 @@ extend("numeric", {
 extend("regex", {
   ...regex,
   message: "{_field_} is not valid",
-})
+});
 
 export default Vue.extend({
   name: "UploadForm",
   props: ["manga_id", "chapter"],
-  components: {PageInput, ValidationProvider, ValidationObserver},
+  components: { PageInput, ValidationProvider, ValidationObserver },
   data: () => ({
     alert: "",
     name: "",
@@ -119,18 +137,18 @@ export default Vue.extend({
     },
     chapterDraft() {
       return {
-          name: this.name,
-          number: this.number,
-          volume: this.volume,
-          scan_group: this.scan_group,
-        };
+        name: this.name,
+        number: this.number,
+        volume: this.volume,
+        scan_group: this.scan_group,
+      };
     },
     params() {
       return {
         chapterDraft: this.chapterDraft,
         page_order: this.page_order,
-      }
-    }
+      };
+    },
   },
   methods: {
     async submit() {
@@ -237,7 +255,7 @@ export default Vue.extend({
         default:
           this.alert = response.statusText;
       }
-    }
+    },
   },
   mounted() {
     if (this.chapter) {
@@ -248,10 +266,8 @@ export default Vue.extend({
     } else {
       this.createSession(this.manga_id);
     }
-  }
+  },
 });
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

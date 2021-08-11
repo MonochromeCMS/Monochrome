@@ -50,6 +50,7 @@ lint:  ## Lint project code.
 
 .PHONY: format
 format:  ## Format project code.
+	@$(DC) run --rm web-dev npm run lint
 	@$(DC) run --rm -w /api api black .
 
 .PHONY: upgrade

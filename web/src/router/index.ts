@@ -32,13 +32,17 @@ const routes: Array<RouteConfig> = [
     path: "/manga/:manga/upload",
     name: "ChapterUpload",
     component: () =>
-      import(/* webpackChunkName: "chapter_upload" */ "../views/ChapterUpload.vue"),
+      import(
+        /* webpackChunkName: "chapter_upload" */ "../views/ChapterUpload.vue"
+      ),
   },
-    {
+  {
     path: "/chapters/:chapter",
     name: "ChapterDetail",
     component: () =>
-      import(/* webpackChunkName: "chapter_edit" */ "../views/ChapterDetail.vue"),
+      import(
+        /* webpackChunkName: "chapter_edit" */ "../views/ChapterDetail.vue"
+      ),
   },
   {
     path: "/chapters/:chapter/edit",

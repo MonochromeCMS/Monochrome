@@ -7,7 +7,12 @@
           <v-card-title class="justify-center lemon-milk">
             UPLOAD CHAPTER
           </v-card-title>
-          <manga-row v-if="manga" :manga="manga" :cover="`/media/${manga_id}/cover.jpg`" class="background rounded" />
+          <manga-row
+            v-if="manga"
+            :manga="manga"
+            :cover="`/media/${manga_id}/cover.jpg`"
+            class="background rounded"
+          />
           <v-card-text>
             <upload-form :manga_id="manga_id" />
           </v-card-text>
