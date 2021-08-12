@@ -140,7 +140,7 @@ export default Vue.extend({
         return this.$store.getters.getParity;
       },
       set(value) {
-        this.$store.commit("setParity", !!value);
+        this.$store.commit("setParity", value);
       }
     },
     direction: {
@@ -148,7 +148,7 @@ export default Vue.extend({
         return this.$store.getters.getDirection;
       },
       set(value) {
-        this.$store.commit("setDirection", !!value);
+        this.$store.commit("setDirection", value);
       }
     },
     readerMode: {

@@ -1,12 +1,14 @@
+type fakeBoolean = 0 | 1;
+
 interface ReaderState {
-  direction: boolean;
+  direction: fakeBoolean;
   readerMode: string;
-  parity: boolean;
+  parity: fakeBoolean;
 }
 
 const state = (): ReaderState => ({
-  direction: false,
-  parity: false,
+  direction: 0,
+  parity: 0,
   readerMode: "Single",
 });
 
@@ -14,10 +16,10 @@ const getters = {
   getReaderMode(state: ReaderState): string {
     return state.readerMode;
   },
-  getDirection(state: ReaderState): boolean {
+  getDirection(state: ReaderState): fakeBoolean {
     return state.direction;
   },
-  getParity(state: ReaderState): boolean {
+  getParity(state: ReaderState): fakeBoolean {
     return state.parity;
   },
 };
@@ -26,10 +28,10 @@ const mutations = {
   setReaderMode(state: ReaderState, payload: string): void {
     state.readerMode = payload;
   },
-  setDirection(state: ReaderState, payload: boolean): void {
+  setDirection(state: ReaderState, payload: fakeBoolean): void {
     state.direction = payload;
   },
-  setParity(state: ReaderState, payload: boolean): void {
+  setParity(state: ReaderState, payload: fakeBoolean): void {
     state.parity = payload;
   },
 };
