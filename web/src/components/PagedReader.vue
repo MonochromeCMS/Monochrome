@@ -94,7 +94,15 @@ import Vue from "vue";
 
 export default Vue.extend({
   name: "PagedReader",
-  props: ["manga", "chapter", "version", "length", "reverse", "double", "parity"],
+  props: [
+    "manga",
+    "chapter",
+    "version",
+    "length",
+    "reverse",
+    "double",
+    "parity",
+  ],
   data: () => ({
     currentPage: null,
     test: null,
@@ -121,7 +129,10 @@ export default Vue.extend({
     urls() {
       let result = Array.from(
         { length: this.length },
-        (_, i) => `/media/${this.manga}/${this.chapter}/${i + 1}.jpg?version=${this.version}`
+        (_, i) =>
+          `/media/${this.manga}/${this.chapter}/${i + 1}.jpg?version=${
+            this.version
+          }`
       );
 
       if (this.double) {

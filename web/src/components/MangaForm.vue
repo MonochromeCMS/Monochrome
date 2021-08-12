@@ -174,7 +174,9 @@ export default Vue.extend({
       if (blob) {
         return blob ? URL.createObjectURL(blob) : null;
       } else {
-        return this.manga ? `/media/${this.manga.id}/cover.jpg?version=${this.manga.version}` : null;
+        return this.manga
+          ? `/media/${this.manga.id}/cover.jpg?version=${this.manga.version}`
+          : null;
       }
     },
     async submit() {

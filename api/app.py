@@ -20,8 +20,12 @@ app = FastAPI(title="Monochrome", version="0.1")
 
 
 def get_remote_address(request: Request):
-    ip = request.headers.get("CF-CONNECTING-IP") or request.headers.get("X-FORWARDED-FOR") \
-           or request.client.host or "127.0.0.1"
+    ip = (
+        request.headers.get("CF-CONNECTING-IP")
+        or request.headers.get("X-FORWARDED-FOR")
+        or request.client.host
+        or "127.0.0.1"
+    )
     return ip
 
 
