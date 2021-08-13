@@ -5,8 +5,15 @@
 Monochrome requires (at least for now) a copy of this repository, [docker](https://docs.docker.com/engine/install/) 
 and [docker-compose](https://docs.docker.com/compose/install/) to run.
 
-Once those requirementes are fulfilled you need to setup your [.env](#Environment settings) and simply run 
-`make install` and the different services will be launched.
+Once those requirements are fulfilled you need to set up your [.env](#environment-settings) and simply run 
+`make install`, and the different services will be launched.
+
+## docker-compose files
+Four different "environments" are available:
+* `production` Includes PWA support, HTTPS (requires a domain name and to be the only web server on the machine), and optimisations, the one you most likely want. `make install compose_file=docker-compose.prod.yml`
+* `production-nginx` Same as production but without the HTTPS, in case you have other web servers and have a reverse proxy or want to handle the HTTPS yourself (ex. intranet). `make install compose_file=docker-compose.nginx.yml`
+* `development` Only use this one for development or a quick preview. Optimised for development, allows for hot reload and faster builds but skips optimisations: `make install`
+* `testing` Used to perform the tests, more info on [Testing](#testing)
 
 ## Environment settings
 Monochrome uses a `.env` file to take your settings,
@@ -25,6 +32,9 @@ unique username and password is very recommended.*
 
 * `ACCESS_TOKEN_EXPIRE_MINUTES` Basically after how many minutes a user should be logged out, the default is 6 hours.
 
+## Testing
+- `make test-back` Launches the backend tests
+
 ## Tools used
 * API
   * FastAPI
@@ -41,8 +51,8 @@ unique username and password is very recommended.*
   * Documentation 🟡42%
     * OpenAPI 🟠33%
     * Cleaner code 🟡50%
-  * Testing 🔴0%
-    * Unit 🔴0%
+  * Testing 🟠33%
+    * Unit 🟢100%
     * Integration 🔴0%
 * Frontend 
   * Creation 🟡70%

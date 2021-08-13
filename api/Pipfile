@@ -8,6 +8,7 @@ name = "pypi"
 flake8 = "*"
 black = "*"
 # Testing
+pytest = "*"
 pytest-asyncio = "*"
 pytest-cov = "*"
 # Requirements

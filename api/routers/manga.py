@@ -15,7 +15,7 @@ from ..db import get_db
 from ..models.chapter import Chapter
 from ..models.manga import Manga
 from ..schemas.chapter import ChapterResponse
-from ..schemas.manga import MangaSchema, MangaResponse, SearchResponse
+from ..schemas.manga import MangaSchema, MangaResponse, MangaSearchResponse
 
 
 global_settings = get_settings()
@@ -33,7 +33,7 @@ async def create_manga(payload: MangaSchema, db_session: AsyncSession = Depends(
     return manga
 
 
-@router.get("", response_model=SearchResponse)
+@router.get("", response_model=MangaSearchResponse)
 async def search_manga(
     title: str = "",
     limit: Optional[int] = Query(10, ge=1, le=100),

@@ -15,7 +15,7 @@
             ></v-divider>
 
             <v-list-item v-else :key="item.title" :to="item.to">
-              <v-list-item-avatar>
+              <v-list-item-avatar size="3rem">
                 <v-img :src="item.avatar"></v-img>
               </v-list-item-avatar>
 

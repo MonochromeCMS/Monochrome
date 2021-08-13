@@ -1,33 +1,21 @@
 import logging
-import os
 from functools import lru_cache
 
-from pydantic import BaseSettings
+from pydantic import BaseSettings, AnyUrl, Field
 
 log = logging.getLogger(__name__)
 
 
 class Settings(BaseSettings):
-    """
-    BaseSettings, from Pydantic, validates the data so that when we create an instance of Settings,
-     environment and testing will have types of str and bool, respectively.
-    Parameters:
-    pg_user (str):
-    pg_pass (str):
-    pg_database: (str):
-    asyncpg_url: AnyUrl:
-    asyncpg_test_url: AnyUrl:
-    Returns:
-    instance of Settings
-    """
+    db_url: AnyUrl
 
-    db_url: str = os.getenv("DB_URL", "")
+    jwt_secret_key: str
+    jwt_algorithm: str = "HS256"
+    jwt_access_toke_expire_minutes: int = 60
 
-    jwt_secret_key: str = os.getenv("SECRET_KEY", "")
-    jwt_algorithm: str = os.getenv("ALGORITHM", "HS256")
-    jwt_access_toke_expire_minutes: int = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 30)
+    media_path: str = "/media"
 
-    media_path: str = os.getenv("MEDIA_PATH", "/media")
+    max_page_limit: int = Field(50, gt=0)
 
 
 @lru_cache()

@@ -7,7 +7,7 @@ COPY . .
 RUN npm run build
 
 # production stage
-FROM nginx:1.17 as final-stage
+FROM nginx:alpine as final-stage
 COPY ./nginx.conf /etc/nginx/nginx.conf
 WORKDIR /srv
 COPY --from=build-stage /app/dist .

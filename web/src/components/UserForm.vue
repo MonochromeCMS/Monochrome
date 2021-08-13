@@ -13,7 +13,7 @@
           <validation-provider
             v-slot="{ errors }"
             name="Username"
-            rules="required"
+            rules="required|max:15"
           >
             <v-text-field
               v-model="username"
@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import { required, email } from "vee-validate/dist/rules";
+import { required, email, max } from "vee-validate/dist/rules";
 import {
   extend,
   ValidationProvider,
@@ -80,6 +80,11 @@ import {
 import Vue from "vue";
 
 setInteractionMode("eager");
+
+extend("max", {
+  ...max,
+  message: "{_field_} can't be that long",
+});
 
 extend("email", {
   ...email,

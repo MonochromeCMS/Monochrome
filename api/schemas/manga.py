@@ -20,7 +20,6 @@ class MangaSchema(BaseModel):
         description="Artist of the manga",
     )
     year: Optional[int] = Field(
-        None,
         description="Year of release of the manga",
     )
     status: Status = Field(
@@ -64,9 +63,10 @@ class MangaResponse(MangaSchema):
                 "year": 2021,
                 "status": Status.ongoing,
                 "version": 2,
+                "create_time": "2000-08-24 00:00:00",
             }
         }
 
 
-class SearchResponse(PaginationResponse):
+class MangaSearchResponse(PaginationResponse):
     results: List[MangaResponse]

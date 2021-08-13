@@ -135,7 +135,7 @@ export default Vue.extend({
     authConfig() {
       return this.$store.getters.authConfig;
     },
-    chapterDraft() {
+    chapter_draft() {
       return {
         name: this.name,
         number: this.number,
@@ -145,7 +145,7 @@ export default Vue.extend({
     },
     params() {
       return {
-        chapterDraft: this.chapterDraft,
+        chapter_draft: this.chapter_draft,
         page_order: this.page_order,
       };
     },
@@ -156,7 +156,7 @@ export default Vue.extend({
       if (valid) {
         switch (true) {
           case this.chapter && !this.session:
-            await this.editChapter(this.chapterDraft);
+            await this.editChapter(this.chapter_draft);
             break;
           case this.session && this.page_order.length > 0:
             await this.commitSession(this.params);

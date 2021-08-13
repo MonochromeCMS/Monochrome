@@ -10,14 +10,15 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
   api:
+    image: monochrome-api
     build: ./api
     command: hypercorn api.main:app -b 0.0.0.0:3000 --root-path /api
     volumes:
       - ./media:/media
     environment:
       DB_URL: postgresql+asyncpg://${DB_USER}:${DB_PASS}@db:5432/${DB_NAME}
-      SECRET_KEY: ${SECRET_KEY}
-      ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES}
+      JWT_SECRET_KEY: ${SECRET_KEY}
+      JWT_ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES}
       MEDIA_PATH: /media
     depends_on:
       - db
