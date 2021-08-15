@@ -3,6 +3,10 @@ FROM node:lts-alpine as build-stage
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
+
+ARG VUE_APP_DOMAIN_NAME=localhost
+ARG VUE_APP_PROTOCOL=http
+
 COPY . .
 RUN npm run build
 

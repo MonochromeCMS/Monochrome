@@ -27,6 +27,9 @@ services:
     build:
       context: ./web
       dockerfile: Dockerfile.dev
+      args:
+        - VUE_APP_DOMAIN_NAME=${DOMAIN_NAME}
+        - VUE_APP_PROTOCOL=http
     volumes:
     - ./web:/app
 

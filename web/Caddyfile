@@ -1,6 +1,8 @@
 http://{$DOMAIN_NAME} {
     encode zstd gzip
 
+    header /opensearch.xml Content-Type "application/opensearchdescription+xml"
+
     handle_path /api/* {
 		reverse_proxy api:3000
 	}

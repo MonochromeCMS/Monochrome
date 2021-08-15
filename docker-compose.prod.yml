@@ -23,7 +23,11 @@ services:
     depends_on:
       - db
   web:
-    build: ./web
+    build:
+      context: ./web
+      args:
+        - VUE_APP_DOMAIN_NAME=${DOMAIN_NAME}
+        - VUE_APP_PROTOCOL=https
     volumes:
     - ./media:/srv/media
     - caddy_data:/data

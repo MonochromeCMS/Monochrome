@@ -1,6 +1,8 @@
 http://{$DOMAIN_NAME} {
 	reverse_proxy web-dev:8080
 
+    header /opensearch.xml Content-Type "application/opensearchdescription+xml"
+
 	handle_path /api/* {
 		reverse_proxy api:3000
 	}

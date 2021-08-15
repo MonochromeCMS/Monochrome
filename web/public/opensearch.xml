@@ -1,8 +1,0 @@
-<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/" xmlns:moz="http://www.mozilla.org/2006/browser/search/">
-<ShortName>Monochrome</ShortName>
-<Description>Monochrome</Description>
-<Image width="32" height="32" type="image/x-icon">/favicon.ico</Image>
-<Url type="text/html" template="/manga?q={searchTerms}"/>
-<InputEncoding>UTF-8</InputEncoding>
-<Url type="application/opensearchdescription+xml" rel="self" template="/opensearch.xml"/>
-</OpenSearchDescription>
