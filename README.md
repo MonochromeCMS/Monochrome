@@ -32,6 +32,9 @@ unique username and password is very recommended.*
 
 * `ACCESS_TOKEN_EXPIRE_MINUTES` Basically after how many minutes a user should be logged out, the default is 6 hours.
 
+* `TITLE` Name of your website, used for stuff like the title of the tab when you open the website.
+* `DESCRIPTION` Description of your website.
+
 ## Testing
 - `make test-back` Launches the backend tests
 
@@ -72,7 +75,7 @@ unique username and password is very recommended.*
     * Admin 🟡66%
       * Login 🟢100%
       * User management 🟢100%
-      * Interface customization 🔴0%
+      * Interface customization 🔴33% (meta at build)
     * About page 🔴0%
   * Cleaner code 🟡??% (basically reading everything back and adding comments and modularity)
   * Testing 🔴0% (It's a pain so no promises)
