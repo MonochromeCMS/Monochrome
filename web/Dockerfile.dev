@@ -1,13 +1,17 @@
 # build stage
-FROM node:lts-alpine as build-stage
+FROM node:lts-slim as build-stage
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
 
 ARG VUE_APP_DOMAIN_NAME=localhost
 ARG VUE_APP_PROTOCOL=http
+ARG VUE_APP_TITLE=Monochrome
+ARG VUE_APP_DESCRIPTION
 ENV VUE_APP_DOMAIN_NAME=$VUE_APP_DOMAIN_NAME
 ENV VUE_APP_PROTOCOL=$VUE_APP_PROTOCOL
+ENV VUE_APP_TITLE=$VUE_APP_TITLE
+ENV VUE_APP_DESCRIPTION=$VUE_APP_DESCRIPTION
 
 
 # production stage

@@ -29,9 +29,16 @@ services:
       dockerfile: Dockerfile.dev
       args:
         - VUE_APP_DOMAIN_NAME=${DOMAIN_NAME}
+        - VUE_APP_TITLE=${TITLE}
+        - VUE_APP_DESCRIPTION=${DESCRIPTION}
         - VUE_APP_PROTOCOL=http
     volumes:
     - ./web:/app
+    environment:
+      - VUE_APP_DOMAIN_NAME=${DOMAIN_NAME}
+      - VUE_APP_TITLE=${TITLE}
+      - VUE_APP_DESCRIPTION=${DESCRIPTION}
+      - VUE_APP_PROTOCOL=http
 
   caddy:
     image: caddy:2-alpine
