@@ -17,7 +17,6 @@
     "register-service-worker": "^1.7.1",
     "vee-validate": "^3.4.11",
     "vue": "^2.6.11",
-    "vue-meta": "^2.4.0",
     "vue-router": "^3.2.0",
     "vuedraggable": "^2.24.3",
     "vuetify": "^2.4.0",
