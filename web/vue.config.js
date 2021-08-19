@@ -3,6 +3,7 @@ const XMLPlugin = require("xml-webpack-plugin");
 
 const protocol = process.env.VUE_APP_PROTOCOL || "http";
 const domainName = process.env.VUE_APP_DOMAIN_NAME || "localhost";
+const title = process.env.VUE_APP_TITLE || "Monochrome";
 
 const XMLFiles = [
   {
@@ -16,13 +17,17 @@ const XMLFiles = [
 ];
 
 const metaArgs = {
-  title: process.env.VUE_APP_TITLE || "Monochrome",
+  title,
   url: `${protocol}://${domainName}/`,
   description: process.env.VUE_APP_DESCRIPTION || "A website for reading manga",
 };
 
 module.exports = {
   transpileDependencies: ["vuetify"],
+  pwa: {
+    name: title,
+    themeColor: "#212121",
+  },
   chainWebpack: config => {
     config.plugin('html').tap((args) => {
       args[0] = {...args[0], ...metaArgs};
