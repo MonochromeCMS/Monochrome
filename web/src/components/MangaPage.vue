@@ -8,7 +8,10 @@
     <v-row v-if="loading">
       <v-col cols="12" sm="6" md="4" lg="3" v-for="i in limit" :key="i">
         <v-card color="background" height="100%" class="d-flex flex-column">
-          <v-skeleton-loader type="image, article, divider" />
+          <v-responsive aspect-ratio="1">
+            <v-skeleton-loader type="image" class="skeleton-image fill-height" />
+          </v-responsive>
+          <v-skeleton-loader type="article, divider" />
           <v-skeleton-loader type="chip" class="skeleton-chip" />
         </v-card>
       </v-col>
@@ -176,5 +179,9 @@ export default Vue.extend({
   display: -webkit-box;
   padding-bottom: 0 !important;
   margin-bottom: 1rem;
+}
+
+.skeleton-image .v-skeleton-loader__image {
+  height: 100%;
 }
 </style>

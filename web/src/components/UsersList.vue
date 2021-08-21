@@ -2,7 +2,7 @@
   <v-container>
     <v-row class="user-row text--primary" align="center">
       <v-col class="text-center text-h5"> Username </v-col>
-      <v-col class="text-center text-h5"> Email </v-col>
+      <v-col class="text-center text-h5 hidden-sm-and-down"> Email </v-col>
       <v-col class="text-center text-h5"> Actions </v-col>
     </v-row>
     <v-row v-if="loading" class="user-row text--primary" align="center">
@@ -28,7 +28,7 @@
       <v-col class="text-center text-body-1">
         {{ item.username }}
       </v-col>
-      <v-col class="text-center text-body-1">
+      <v-col class="text-center text-body-1 hidden-sm-and-down">
         {{ item.email }}
       </v-col>
       <v-col class="text-center text-body-1 d-flex justify-center">
@@ -83,17 +83,13 @@ export default Vue.extend({
 .theme--dark {
   .user-row {
     background-color: black;
-    &:nth-child(2n) {
-      background-color: #424242;
-    }
+    border-bottom: #212121 .2rem solid;
   }
 }
 .theme--light {
   .user-row {
     background-color: #eeeeee;
-    &:nth-child(2n) {
-      background-color: #f5f5f5;
-    }
+    border-bottom: white .2rem solid;
   }
 }
 </style>

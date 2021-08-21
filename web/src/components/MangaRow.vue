@@ -1,10 +1,10 @@
 <template>
   <v-container>
     <v-row v-if="loading" align="center">
-      <v-col cols="12" sm="3">
+      <v-col cols="12" md="3">
         <v-skeleton-loader type="image" />
       </v-col>
-      <v-col cols="12" sm="9" class="d-flex flex-column justify-center">
+      <v-col cols="12" md="9" class="d-flex flex-column justify-center">
         <v-skeleton-loader type="heading" class="mb" />
         <v-skeleton-loader
           type="chip, chip, chip"

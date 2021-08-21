@@ -28,7 +28,7 @@
             </v-list-item>
           </template>
         </v-list>
-        <div v-if="manga.length === 0 && alert === ''" class="text-center">
+        <div v-if="manga.length === 0 && alert === ''" class="text-center mb-2">
           No manga has been added yet.
         </div>
         <v-alert type="error" v-if="alert !== ''">

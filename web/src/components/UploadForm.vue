@@ -46,14 +46,14 @@
             name="Scan Group"
             rules="required"
           >
-            <v-text-field
+            <v-combobox
               v-model="scan_group"
+              :items="groupAutocomplete"
               :error-messages="errors"
               label="Scan Group"
-              required
-              hide-details="auto"
               outlined
-            ></v-text-field>
+              hide-details="auto"
+            />
           </validation-provider>
         </v-col>
       </v-row>
@@ -123,6 +123,7 @@ export default Vue.extend({
   props: ["manga_id", "chapter"],
   components: { PageInput, ValidationProvider, ValidationObserver },
   data: () => ({
+    groupAutocomplete: [],
     alert: "",
     name: "",
     volume: null,
@@ -256,6 +257,29 @@ export default Vue.extend({
           this.alert = response.statusText;
       }
     },
+    async autocomplete() {
+      let url = `/api/autocomplete/groups`;
+
+      const config = this.authConfig;
+
+      let response;
+      try {
+        response = await axios.get(url, config);
+      } catch (e) {
+        response = e.response;
+      }
+
+      switch (response.status) {
+        case 200:
+          this.groupAutocomplete = response.data;
+          break;
+        case 401:
+          this.$store.commit("logout");
+          break;
+        default:
+          this.alert = response.statusText;
+      }
+    }
   },
   mounted() {
     if (this.chapter) {
@@ -266,6 +290,7 @@ export default Vue.extend({
     } else {
       this.createSession(this.manga_id);
     }
+    this.autocomplete();
   },
 });
 </script>

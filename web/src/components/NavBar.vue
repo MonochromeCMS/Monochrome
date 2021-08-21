@@ -8,7 +8,7 @@
       <span v-if="settings.title2" v-text="settings.title2" class="text--secondary" />
     </router-link>
 
-    <v-tabs centered class="hidden-sm-and-down">
+    <v-tabs centered class="hidden-sm-and-down" optional v-model="tabs">
       <v-tab v-for="link in links" :key="link.text" :to="link.to">
         {{ link.text }}
       </v-tab>
@@ -60,6 +60,7 @@ export default Vue.extend({
   name: "NavBar",
   components: { AdminActions },
   data: (): Record<string, any> => ({
+    tabs: "/",
     links: [
       {
         text: "Home",

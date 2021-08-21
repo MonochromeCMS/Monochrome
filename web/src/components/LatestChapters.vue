@@ -3,31 +3,40 @@
     <v-card-title class="justify-center lemon-milk">
       Latest chapters
     </v-card-title>
-    <v-row v-if="loading">
+    <v-row v-if="loading" class="mx-0 mb-0">
       <v-col
         cols="12"
+        sm="6"
         :lg="isConnected ? 12 : 6"
         xl="6"
         v-for="index in limit"
         :key="index"
-        class="px-1 my-1"
+        class="px-2 my-2"
       >
         <v-card color="background" class="px-4">
           <v-row align="center">
             <v-col cols="3">
-              <v-skeleton-loader type="image" max-height="7rem" />
+              <v-responsive max-height="7rem">
+                <v-skeleton-loader type="image" />
+              </v-responsive>
             </v-col>
-            <v-col cols="8">
-              <v-skeleton-loader
-                class="background chapter-skeleton"
-                type="article"
-              />
+            <v-col cols="8" class="d-flex flex-column justify-center">
+              <h2>
+                <v-skeleton-loader type="text" />
+              </h2>
+              <h3>
+                <v-skeleton-loader type="text" />
+              </h3>
+              <h4>
+                <v-skeleton-loader type="text" />
+              </h4>
+              <v-skeleton-loader type="chip" />
             </v-col>
           </v-row>
         </v-card>
       </v-col>
     </v-row>
-    <v-row v-else class="ma-1">
+    <v-row v-else class="mx-0 mb-0">
       <v-col cols="12" v-if="alert !== ''">
         <v-alert type="error">{{ alert }}</v-alert>
       </v-col>
@@ -40,11 +49,12 @@
       </v-col>
       <v-col
         cols="12"
+        sm="6"
         :lg="isConnected ? 12 : 6"
         xl="6"
         v-for="(chapter, index) in chapters"
         :key="index"
-        class="px-1 my-1"
+        class="px-2 my-2"
       >
         <v-card color="background" class="px-4" :to="`/chapters/${chapter.id}`">
           <v-row align="center">
@@ -170,9 +180,6 @@ export default Vue.extend({
 .v-chip.chip-tag {
   margin-top: 0.2rem;
   max-width: max-content;
-}
-.chapter-skeleton .v-skeleton-loader__article {
-  background-color: inherit !important;
 }
 .ellipsis {
   white-space: nowrap;
