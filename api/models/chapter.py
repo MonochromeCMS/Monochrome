@@ -32,3 +32,9 @@ class Chapter(Base):
         stmt = select(cls).where(cls.manga_id == manga_id).order_by(cls.number.desc())
         result = await db_session.execute(stmt)
         return result.scalars().all()
+
+    @classmethod
+    async def get_groups(cls, db_session: AsyncSession):
+        stmt = select(cls.scan_group).distinct()
+        result = await db_session.execute(stmt)
+        return result.scalars().all()

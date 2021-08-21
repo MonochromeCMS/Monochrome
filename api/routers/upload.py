@@ -143,9 +143,9 @@ async def commit_upload_session(
 
     if session.chapter_id:
         chapter = await Chapter.find(db_session, session.chapter_id)
-        await chapter.update(db_session, length=len(payload.page_order), **payload.chapterDraft.dict())
+        await chapter.update(db_session, length=len(payload.page_order), **payload.chapter_draft.dict())
     else:
-        chapter = Chapter(manga_id=session.manga_id, length=len(payload.page_order), **payload.chapterDraft.dict())
+        chapter = Chapter(manga_id=session.manga_id, length=len(payload.page_order), **payload.chapter_draft.dict())
         await chapter.save(db_session)
 
     await session.delete(db_session)
