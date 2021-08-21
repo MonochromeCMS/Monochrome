@@ -86,7 +86,6 @@ export default Vue.extend({
       this.alert = "";
       this.username = "";
       this.password = "";
-      this.$refs.observer.reset();
     },
     async login(params) {
       const response = await this.$store.dispatch("login", params);

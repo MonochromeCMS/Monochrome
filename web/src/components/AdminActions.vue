@@ -40,6 +40,10 @@ export default Vue.extend({
         to: "/users",
       },
       {
+        text: "Customize website",
+        to: "/settings",
+      },
+      {
         text: "Logout",
         to: "/logout",
       },

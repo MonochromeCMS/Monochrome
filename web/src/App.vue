@@ -32,6 +32,7 @@ export default Vue.extend({
   },
   mounted() {
     if (this.isConnected) this.$store.dispatch("getUserData");
+    this.$store.dispatch("getSettings");
   },
 });
 </script>
