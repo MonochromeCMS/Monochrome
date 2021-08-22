@@ -26,34 +26,36 @@
       :continuous="false"
     >
       <v-carousel-item :key="0">
-        <v-sheet height="20rem" tile>
-          <v-row
-            class="fill-height pa-3 text-center"
-            align="center"
-            justify="center"
-          >
-            <div class="text-h2">
-              {{
-                reverse
-                  ? "This is the last chapter, for now..."
-                  : "This is the first chapter"
-              }}
-            </div>
-          </v-row>
-        </v-sheet>
+        <v-row>
+          <v-col class="mx-auto d-flex align-center" cols="12" sm="10" md="6" lg="5" style="height: calc(100vh - 8rem)">
+            <v-sheet rounded="lg">
+              <v-row
+                class="fill-height text-center ma-0 pa-10"
+                align="center"
+                justify="center"
+              >
+                <div class="text-h2">
+                  {{
+                    reverse
+                      ? "This is the latest chapter available, thanks for reading!"
+                      : "This is the first chapter"
+                  }}
+                </div>
+              </v-row>
+            </v-sheet>
+          </v-col>
+        </v-row>
       </v-carousel-item>
       <v-carousel-item v-for="index in amountTabs" :key="index">
         <div v-if="double" class="d-flex justify-center">
           <v-img
-            max-width="50%"
-            max-height="150vh"
+            :class="`${fit} half-page left`"
             contain
             :src="urls[2 * index - 2]"
             :alt="`Page ${2 * index - 1}`"
           />
           <v-img
-            max-width="50%"
-            max-height="150vh"
+            :class="`${fit} half-page right`"
             contain
             :src="urls[2 * index - 1]"
             :alt="`Page ${2 * index}`"
@@ -61,29 +63,32 @@
         </div>
         <v-img
           v-else
-          max-width="100%"
-          max-height="150vh"
+          :class="fit"
           contain
           :src="urls[index - 1]"
           :alt="`Page ${index}`"
         />
       </v-carousel-item>
       <v-carousel-item :key="amountTabs + 1">
-        <v-sheet height="20rem" tile>
-          <v-row
-            class="fill-height pa-4 text-center"
-            align="center"
-            justify="center"
-          >
-            <div class="text-h2">
-              {{
-                reverse
-                  ? "This is the first chapter"
-                  : "This is the last chapter, for now..."
-              }}
-            </div>
-          </v-row>
-        </v-sheet>
+        <v-row>
+          <v-col class="mx-auto d-flex align-center" cols="12" sm="10" md="6" lg="5" style="height: calc(100vh - 8rem)">
+            <v-sheet rounded="lg">
+              <v-row
+                class="fill-height text-center ma-0 pa-10"
+                align="center"
+                justify="center"
+              >
+                <div class="text-h2">
+                  {{
+                    reverse
+                      ? "This is the first chapter"
+                      : "This is the latest chapter available, thanks for reading!"
+                  }}
+                </div>
+              </v-row>
+            </v-sheet>
+          </v-col>
+        </v-row>
       </v-carousel-item>
     </v-carousel>
   </div>
@@ -99,9 +104,7 @@ export default Vue.extend({
     "chapter",
     "version",
     "length",
-    "reverse",
     "double",
-    "parity",
   ],
   data: () => ({
     currentPage: null,
@@ -121,6 +124,15 @@ export default Vue.extend({
     },
   },
   computed: {
+    fit() {
+      return this.$store.getters.getFit;
+    },
+    reverse() {
+      return !this.$store.getters.getDirection;
+    },
+    parity() {
+      return this.$store.getters.getParity;
+    },
     amountTabs() {
       return this.double
         ? Math.ceil((this.length + this.parity) / 2)
@@ -184,28 +196,45 @@ export default Vue.extend({
   },
   mounted() {
     this.currentPage = this.reverse ? this.amountTabs : 1;
-
     document.addEventListener("keyup", this.handleArrows);
   },
 });
 </script>
 
-<style>
+<style lang="scss">
 .half-page {
-  max-width: 50%;
+  &.left .v-image__image {
+    background-position: right center !important;
+  }
+  &.right .v-image__image {
+    background-position: left center !important;
+  }
 }
-.full-page {
-  max-width: 100%;
-}
-.full-page,
-.half-page {
+.default {
   max-height: 150vh;
+  max-width: 100%;
+  &.half-page {
+    max-width: 50%;
+  }
+}
+.width {
+  width: 100%;
+  &.half-page {
+    width: 50%;
+  }
+}
+.height {
+  max-height: calc(100vh - 10rem);
+  max-width: 100%;
+  &.half-page {
+    max-width: 50%;
+  }
 }
 .reader-tabs {
   position: sticky;
   top: 3.7rem;
   z-index: 1;
   border-radius: 0.3rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: .8rem;
 }
 </style>

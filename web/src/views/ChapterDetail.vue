@@ -2,25 +2,14 @@
   <v-container fluid class="reader">
     <v-alert v-if="alert !== ''" type="error">{{ alert }}</v-alert>
     <v-row v-if="chapter">
-      <v-col
-        cols="12"
-        md="8"
-        class="mx-auto"
-        v-if="['Vertical', 'Webtoon'].includes(readerMode)"
-      >
-        <v-sheet rounded="lg" color="backgroundAlt mx-auto" v-if="chapter">
-          <v-row class="ma-0 pa-3">
-            <v-col
-              v-bind="columnBind[readerMode]"
-              v-for="index in chapter.length"
-              :key="index"
-            >
-              <v-img
-                :src="`/media/${chapter.manga_id}/${chapter_id}/${index}.jpg?version=${chapter.version}`"
-              />
-            </v-col>
-          </v-row>
-        </v-sheet>
+      <v-col cols="12" v-if="['Vertical', 'Webtoon'].includes(readerMode)">
+        <vertical-reader
+          :manga="chapter.manga.id"
+          :chapter="chapter.id"
+          :version="chapter.version"
+          :length="chapter.length"
+          :webtoon="readerMode === 'Webtoon'"
+        />
       </v-col>
       <v-col cols="12" v-if="['Single', 'Double'].includes(readerMode)">
         <paged-reader
@@ -29,8 +18,6 @@
           :version="chapter.version"
           :length="chapter.length"
           :double="readerMode === 'Double'"
-          :reverse="!direction"
-          :parity="doubleParity"
           @next="goToChapter(nextChapter)"
           @previous="goToChapter(previousChapter)"
         />
@@ -73,6 +60,25 @@
           <v-row
             align="center"
             class="ma-1"
+          >
+            <v-col class="text-body-1"> Image fit: </v-col>
+            <v-col class="text-right pa-2">
+              <v-btn-toggle v-model="fit" mandatory>
+                <v-btn color="background">
+                  <v-icon>mdi-arrow-expand-horizontal</v-icon>
+                </v-btn>
+                <v-btn color="background">
+                  Default
+                </v-btn>
+                <v-btn color="background">
+                  <v-icon>mdi-arrow-expand-vertical</v-icon>
+                </v-btn>
+              </v-btn-toggle>
+            </v-col>
+          </v-row>
+          <v-row
+            align="center"
+            class="ma-1"
             v-if="['Single', 'Double'].includes(readerMode)"
           >
             <v-col class="text-body-1"> Page direction: </v-col>
@@ -106,33 +112,18 @@
 import Vue from "vue";
 import axios from "axios";
 import PagedReader from "@/components/PagedReader.vue";
+import VerticalReader from "@/components/VerticalReader.vue";
 
 export default Vue.extend({
-  components: {PagedReader},
+  components: {VerticalReader, PagedReader},
   data() {return {
+    test: null,
     chapter_id: this.$route.params.chapter,
     chapter: null,
     chapters: [],
     menu: false,
     alert: "",
     modeItems: ["Single", "Double", "Vertical", "Webtoon"],
-    columnBind: {
-      "Single": false,
-      "Double": false,
-      "Vertical": {
-        cols: 12,
-      },
-      "Webtoon": {
-        cols: 12,
-        class: "webtoon",
-      },
-    },
-    carouselBind: {
-      "Single": true,
-      "Double": true,
-      "Vertical": false,
-      "Webtoon": false,
-  }
   }},
   computed: {
     doubleParity: {
@@ -141,6 +132,29 @@ export default Vue.extend({
       },
       set(value) {
         this.$store.commit("setParity", value);
+      }
+    },
+    fit: {
+      get() {
+        const value = this.$store.getters.getFit;
+        switch (value) {
+          case "width":
+            return 0
+          case "height":
+            return 2
+          default:
+            return 1
+        }
+      },
+      set(value) {
+        switch (value) {
+          case 0:
+            return this.$store.commit("setFit", "width");
+          case 2:
+            return this.$store.commit("setFit", "height");
+          default:
+            return this.$store.commit("setFit", "default");
+        }
       }
     },
     direction: {
@@ -256,9 +270,6 @@ export default Vue.extend({
     position: fixed;
     right: 1rem;
     bottom: 1rem;
-  }
-  .webtoon {
-    padding: 0;
   }
 }
 </style>

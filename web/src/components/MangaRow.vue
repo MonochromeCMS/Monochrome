@@ -27,7 +27,7 @@
           </template>
           <span v-text="manga.title" />
         </v-tooltip>
-        <div class="d-flex flex-wrap">
+        <v-chip-group column>
           <v-chip
             class="chip-tag"
             :color="statusColor[manga.status] || 'gray'"
@@ -42,7 +42,7 @@
           <v-chip v-if="manga.year" class="chip-tag" color="background">
             <span>Release: </span> {{ manga.year }}
           </v-chip>
-        </div>
+        </v-chip-group>
         <div class="manga-desc">{{ manga.description }}</div>
         <slot></slot>
       </v-col>

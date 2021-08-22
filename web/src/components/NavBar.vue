@@ -90,6 +90,11 @@ export default Vue.extend({
 
 <style lang="scss">
 .logo {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: max-content;
+  width: calc(100vw - 3rem);
   font-size: 2em;
   text-decoration: none;
 }
