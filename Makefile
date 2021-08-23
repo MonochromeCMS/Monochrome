@@ -110,14 +110,13 @@ _test_setup:
 	@sleep 3
 	@$(DC_TEST) run --rm -T --workdir /api api alembic upgrade head    
 	@echo Adding the default user...
-	@hash=`$(DC_TEST) run --rm -T api python -c "from passlib.hash import bcrypt;print(bcrypt.hash('admin'), end='')"`
-	@id=`$(DC_TEST) run --rm -T api python -c "from uuid import uuid4;print(uuid4(), end='')"`
+	@hash=`$(DC_TEST) run --rm -T api python -c "from passlib.hash import bcrypt;print(bcrypt.hash('pass'), end='')"`
 	@$(DC_TEST) exec -T db psql $(DB_NAME) $(DB_USER) -c "    \
 		INSERT INTO \"user\"                             \
 		(version, id, username, hashed_password)         \
 		VALUES(                                          \
             1,                                           \
-			'$$id',                                      \
+			'c603ef4f-08f9-4130-a770-3a34defa44b3',      \
 			'admin',                                     \
 			'$$hash'                                     \
 		);"

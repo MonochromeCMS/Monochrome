@@ -29,9 +29,9 @@ module.exports = {
     name: title,
     themeColor: "#212121",
   },
-  chainWebpack: config => {
-    config.plugin('html').tap((args) => {
-      args[0] = {...args[0], ...metaArgs};
+  chainWebpack: (config) => {
+    config.plugin("html").tap((args) => {
+      args[0] = { ...args[0], ...metaArgs };
       return args;
     });
   },

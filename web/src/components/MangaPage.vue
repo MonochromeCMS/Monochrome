@@ -9,7 +9,10 @@
       <v-col cols="12" sm="6" md="4" lg="3" v-for="i in limit" :key="i">
         <v-card color="background" height="100%" class="d-flex flex-column">
           <v-responsive aspect-ratio="1">
-            <v-skeleton-loader type="image" class="skeleton-image fill-height" />
+            <v-skeleton-loader
+              type="image"
+              class="skeleton-image fill-height"
+            />
           </v-responsive>
           <v-skeleton-loader type="article, divider" />
           <v-skeleton-loader type="chip" class="skeleton-chip" />

@@ -279,7 +279,7 @@ export default Vue.extend({
         default:
           this.alert = response.statusText;
       }
-    }
+    },
   },
   mounted() {
     if (this.chapter) {

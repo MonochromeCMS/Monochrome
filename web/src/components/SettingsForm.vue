@@ -42,8 +42,13 @@
       </validation-provider>
 
       <div class="caption ma-3">
-        Markdown (or HTML) can be used to customize the About page. You can find its syntax
-        <a href="https://www.markdownguide.org/basic-syntax" class="text-decoration-none">here</a>.
+        Markdown (or HTML) can be used to customize the About page. You can find
+        its syntax
+        <a
+          href="https://www.markdownguide.org/basic-syntax"
+          class="text-decoration-none"
+          >here</a
+        >.
       </div>
 
       <!-- PREVIEW -->
@@ -99,7 +104,7 @@ export default Vue.extend({
     },
     settings() {
       return this.$store.getters.settings;
-    }
+    },
   },
   methods: {
     async submit() {
@@ -129,7 +134,7 @@ export default Vue.extend({
       this.title1 = value.title1;
       this.title2 = value.title2;
       this.about = value.about;
-    }
+    },
   },
   mounted() {
     this.title1 = this.settings.title1;

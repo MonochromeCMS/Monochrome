@@ -27,7 +27,14 @@
     >
       <v-carousel-item :key="0">
         <v-row>
-          <v-col class="mx-auto d-flex align-center" cols="12" sm="10" md="6" lg="5" style="height: calc(100vh - 8rem)">
+          <v-col
+            class="mx-auto d-flex align-center"
+            cols="12"
+            sm="10"
+            md="6"
+            lg="5"
+            style="height: calc(100vh - 8rem)"
+          >
             <v-sheet rounded="lg">
               <v-row
                 class="fill-height text-center ma-0 pa-10"
@@ -71,7 +78,14 @@
       </v-carousel-item>
       <v-carousel-item :key="amountTabs + 1">
         <v-row>
-          <v-col class="mx-auto d-flex align-center" cols="12" sm="10" md="6" lg="5" style="height: calc(100vh - 8rem)">
+          <v-col
+            class="mx-auto d-flex align-center"
+            cols="12"
+            sm="10"
+            md="6"
+            lg="5"
+            style="height: calc(100vh - 8rem)"
+          >
             <v-sheet rounded="lg">
               <v-row
                 class="fill-height text-center ma-0 pa-10"
@@ -99,13 +113,7 @@ import Vue from "vue";
 
 export default Vue.extend({
   name: "PagedReader",
-  props: [
-    "manga",
-    "chapter",
-    "version",
-    "length",
-    "double",
-  ],
+  props: ["manga", "chapter", "version", "length", "double"],
   data: () => ({
     currentPage: null,
     test: null,
@@ -235,6 +243,6 @@ export default Vue.extend({
   top: 3.7rem;
   z-index: 1;
   border-radius: 0.3rem;
-  margin-bottom: .8rem;
+  margin-bottom: 0.8rem;
 }
 </style>

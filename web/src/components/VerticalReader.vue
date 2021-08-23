@@ -1,12 +1,12 @@
 <template>
   <v-row class="ma-0">
     <v-col
-      :class=" webtoon ? 'webtoon' : ''"
+      :class="webtoon ? 'webtoon' : ''"
       v-for="index in length"
       :key="index"
     >
       <v-img
-          contain
+        contain
         :class="fit"
         :src="`/media/${manga}/${chapter}/${index}.jpg?version=${version}`"
       />

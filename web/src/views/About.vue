@@ -11,13 +11,17 @@
           <template v-if="settings.about">
             <vue-markdown class="pt-3 px-3" :source="settings.about" />
             <v-card-actions>
-            <div class="caption ml-auto text--secondary">
-              This website was created with
-              <a href="https://github.com/D34DPlayer/Monochrome" class="text-decoration-none" target="_blank">
-                Monochrome
-              </a>
-            </div>
-          </v-card-actions>
+              <div class="caption ml-auto text--secondary">
+                This website was created with
+                <a
+                  href="https://github.com/D34DPlayer/Monochrome"
+                  class="text-decoration-none"
+                  target="_blank"
+                >
+                  Monochrome
+                </a>
+              </div>
+            </v-card-actions>
           </template>
 
           <template v-else>
@@ -28,21 +32,38 @@
               <v-row>
                 <v-col cols="12">
                   This website was created with
-                  <a href="https://github.com/D34DPlayer/Monochrome" class="text-decoration-none" target="_blank">
-                    Monochrome</a>.
+                  <a
+                    href="https://github.com/D34DPlayer/Monochrome"
+                    class="text-decoration-none"
+                    target="_blank"
+                  >
+                    Monochrome</a
+                  >.
                 </v-col>
                 <v-col cols="12">
-                  Monochrome's goal is to provide a good quality manga CMS for anyone to host.
+                  Monochrome's goal is to provide a good quality manga CMS for
+                  anyone to host.
                 </v-col>
                 <v-col cols="12">
-                  You can find how it works and how to set up your own version of Monochrome on
-                  <a href="https://github.com/D34DPlayer/Monochrome" class="text-decoration-none" target="_blank">
-                    Github</a>.
+                  You can find how it works and how to set up your own version
+                  of Monochrome on
+                  <a
+                    href="https://github.com/D34DPlayer/Monochrome"
+                    class="text-decoration-none"
+                    target="_blank"
+                  >
+                    Github</a
+                  >.
                 </v-col>
                 <v-col cols="12" class="mb-2">
                   And if you are interested, you can find more about its creator
-                  <a href="https://www.d34d.one" class="text-decoration-none" target="_blank">
-                    here</a>.
+                  <a
+                    href="https://www.d34d.one"
+                    class="text-decoration-none"
+                    target="_blank"
+                  >
+                    here</a
+                  >.
                 </v-col>
               </v-row>
             </v-card-text>
@@ -62,7 +83,7 @@ export default Vue.extend({
   computed: {
     settings() {
       return this.$store.getters.settings;
-    }
-  }
+    },
+  },
 });
 </script>

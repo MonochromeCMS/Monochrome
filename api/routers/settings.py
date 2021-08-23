@@ -17,16 +17,14 @@ router = APIRouter(prefix="/settings", tags=["Settings"])
 custom_settings = Settings()
 
 
-@router.get("", response_model=SettingsSchema,)
+@router.get(
+    "",
+    response_model=SettingsSchema,
+)
 async def get_site_settings():
     return custom_settings.get()
 
 
-@router.put(
-    "",
-    response_model=SettingsSchema,
-    dependencies=[Depends(is_connected)]
-)
+@router.put("", response_model=SettingsSchema, dependencies=[Depends(is_connected)])
 async def edit_site_settings(settings: SettingsSchema):
     return custom_settings.set(settings)
-

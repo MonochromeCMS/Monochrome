@@ -26,7 +26,7 @@ const getters = {
   },
   getFit(state: ReaderState): string {
     return state.fit;
-  }
+  },
 };
 
 const mutations = {

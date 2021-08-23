@@ -1,11 +1,19 @@
 <template>
   <v-app-bar app flat color="backgroundAlt">
-    <router-link v-if="!settings.title1 && !settings.title2" to="/" class="logo lemon-milk">
+    <router-link
+      v-if="!settings.title1 && !settings.title2"
+      to="/"
+      class="logo lemon-milk"
+    >
       Mono<span class="text--secondary">chrome</span>
     </router-link>
     <router-link v-else to="/" class="logo lemon-milk">
       <span v-if="settings.title1" v-text="settings.title1" />
-      <span v-if="settings.title2" v-text="settings.title2" class="text--secondary" />
+      <span
+        v-if="settings.title2"
+        v-text="settings.title2"
+        class="text--secondary"
+      />
     </router-link>
 
     <v-tabs centered class="hidden-sm-and-down" optional v-model="tabs">
@@ -83,7 +91,7 @@ export default Vue.extend({
     },
     settings() {
       return this.$store.getters.settings;
-    }
+    },
   },
 });
 </script>

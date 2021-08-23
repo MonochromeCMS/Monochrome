@@ -83,13 +83,13 @@ export default Vue.extend({
 .theme--dark {
   .user-row {
     background-color: black;
-    border-bottom: #212121 .2rem solid;
+    border-bottom: #212121 0.2rem solid;
   }
 }
 .theme--light {
   .user-row {
     background-color: #eeeeee;
-    border-bottom: white .2rem solid;
+    border-bottom: white 0.2rem solid;
   }
 }
 </style>

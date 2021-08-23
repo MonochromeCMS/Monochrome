@@ -57,19 +57,14 @@
             v-model="readerMode"
             :items="modeItems"
           />
-          <v-row
-            align="center"
-            class="ma-1"
-          >
+          <v-row align="center" class="ma-1">
             <v-col class="text-body-1"> Image fit: </v-col>
             <v-col class="text-right pa-2">
               <v-btn-toggle v-model="fit" mandatory>
                 <v-btn color="background">
                   <v-icon>mdi-arrow-expand-horizontal</v-icon>
                 </v-btn>
-                <v-btn color="background">
-                  Default
-                </v-btn>
+                <v-btn color="background"> Default </v-btn>
                 <v-btn color="background">
                   <v-icon>mdi-arrow-expand-vertical</v-icon>
                 </v-btn>

@@ -24,8 +24,8 @@ const mutations = {
 
 const getters = {
   settings(state: SettingsState): SettingsState {
-    return state
-  }
+    return state;
+  },
 };
 
 const actions = {
