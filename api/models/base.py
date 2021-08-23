@@ -7,7 +7,7 @@ from sqlalchemy.orm import joinedload
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.ext.declarative import as_declarative, declared_attr
 
-from ..exceptions import UnprocessableEntityHTTPException, NotFoundHTTPException
+from ..exceptions import UnprocessableEntityHTTPException, NotFoundHTTPException, HTTPException
 
 
 @as_declarative()
@@ -56,12 +56,12 @@ class Base:
         await self.save(db_session)
 
     @classmethod
-    async def find(cls, db_session: AsyncSession, _id: uuid.UUID):
+    async def find(cls, db_session: AsyncSession, _id: uuid.UUID, exception=NotFoundHTTPException):
         stmt = select(cls).where(cls.id == _id)
         result = await db_session.execute(stmt)
         instance = result.scalars().first()
         if instance is None:
-            raise NotFoundHTTPException()
+            raise exception()
         else:
             return instance
 

@@ -56,9 +56,7 @@ async def is_connected(db_session: AsyncSession = Depends(get_db), token: str = 
         raise AuthFailedHTTPException("Expired token")
     except JWTError:
         raise AuthFailedHTTPException()
-    user = await User.find(db_session, UUID(id))
-    if user is None:
-        raise AuthFailedHTTPException()
+    user = await User.find(db_session, UUID(id), AuthFailedHTTPException)
     return user
 
 

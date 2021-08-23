@@ -17,7 +17,7 @@ app.include_router(autocomplete.router)
 
 @app.get("/", include_in_schema=False)
 async def root(request: Request):
-    return RedirectResponse(f"{request.scope.get('root_path')}/docs")
+    return RedirectResponse(f"{request.scope.get('root_path')}/docs", status_code=301)
 
 
 @app.get("/ping", tags=["Status"])
