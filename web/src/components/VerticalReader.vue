@@ -14,18 +14,21 @@
   </v-row>
 </template>
 
-<script>
-import Vue from "vue";
+<script lang="ts">
+import { Vue, Component, Prop } from "vue-property-decorator";
 
-export default Vue.extend({
-  name: "VerticalReader",
-  props: ["manga", "chapter", "version", "length", "webtoon"],
-  computed: {
-    fit() {
-      return this.$store.getters.getFit;
-    },
-  },
-});
+@Component
+export default class VerticalReader extends Vue {
+  @Prop(String) readonly manga!: string;
+  @Prop(String) readonly chapter!: string;
+  @Prop(Number) readonly version!: number;
+  @Prop(Number) readonly length!: number;
+  @Prop(Boolean) readonly webtoon!: boolean;
+
+  get fit(): string {
+    return this.$store.getters.getFit;
+  }
+}
 </script>
 
 <style lang="scss">

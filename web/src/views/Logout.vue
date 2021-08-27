@@ -14,12 +14,12 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { Vue, Component } from "vue-property-decorator";
 
-export default Vue.extend({
-  name: "Logout",
-  mounted() {
+@Component
+export default class Logout extends Vue {
+  mounted(): void {
     this.$store.commit("logout");
-  },
-});
+  }
+}
 </script>

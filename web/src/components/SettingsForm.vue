@@ -69,77 +69,77 @@
   </validation-observer>
 </template>
 
-<script>
+<script lang="ts">
 import {
   ValidationProvider,
   setInteractionMode,
   ValidationObserver,
 } from "vee-validate";
-import Vue from "vue";
+import { Vue, Component, Watch } from "vue-property-decorator";
 import VueMarkdown from "vue-markdown";
 
 setInteractionMode("eager");
 
-export default Vue.extend({
-  name: "SettingsForm",
+@Component({
   components: {
     VueMarkdown,
     ValidationProvider,
     ValidationObserver,
   },
-  data: () => ({
-    title1: null,
-    title2: null,
-    about: null,
-    success: false,
-    alert: "",
-  }),
-  computed: {
-    params() {
-      return {
-        title1: this.title1 || null,
-        title2: this.title2 || null,
-        about: this.about || null,
-      };
-    },
-    settings() {
-      return this.$store.getters.settings;
-    },
-  },
-  methods: {
-    async submit() {
-      const valid = await this.$refs.observer.validate();
-      if (valid) {
-        await this.editSettings(this.params);
-      }
-    },
-    async editSettings(params) {
-      this.success = false;
+})
+export default class SettingsForm extends Vue {
+  title1 = null;
+  title2 = null;
+  about = null;
+  success = false;
+  alert = "";
 
-      const response = await this.$store.dispatch("editSettings", params);
+  get params(): any {
+    return {
+      title1: this.title1 || null,
+      title2: this.title2 || null,
+      about: this.about || null,
+    };
+  }
 
-      switch (response.status) {
-        case 200:
-          this.success = true;
-          break;
-        case 401:
-          break;
-        default:
-          this.alert = response.statusText;
-      }
-    },
-  },
-  watch: {
-    settings(value) {
-      this.title1 = value.title1;
-      this.title2 = value.title2;
-      this.about = value.about;
-    },
-  },
-  mounted() {
+  get settings(): any {
+    return this.$store.getters.settings;
+  }
+
+  async submit(): Promise<void> {
+    //@ts-ignore I can't define this $ref, so let's assume it works
+    const valid = await this.$refs.observer.validate();
+    if (valid) {
+      await this.editSettings(this.params);
+    }
+  }
+  async editSettings(params: any): Promise<void> {
+    this.success = false;
+
+    const response = await this.$store.dispatch("editSettings", params);
+
+    switch (response.status) {
+      case 200:
+        this.success = true;
+        break;
+      case 401:
+        break;
+      default:
+        this.alert = response.data?.detail ?? response.statusText;
+    }
+  }
+
+  @Watch("settings")
+  onSettingsUpdate(value: any): void {
+    this.title1 = value.title1;
+    this.title2 = value.title2;
+    this.about = value.about;
+  }
+
+  mounted(): void {
     this.title1 = this.settings.title1;
     this.title2 = this.settings.title2;
     this.about = this.settings.about;
-  },
-});
+  }
+}
 </script>

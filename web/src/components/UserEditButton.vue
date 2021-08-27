@@ -14,21 +14,22 @@
   </v-dialog>
 </template>
 
-<script>
-import Vue from "vue";
-import UserForm from "./UserForm";
+<script lang="ts">
+import { Vue, Component, Prop, Emit } from "vue-property-decorator";
+import UserForm from "./UserForm.vue";
 
-export default Vue.extend({
-  name: "UserEditButton",
+@Component({
   components: { UserForm },
-  props: ["user", "ownUser"],
-  data: () => ({
-    dialog: false,
-  }),
-  methods: {
-    update() {
-      this.$emit("update", true);
-    },
-  },
-});
+})
+export default class UserEditButton extends Vue {
+  @Prop() readonly user!: any;
+  @Prop(Boolean) readonly ownUser!: boolean;
+
+  dialog = false;
+
+  @Emit("update")
+  update(): boolean {
+    return true;
+  }
+}
 </script>

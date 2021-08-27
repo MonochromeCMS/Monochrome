@@ -51,25 +51,25 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { Vue, Component, Prop } from "vue-property-decorator";
 
-export default Vue.extend({
-  name: "MangaRow",
-  props: ["manga", "cover", "loading"],
-  data: () => ({
-    statusColor: {
-      ongoing: "green",
-      completed: "green darken-3",
-      hiatus: "orange",
-      cancelled: "red",
-    },
-  }),
-  methods: {
-    upper(status: string) {
-      return status ? status.charAt(0).toUpperCase() + status.slice(1) : "";
-    },
-  },
-});
+@Component
+export default class MangaRow extends Vue {
+  @Prop() readonly manga!: Record<string, any>;
+  @Prop(String) readonly cover!: string;
+  @Prop(Boolean) readonly loading!: boolean;
+
+  statusColor = {
+    ongoing: "green",
+    completed: "green darken-3",
+    hiatus: "orange",
+    cancelled: "red",
+  };
+
+  upper(status: string): string {
+    return status ? status.charAt(0).toUpperCase() + status.slice(1) : "";
+  }
+}
 </script>
 
 <style lang="scss">

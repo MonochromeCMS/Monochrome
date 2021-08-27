@@ -21,15 +21,15 @@
   </v-container>
 </template>
 <script lang="ts">
-import Vue from "vue";
+import { Vue, Component } from "vue-property-decorator";
 import MangaPage from "@/components/MangaPage.vue";
 
-export default Vue.extend({
+@Component({
   components: { MangaPage },
-  computed: {
-    isConnected() {
-      return this.$store.getters.isConnected;
-    },
-  },
-});
+})
+export default class Manga extends Vue {
+  get isConnected(): boolean {
+    return this.$store.getters.isConnected;
+  }
+}
 </script>

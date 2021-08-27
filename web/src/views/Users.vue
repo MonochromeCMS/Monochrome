@@ -49,81 +49,83 @@
   </v-container>
 </template>
 
-<script type="ts">
-import Vue from "vue";
-import axios from "axios";
+<script lang="ts">
+import { Vue, Component, Watch } from 'vue-property-decorator';
+import axios, {AxiosRequestConfig} from "axios";
 import UsersList from "@/components/UsersList.vue";
 import UserForm from "@/components/UserForm.vue";
 
-export default Vue.extend({
-  components: {UserForm, UsersList},
-  data() {return {
-    alert: "",
-    page: 1,
-    total: 0,
-    limit: 10,
-    users: [],
-    loading: true,
-    addDialog: false,
-  }},
-  computed: {
-    isConnected() {
-      return this.$store.getters.isConnected;
-    },
-    authConfig() {
-      return this.$store.getters.authConfig;
-    },
-    offset() {
-      return (this.page - 1) * this.limit;
-    },
-    pageAmount() {
-      return Math.ceil((this.total + 1) / this.limit);
-    },
-  },
-  watch: {
-    page() {
-      this.getUsers();
-    },
-  },
-  methods: {
-    async getUsers() {
-      let url = `/api/user?offset=${this.offset}&limit=${this.limit}`;
+@Component({
+  components: { UsersList, UserForm },
+})
+export default class About extends Vue {
+    alert = "";
+    page = 1;
+    total = 0;
+    limit = 10;
+    users = [];
+    loading = true;
+    addDialog = false;
 
-      let config = this.authConfig;
+  get isConnected(): boolean {
+    return this.$store.getters.isConnected;
+  }
 
-      let response;
-      try {
-        response = await axios.get(url, config);
-      } catch (e) {
-        response = e.response;
-      }
+  get authConfig(): AxiosRequestConfig {
+    return this.$store.getters.authConfig;
+  }
 
-      if (this.loading) {
-        await new Promise((resolve) => {
-          setTimeout(() => resolve("done!"), 500);
-        });
-      }
+  get offset(): number {
+    return (this.page - 1) * this.limit;
+  }
 
-      switch (response.status) {
-        case 200:
-          this.total = response.data.total;
-          this.users = response.data.results;
-          break;
-        case 401:
-          this.$store.commit("logout");
-          break;
-        default:
-          this.alert = response.statusText;
-      }
-      this.loading = false;
-    },
-  },
-  mounted() {
+  get pageAmount(): number {
+    return Math.ceil((this.total + 1) / this.limit);
+  }
+
+  @Watch('page')
+  onPageChange(): void {
+    this.getUsers();
+  }
+
+  async getUsers(): Promise<void> {
+    let url = `/api/user?offset=${this.offset}&limit=${this.limit}`;
+
+    let config = this.authConfig;
+
+    let response;
+    try {
+      response = await axios.get(url, config);
+    } catch (e) {
+      response = e.response;
+    }
+
+    if (this.loading) {
+      await new Promise((resolve) => {
+        setTimeout(() => resolve("done!"), 500);
+      });
+    }
+
+    switch (response.status) {
+      case 200:
+        this.total = response.data.total;
+        this.users = response.data.results;
+        break;
+      case 401:
+        this.$store.commit("logout");
+        break;
+      default:
+        this.alert = response.statusText;
+    }
+    this.loading = false;
+  }
+
+  mounted(): void {
     if (!this.isConnected) {
       this.$router.replace("/")
     } else {
       this.getUsers();
     }
-  },
-});
+  }
+}
 </script>

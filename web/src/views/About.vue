@@ -18,8 +18,8 @@
                   class="text-decoration-none"
                   target="_blank"
                 >
-                  Monochrome
-                </a>
+                  Monochrome </a
+                >.
               </div>
             </v-card-actions>
           </template>
@@ -37,7 +37,7 @@
                     class="text-decoration-none"
                     target="_blank"
                   >
-                    Monochrome</a
+                    Monochrome </a
                   >.
                 </v-col>
                 <v-col cols="12">
@@ -52,7 +52,7 @@
                     class="text-decoration-none"
                     target="_blank"
                   >
-                    Github</a
+                    Github </a
                   >.
                 </v-col>
                 <v-col cols="12" class="mb-2">
@@ -62,7 +62,7 @@
                     class="text-decoration-none"
                     target="_blank"
                   >
-                    here</a
+                    here </a
                   >.
                 </v-col>
               </v-row>
@@ -74,16 +74,16 @@
   </v-container>
 </template>
 
-<script>
-import Vue from "vue";
+<script lang="ts">
+import { Vue, Component } from "vue-property-decorator";
 import VueMarkdown from "vue-markdown";
 
-export default Vue.extend({
+@Component({
   components: { VueMarkdown },
-  computed: {
-    settings() {
-      return this.$store.getters.settings;
-    },
-  },
-});
+})
+export default class About extends Vue {
+  get settings(): any {
+    return this.$store.getters.settings;
+  }
+}
 </script>

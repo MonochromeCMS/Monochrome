@@ -98,82 +98,83 @@
   </v-container>
 </template>
 
-<script>
-import Vue from "vue";
+<script lang="ts">
+import { Vue, Component } from "vue-property-decorator";
 import axios from "axios";
 
-export default Vue.extend({
-  name: "LatestChapters",
-  data: () => ({
-    page: 1,
-    limit: 10,
-    total: 0,
-    loading: true,
-    alert: "",
-    chapters: [],
-  }),
-  computed: {
-    pageAmount() {
-      return Math.ceil(this.total / this.limit);
-    },
-    offset() {
-      return (this.page - 1) * this.limit;
-    },
-    isConnected() {
-      return this.$store.getters.isConnected;
-    },
-  },
-  methods: {
-    async getChapters() {
-      let url = `/api/chapter?limit=${this.limit}&offset=${this.offset}`;
+@Component
+export default class LatestChapters extends Vue {
+  page = 1;
+  limit = 10;
+  total = 0;
+  loading = true;
+  alert = "";
+  chapters = [];
 
-      let response;
-      try {
-        response = await axios.get(url);
-      } catch (e) {
-        response = e.response;
-      }
+  get pageAmount(): number {
+    return Math.ceil(this.total / this.limit);
+  }
 
-      if (this.loading) {
-        await new Promise((resolve) => {
-          setTimeout(() => resolve("done!"), 500);
-        });
-      }
+  get offset(): number {
+    return (this.page - 1) * this.limit;
+  }
 
-      switch (response.status) {
-        case 200:
-          this.chapters = response.data.results;
-          this.total = response.data.total;
-          break;
-        default:
-          this.alert = response.statusText;
-      }
+  get isConnected(): boolean {
+    return this.$store.getters.isConnected;
+  }
 
-      this.loading = false;
-    },
-    ago(val) {
-      val = 0 | ((Date.now() - val) / 1000);
-      const length = {
-        second: 60,
-        minute: 60,
-        hour: 24,
-        day: 7,
-        week: 4.35,
-        month: 12,
-        year: 10000,
-      };
+  async getChapters(): Promise<void> {
+    let url = `/api/chapter?limit=${this.limit}&offset=${this.offset}`;
 
-      for (const unit in length) {
-        const result = val % length[unit];
-        if (!(val = 0 | (val / length[unit])))
-          return result + " " + (result - 1 ? unit + "s" : unit);
-      }
-    },
-  },
-  mounted() {
+    let response;
+    try {
+      response = await axios.get(url);
+    } catch (e) {
+      response = e.response;
+    }
+
+    if (this.loading) {
+      await new Promise((resolve) => {
+        setTimeout(() => resolve("done!"), 500);
+      });
+    }
+
+    switch (response.status) {
+      case 200:
+        this.chapters = response.data.results;
+        this.total = response.data.total;
+        break;
+      default:
+        this.alert = response.statusText;
+    }
+
+    this.loading = false;
+  }
+
+  ago(val: number): string {
+    val = 0 | ((Date.now() - val) / 1000);
+    const length: Record<string, number> = {
+      second: 60,
+      minute: 60,
+      hour: 24,
+      day: 7,
+      week: 4.35,
+      month: 12,
+      year: 10000,
+    };
+
+    for (const unit of Object.keys(length)) {
+      const result = val % length[unit];
+      if (!(val = 0 | (val / length[unit])))
+        return result + " " + (result - 1 ? unit + "s" : unit);
+    }
+    return "ERROR";
+  }
+
+  mounted(): void {
     this.getChapters();
-  },
-});
+  }
+}
 </script>
 
 <style lang="scss">

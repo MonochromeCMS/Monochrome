@@ -22,56 +22,58 @@
   </v-container>
 </template>
 
-<script type="ts">
-import Vue from "vue";
+<script lang="ts">
+import { Vue, Component } from 'vue-property-decorator';
 import axios from "axios";
 import MangaRow from "@/components/MangaRow.vue";
 import UploadForm from "@/components/UploadForm.vue";
 
-export default Vue.extend({
-  components: {UploadForm, MangaRow},
-  data() {return {
-    manga: null,
-    manga_id: this.$route.params.manga,
-    alert: "",
-  }},
-  computed: {
-    isConnected() {
-      return this.$store.getters.isConnected;
-    },
-  },
-  methods: {
-    async getManga() {
-      let url = `/api/manga/${this.manga_id}`;
+@Component({
+  components: { MangaRow, UploadForm },
+})
+export default class ChapterUpload extends Vue {
+  manga = null;
+  alert = "";
 
-      let response;
-      try {
-        response = await axios.get(url);
-      } catch (e) {
-        response = e.response;
-      }
+  get manga_id(): string {
+    return this.$route.params.manga;
+  }
 
-      switch (response.status) {
-        case 200:
-          this.manga = response.data;
-          break;
-        case 404:
-          this.alert = "Manga not found";
-          break;
-        case 422:
-          this.alert = "The ID provided isn't an UUID";
-          break;
-        default:
-          this.alert = response.statusText;
-      }
-    },
-  },
-  mounted() {
+  get isConnected(): boolean {
+    return this.$store.getters.isConnected;
+  }
+
+  async getManga(): Promise<void> {
+    let url = `/api/manga/${this.manga_id}`;
+
+    let response;
+    try {
+      response = await axios.get(url);
+    } catch (e) {
+      response = e.response;
+    }
+
+    switch (response.status) {
+      case 200:
+        this.manga = response.data;
+        break;
+      case 404:
+        this.alert = "Manga not found";
+        break;
+      case 422:
+        this.alert = "The ID provided isn't an UUID";
+        break;
+      default:
+        this.alert = response.data?.detail ?? response.statusText;
+    }
+  }
+
+  mounted(): void {
     if (!this.isConnected) {
       this.$router.replace("/")
     } else {
       this.getManga();
     }
-  },
-});
+  }
+}
 </script>

@@ -69,7 +69,7 @@
   </validation-observer>
 </template>
 
-<script>
+<script lang="ts">
 import { required, email, max } from "vee-validate/dist/rules";
 import {
   extend,
@@ -77,7 +77,7 @@ import {
   setInteractionMode,
   ValidationObserver,
 } from "vee-validate";
-import Vue from "vue";
+import { Vue, Component, Emit, Prop } from "vue-property-decorator";
 
 setInteractionMode("eager");
 
@@ -96,90 +96,92 @@ extend("required", {
   message: "{_field_} can not be empty",
 });
 
-export default Vue.extend({
-  name: "LoginForm",
-  props: ["user", "ownUser"],
+@Component({
   components: {
     ValidationProvider,
     ValidationObserver,
   },
-  data: () => ({
-    username: "",
-    password: "",
-    email: null,
-    showPass: false,
-    alert: "",
-    loading: false,
-  }),
-  mounted() {
+})
+export default class UserForm extends Vue {
+  @Prop() readonly user!: any;
+  @Prop(Boolean) readonly ownUser!: boolean;
+
+  username = "";
+  password = "";
+  email = null;
+  showPass = false;
+  alert = "";
+  loading = false;
+
+  mounted(): void {
     if (this.user) {
       this.username = this.user.username;
       this.password = this.user.password;
       this.email = this.user.email;
     }
-  },
-  computed: {
-    params() {
-      return {
-        username: this.username,
-        password: this.password,
-        email: this.email || undefined,
-      };
-    },
-  },
-  methods: {
-    close() {
-      this.$emit("close", true);
-    },
-    async submit() {
-      const valid = await this.$refs.observer.validate();
-      if (valid) {
-        if (this.user) {
-          await this.editUser(this.user.id, this.params);
-        } else {
-          await this.addUser(this.params);
-        }
-      }
-    },
-    clear() {
-      this.alert = "";
-      this.username = "";
-      this.email = null;
-      this.password = "";
-      this.$refs.observer.reset();
-    },
-    async editUser(user_id, params) {
-      this.loading = true;
-      const response = await this.$store.dispatch("editUser", [
-        user_id,
-        params,
-      ]);
+  }
 
-      switch (response.status) {
-        case 200:
-          this.$emit("update", true);
-          this.close();
-          break;
-        default:
-          this.alert = response.data.detail || response.statusText;
-      }
-      this.loading = false;
-    },
-    async addUser(params) {
-      this.loading = true;
-      const response = await this.$store.dispatch("createUser", params);
+  get params(): any {
+    return {
+      username: this.username,
+      password: this.password,
+      email: this.email || undefined,
+    };
+  }
 
-      switch (response.status) {
-        case 201:
-          this.$emit("update", true);
-          this.clear();
-          this.close();
-          break;
-        default:
-          this.alert = response.data.detail || response.statusText;
+  @Emit("close")
+  close(): boolean {
+    return true;
+  }
+
+  async submit(): Promise<void> {
+    //@ts-ignore I can't define this $ref, so let's assume it works
+    const valid = await this.$refs.observer.validate();
+    if (valid) {
+      if (this.user) {
+        await this.editUser(this.user.id, this.params);
+      } else {
+        await this.addUser(this.params);
       }
-      this.loading = false;
-    },
-  },
-});
+    }
+  }
+
+  clear(): void {
+    this.alert = "";
+    this.username = "";
+    this.email = null;
+    this.password = "";
+  }
+
+  async editUser(user_id: string, params: any): Promise<void> {
+    this.loading = true;
+    const response = await this.$store.dispatch("editUser", [user_id, params]);
+
+    switch (response.status) {
+      case 200:
+        this.$emit("update", true);
+        this.close();
+        break;
+      default:
+        this.alert = response.data.detail || response.statusText;
+    }
+    this.loading = false;
+  }
+
+  async addUser(params: any): Promise<void> {
+    this.loading = true;
+    const response = await this.$store.dispatch("createUser", params);
+
+    switch (response.status) {
+      case 201:
+        this.$emit("update", true);
+        this.clear();
+        this.close();
+        break;
+      default:
+        this.alert = response.data?.detail ?? response.statusText;
+    }
+    this.loading = false;
+  }
+}
 </script>

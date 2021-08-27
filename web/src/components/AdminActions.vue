@@ -23,36 +23,35 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { Vue, Component } from "vue-property-decorator";
 
-export default Vue.extend({
-  name: "AdminActions",
+@Component({
   props: ["left"],
-  data: (): Record<string, any> => ({
-    selectedItem: null,
-    items: [
-      {
-        text: "Create manga",
-        to: "/manga/new",
-      },
-      {
-        text: "Handle users",
-        to: "/users",
-      },
-      {
-        text: "Customize website",
-        to: "/settings",
-      },
-      {
-        text: "Logout",
-        to: "/logout",
-      },
-      {
-        text: "API Documentation",
-        href: "/api/docs",
-        target: "_blank",
-      },
-    ],
-  }),
-});
+})
+export default class AdminActions extends Vue {
+  selectedItem = null;
+  items = [
+    {
+      text: "Create manga",
+      to: "/manga/new",
+    },
+    {
+      text: "Handle users",
+      to: "/users",
+    },
+    {
+      text: "Customize website",
+      to: "/settings",
+    },
+    {
+      text: "Logout",
+      to: "/logout",
+    },
+    {
+      text: "API Documentation",
+      href: "/api/docs",
+      target: "_blank",
+    },
+  ];
+}
 </script>

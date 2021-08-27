@@ -74,100 +74,105 @@
 
 <script lang="ts">
 import axios from "axios";
-import Vue from "vue";
+import { Vue, Component, Watch } from "vue-property-decorator";
 import SearchBar from "@/components/SearchBar.vue";
 
-export default Vue.extend({
-  name: "MangaPage",
+@Component({
   components: { SearchBar },
-  data: (): Record<string, any> => ({
-    loading: true,
-    rawManga: [],
-    limit: 12,
-    page: 1,
-    alert: "",
-    total: 0,
-    statusColor: {
-      ongoing: "green",
-      completed: "green darken-3",
-      hiatus: "orange",
-      cancelled: "red",
-    },
-    search: "",
-  }),
-  computed: {
-    manga() {
-      return this.rawManga.map((el: any) => ({
-        cover: `/media/${el.id}/cover.jpg?version=${el.version}`,
-        title: el.title,
-        subtitle: el.author,
-        description: el.description,
-        to: `/manga/${el.id}`,
-        status: el.status,
-      }));
-    },
-    offset() {
-      return (this.page - 1) * this.limit;
-    },
-    pageAmount() {
-      return Math.ceil(this.total / this.limit);
-    },
-  },
-  methods: {
-    async getManga() {
-      let url = `/api/manga?limit=${this.limit}&offset=${this.offset}`;
-      if (this.search) {
-        url += `&title=${this.search}`;
-      }
+})
+export default class MangaPage extends Vue {
+  loading = true;
+  rawManga = [];
+  limit = 12;
+  page = 1;
+  alert = "";
+  total = 0;
+  statusColor = {
+    ongoing: "green",
+    completed: "green darken-3",
+    hiatus: "orange",
+    cancelled: "red",
+  };
+  search: any = "";
 
-      let response;
-      try {
-        response = await axios.get(url);
-      } catch (e) {
-        response = e.response;
-      }
+  get manga(): any[] {
+    return this.rawManga.map((el: any) => ({
+      cover: `/media/${el.id}/cover.jpg?version=${el.version}`,
+      title: el.title,
+      subtitle: el.author,
+      description: el.description,
+      to: `/manga/${el.id}`,
+      status: el.status,
+    }));
+  }
 
-      if (this.loading) {
-        await new Promise((resolve) => {
-          setTimeout(() => resolve("done!"), 500);
-        });
-      }
+  get offset(): number {
+    return (this.page - 1) * this.limit;
+  }
 
-      switch (response.status) {
-        case 200:
-          this.rawManga = response.data.results;
-          this.total = response.data.total;
-          break;
-        default:
-          this.alert = response.statusText;
-      }
+  get pageAmount(): number {
+    return Math.ceil(this.total / this.limit);
+  }
 
-      this.loading = false;
-    },
-    upper(status: string) {
-      return status ? status.charAt(0).toUpperCase() + status.slice(1) : "";
-    },
-  },
-  watch: {
-    page() {
+  async getManga(): Promise<void> {
+    let url = `/api/manga?limit=${this.limit}&offset=${this.offset}`;
+    if (this.search) {
+      url += `&title=${this.search}`;
+    }
+
+    let response;
+    try {
+      response = await axios.get(url);
+    } catch (e) {
+      response = e.response;
+    }
+
+    if (this.loading) {
+      await new Promise((resolve) => {
+        setTimeout(() => resolve("done!"), 500);
+      });
+    }
+
+    switch (response.status) {
+      case 200:
+        this.rawManga = response.data.results;
+        this.total = response.data.total;
+        break;
+      default:
+        this.alert = response.data.detail ?? response.statusText;
+    }
+
+    this.loading = false;
+  }
+
+  upper(status: string): string {
+    return status ? status.charAt(0).toUpperCase() + status.slice(1) : "";
+  }
+
+  @Watch("page")
+  onPageUpdate(): void {
+    this.getManga();
+  }
+
+  @Watch("search")
+  onSearch(): void {
+    if (this.page === 1) {
       this.getManga();
-    },
-    search() {
-      if (this.page === 1) {
-        this.getManga();
-      } else {
-        this.page = 1;
-      }
-    },
-  },
-  mounted() {
+    } else {
+      this.page = 1;
+    }
+  }
+
+  mounted(): void {
     if (this.$route.query.q) {
-      this.search = this.$route.query.q;
+      this.search = this.$route.query.q.length
+        ? this.$route.query.q[0]
+        : this.$route.query.q;
     } else {
       this.getManga();
     }
-  },
-});
+  }
+}
 </script>
 
 <style lang="scss">

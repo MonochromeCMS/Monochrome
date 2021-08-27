@@ -66,12 +66,12 @@ class Base:
             return instance
 
     @classmethod
-    async def find_rel(cls, db_session: AsyncSession, _id: uuid.UUID, relationship):
+    async def find_rel(cls, db_session: AsyncSession, _id: uuid.UUID, relationship, exception=NotFoundHTTPException):
         stmt = select(cls).where(cls.id == _id).options(joinedload(relationship))
         result = await db_session.execute(stmt)
         instance = result.scalars().first()
         if instance is None:
-            raise NotFoundHTTPException()
+            raise exception()
         else:
             return instance
 

@@ -44,117 +44,126 @@
   </v-container>
 </template>
 
-<script>
-import Vue from "vue";
+<script lang="ts">
+import { Vue, Component, Prop, VModel, Watch } from "vue-property-decorator";
 import draggable from "vuedraggable";
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import naturalCompare from "natural-compare-lite";
 
-export default Vue.extend({
-  name: "PageInput",
-  props: ["value", "session"],
+@Component({
   components: { draggable },
-  data: () => ({
-    loading: 0,
-    pages: [],
-    page_upload: null,
-    alert: "",
-  }),
-  computed: {
-    authConfig() {
-      return this.$store.getters.authConfig;
-    },
-    page_order() {
-      return this.pages.map((el) => el.id);
-    },
-  },
-  mounted() {
+})
+export default class PageInput extends Vue {
+  $refs!: {
+    fileInput: HTMLInputElement;
+  };
+
+  @Prop() readonly session!: any;
+
+  @VModel() page_order!: any[];
+
+  pages: any[] = [];
+  loading = 0;
+  page_upload = null;
+  alert = "";
+
+  get authConfig(): AxiosRequestConfig {
+    return this.$store.getters.authConfig;
+  }
+
+  mounted(): void {
     this.pages = this.session.blobs;
-  },
-  watch: {
-    pages() {
-      this.$emit("input", this.page_order);
-      this.$emit("update:value", this.page_order);
-    },
-  },
-  methods: {
-    uploadClick() {
-      this.$refs.fileInput.click();
-    },
-    async updateFile(ev) {
-      await this.uploadFiles(ev.target.files);
-      ev.target.value = null;
-    },
-    async uploadFiles(files) {
-      let url = `/api/upload/${this.session.id}`;
+  }
 
-      this.loading += 1;
+  @Watch("pages")
+  onPagesChange(value: any[]): void {
+    this.page_order = value.map((el) => el.id);
+  }
 
-      const config = this.authConfig;
-      config.headers["Content-Type"] = "text";
+  uploadClick(): void {
+    this.$refs.fileInput.click();
+  }
 
-      const form = new FormData();
-      files.forEach((file) => form.append("payload", file));
+  async updateFile(ev: any): Promise<void> {
+    if (!ev.target) {
+      return;
+    }
 
-      let response;
-      try {
-        response = await axios.post(url, form, config);
-      } catch (e) {
-        response = e.response;
-      }
+    await this.uploadFiles(ev.target.files);
+    ev.target.value = null;
+  }
 
-      switch (response.status) {
-        case 201:
-          this.pages = this.pages.concat(response.data);
-          break;
-        case 404:
-          this.alert = "Session not found";
-          break;
-        case 422:
-          this.alert = "The ID provided isn't an UUID";
-          break;
-        case 401:
-          this.$store.commit("logout");
-          break;
-        default:
-          this.mangaAlert = response.statusText;
-      }
+  async uploadFiles(files: File[]): Promise<void> {
+    let url = `/api/upload/${this.session.id}`;
 
-      this.loading -= 1;
-    },
-    async deletePage(index, id) {
-      let url = `/api/upload/${this.session.id}/${id}`;
+    this.loading += 1;
 
-      const config = this.authConfig;
+    const config = this.authConfig;
+    config.headers["Content-Type"] = "text";
 
-      let response;
-      try {
-        response = await axios.delete(url, config);
-      } catch (e) {
-        response = e.response;
-      }
+    const form = new FormData();
+    files.forEach((file) => form.append("payload", file));
 
-      switch (response.status) {
-        case 200:
-        case 404:
-          this.pages = this.pages
-            .slice(0, index)
-            .concat(this.pages.slice(index + 1));
-          break;
-        case 401:
-          this.$store.commit("logout");
-          break;
-        default:
-          this.alert = response.statusText;
-      }
-    },
-    quickSort() {
-      this.pages = this.pages
-        .slice()
-        .sort((a, b) => naturalCompare(a.name, b.name));
-    },
-  },
-});
+    let response;
+    try {
+      response = await axios.post(url, form, config);
+    } catch (e) {
+      response = e.response;
+    }
+
+    switch (response.status) {
+      case 201:
+        this.pages = this.pages.concat(response.data);
+        break;
+      case 404:
+        this.alert = "Session not found";
+        break;
+      case 422:
+        this.alert = "The ID provided isn't an UUID";
+        break;
+      case 401:
+        this.$store.commit("logout");
+        break;
+      default:
+        this.alert = response.statusText;
+    }
+
+    this.loading -= 1;
+  }
+
+  async deletePage(index: number, id: string): Promise<void> {
+    let url = `/api/upload/${this.session.id}/${id}`;
+
+    const config = this.authConfig;
+
+    let response;
+    try {
+      response = await axios.delete(url, config);
+    } catch (e) {
+      response = e.response;
+    }
+
+    switch (response.status) {
+      case 200:
+      case 404:
+        this.pages = this.pages
+          .slice(0, index)
+          .concat(this.pages.slice(index + 1));
+        break;
+      case 401:
+        this.$store.commit("logout");
+        break;
+      default:
+        this.alert = response.statusText;
+    }
+  }
+
+  quickSort(): void {
+    this.pages = this.pages
+      .slice()
+      .sort((a, b) => naturalCompare(a.name, b.name));
+  }
+}
 </script>
 
 <style scoped>

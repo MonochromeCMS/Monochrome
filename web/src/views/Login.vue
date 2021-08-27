@@ -13,24 +13,20 @@
   </v-container>
 </template>
 
-<script>
-import Vue from "vue";
+<script lang="ts">
+import { Vue, Component } from "vue-property-decorator";
 import LoginForm from "@/components/LoginForm.vue";
 
-export default Vue.extend({
-  name: "Login",
-  components: {
-    LoginForm,
-  },
-  computed: {
-    isConnected() {
-      return this.$store.getters.isConnected;
-    },
-  },
-  mounted() {
-    if (this.isConnected) this.$router.replace("/");
-  },
-});
-</script>
+@Component({
+  components: { LoginForm },
+})
+export default class Login extends Vue {
+  get isConnected(): boolean {
+    return this.$store.getters.isConnected;
+  }
 
-<style lang="scss"></style>
+  mounted(): void {
+    if (this.isConnected) this.$router.replace("/");
+  }
+}
+</script>

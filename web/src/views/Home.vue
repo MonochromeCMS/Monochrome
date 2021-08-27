@@ -23,23 +23,17 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { Vue, Component } from "vue-property-decorator";
 import AdminActions from "@/components/AdminActions.vue";
 import LatestChapters from "@/components/LatestChapters.vue";
 import LatestManga from "@/components/LatestManga.vue";
 
-export default Vue.extend({
-  name: "Home",
-
-  components: {
-    LatestChapters,
-    AdminActions,
-    LatestManga,
-  },
-  computed: {
-    isConnected: function () {
-      return this.$store.getters.isConnected;
-    },
-  },
-});
+@Component({
+  components: { AdminActions, LatestChapters, LatestManga },
+})
+export default class Home extends Vue {
+  get isConnected(): boolean {
+    return this.$store.getters.isConnected;
+  }
+}
 </script>

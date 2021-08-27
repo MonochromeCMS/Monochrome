@@ -48,56 +48,53 @@
 </template>
 
 <script lang="ts">
+import { Vue, Component } from "vue-property-decorator";
 import axios from "axios";
-import Vue from "vue";
 
-export default Vue.extend({
-  name: "LatestManga",
-  data: (): Record<string, any> => ({
-    loading: true,
-    rawManga: [],
-    offset: 0,
-    limit: 5,
-    alert: "",
-    total: 0,
-  }),
-  computed: {
-    manga() {
-      let m = this.rawManga
-        .map((el: any) => [
-          {
-            avatar: `/media/${el.id}/cover.jpg?version=${el.version}`,
-            title: el.title,
-            subtitle: el.description,
-            to: `/manga/${el.id}`,
-          },
-          { divider: true, inset: true },
-        ])
-        .reduce((acc: [], el: []) => [...acc, ...el], []);
+@Component
+export default class LatestManga extends Vue {
+  loading = true;
+  rawManga = [];
+  offset = 0;
+  limit = 5;
+  alert = "";
+  total = 0;
 
-      if (m.length !== 0) m.pop();
-      return m;
-    },
-  },
-  methods: {
-    async getManga() {
-      const url = `/api/manga?limit=${this.limit}&offset=${this.offset}`;
-      const response = await axios.get(url);
+  get manga(): any[] {
+    let m = this.rawManga
+      .map((el: any) => [
+        {
+          avatar: `/media/${el.id}/cover.jpg?version=${el.version}`,
+          title: el.title,
+          subtitle: el.description,
+          to: `/manga/${el.id}`,
+        },
+        { divider: true, inset: true },
+      ])
+      .reduce((acc, el) => [...acc, ...el], []);
 
-      switch (response.status) {
-        case 200:
-          this.rawManga = response.data.results;
-          this.total = response.data.total;
-          break;
-        default:
-          this.alert = response.statusText;
-      }
+    if (m.length !== 0) m.pop();
+    return m;
+  }
 
-      this.loading = false;
-    },
-  },
-  mounted() {
+  async getManga(): Promise<void> {
+    const url = `/api/manga?limit=${this.limit}&offset=${this.offset}`;
+    const response = await axios.get(url);
+
+    switch (response.status) {
+      case 200:
+        this.rawManga = response.data.results;
+        this.total = response.data.total;
+        break;
+      default:
+        this.alert = response.data.detail ?? response.statusText;
+    }
+
+    this.loading = false;
+  }
+
+  mounted(): void {
     this.getManga();
-  },
-});
+  }
+}
 </script>

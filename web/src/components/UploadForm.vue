@@ -89,7 +89,7 @@
   </validation-observer>
 </template>
 
-<script>
+<script lang="ts">
 import { required, numeric, regex } from "vee-validate/dist/rules";
 import {
   extend,
@@ -97,8 +97,8 @@ import {
   setInteractionMode,
   ValidationObserver,
 } from "vee-validate";
-import Vue from "vue";
-import axios from "axios";
+import { Vue, Component, Prop } from "vue-property-decorator";
+import axios, { AxiosRequestConfig } from "axios";
 import PageInput from "@/components/PageInput.vue";
 
 setInteractionMode("eager");
@@ -118,181 +118,186 @@ extend("regex", {
   message: "{_field_} is not valid",
 });
 
-export default Vue.extend({
-  name: "UploadForm",
-  props: ["manga_id", "chapter"],
+@Component({
   components: { PageInput, ValidationProvider, ValidationObserver },
-  data: () => ({
-    groupAutocomplete: [],
-    alert: "",
-    name: "",
-    volume: null,
-    number: null,
-    session: null,
-    page_order: [],
-    scan_group: "no group",
-  }),
-  computed: {
-    authConfig() {
-      return this.$store.getters.authConfig;
-    },
-    chapter_draft() {
-      return {
-        name: this.name,
-        number: this.number,
-        volume: this.volume,
-        scan_group: this.scan_group,
-      };
-    },
-    params() {
-      return {
-        chapter_draft: this.chapter_draft,
-        page_order: this.page_order,
-      };
-    },
-  },
-  methods: {
-    async submit() {
-      const valid = await this.$refs.observer.validate();
-      if (valid) {
-        switch (true) {
-          case this.chapter && !this.session:
-            await this.editChapter(this.chapter_draft);
-            break;
-          case this.session && this.page_order.length > 0:
-            await this.commitSession(this.params);
-        }
+})
+export default class UploadForm extends Vue {
+  @Prop(String) readonly manga_id!: string;
+  @Prop() readonly chapter!: any;
+
+  groupAutocomplete = [];
+  alert = "";
+  name = "";
+  volume = null;
+  number = null;
+  session: any = null;
+  page_order = [];
+  scan_group = "no group";
+
+  get authConfig(): AxiosRequestConfig {
+    return this.$store.getters.authConfig;
+  }
+
+  get chapter_draft(): any {
+    return {
+      name: this.name,
+      number: this.number,
+      volume: this.volume,
+      scan_group: this.scan_group,
+    };
+  }
+
+  get params(): any {
+    return {
+      chapter_draft: this.chapter_draft,
+      page_order: this.page_order,
+    };
+  }
+
+  async submit(): Promise<void> {
+    //@ts-ignore I can't define this $ref, so let's assume it works
+    const valid = await this.$refs.observer.validate();
+    if (valid) {
+      switch (true) {
+        case this.chapter && !this.session:
+          await this.editChapter(this.chapter_draft);
+          break;
+        case this.session && this.page_order.length > 0:
+          await this.commitSession(this.params);
       }
-    },
-    async createSession(manga_id, chapter_id) {
-      let url = `/api/upload/begin`;
+    }
+  }
 
-      const config = this.authConfig;
-      config.headers["Content-Type"] = "application/json";
+  async createSession(manga_id: string, chapter: string | null): Promise<void> {
+    let url = `/api/upload/begin`;
 
-      const data = { manga_id, chapter_id };
+    const config = this.authConfig;
+    config.headers["Content-Type"] = "application/json";
 
-      let response;
-      try {
-        response = await axios.post(url, data, config);
-      } catch (e) {
-        response = e.response;
-      }
+    const data = { manga_id, chapter };
 
-      switch (response.status) {
-        case 201:
-          this.session = response.data;
-          break;
-        case 404:
-          this.alert = "Manga not found";
-          break;
-        case 401:
-          this.$store.commit("logout");
-          break;
-        case 422:
-          this.alert = "The ID provided isn't an UUID";
-          break;
-        default:
-          this.alert = response.statusText;
-      }
-    },
-    async commitSession(params) {
-      let url = `/api/upload/${this.session.id}/commit`;
+    let response;
+    try {
+      response = await axios.post(url, data, config);
+    } catch (e) {
+      response = e.response;
+    }
 
-      const config = this.authConfig;
-      config.headers["Content-Type"] = "application/json";
+    switch (response.status) {
+      case 201:
+        this.session = response.data;
+        break;
+      case 404:
+        this.alert = "Manga not found";
+        break;
+      case 401:
+        this.$store.commit("logout");
+        break;
+      case 422:
+        this.alert = "The ID provided isn't an UUID";
+        break;
+      default:
+        this.alert = response.data?.detail ?? response.statusText;
+    }
+  }
 
-      let response;
-      try {
-        response = await axios.post(url, params, config);
-      } catch (e) {
-        response = e.response;
-      }
+  async commitSession(params: any): Promise<void> {
+    let url = `/api/upload/${this.session?.id}/commit`;
 
-      switch (response.status) {
-        case 200:
-        case 201:
-          await this.$router.push(`/chapters/${response.data.id}`);
-          break;
-        case 404:
-          await this.$router.push("/");
-          break;
-        case 401:
-          this.$store.commit("logout");
-          break;
-        case 422:
-          this.alert = "The ID provided isn't an UUID";
-          break;
-        default:
-          this.alert = response.statusText;
-      }
-    },
-    async editChapter(chapterDraft) {
-      let url = `/api/chapter/${this.chapter.id}`;
+    const config = this.authConfig;
+    config.headers["Content-Type"] = "application/json";
 
-      const config = this.authConfig;
-      config.headers["Content-Type"] = "application/json";
+    let response;
+    try {
+      response = await axios.post(url, params, config);
+    } catch (e) {
+      response = e.response;
+    }
 
-      let response;
-      try {
-        response = await axios.put(url, chapterDraft, config);
-      } catch (e) {
-        response = e.response;
-      }
+    switch (response.status) {
+      case 200:
+      case 201:
+        await this.$router.push(`/chapters/${response.data.id}`);
+        break;
+      case 404:
+        await this.$router.push("/");
+        break;
+      case 401:
+        this.$store.commit("logout");
+        break;
+      case 422:
+        this.alert = "The ID provided isn't an UUID";
+        break;
+      default:
+        this.alert = response.data?.detail ?? response.statusText;
+    }
+  }
 
-      switch (response.status) {
-        case 200:
-          await this.$router.push(`/manga/${this.manga_id}/${response.id}`);
-          break;
-        case 404:
-          await this.$router.push("/");
-          break;
-        case 401:
-          this.$store.commit("logout");
-          break;
-        case 422:
-          this.alert = "The ID provided isn't an UUID";
-          break;
-        default:
-          this.alert = response.statusText;
-      }
-    },
-    async autocomplete() {
-      let url = `/api/autocomplete/groups`;
+  async editChapter(chapterDraft: any): Promise<void> {
+    let url = `/api/chapter/${this.chapter.id}`;
 
-      const config = this.authConfig;
+    const config = this.authConfig;
+    config.headers["Content-Type"] = "application/json";
 
-      let response;
-      try {
-        response = await axios.get(url, config);
-      } catch (e) {
-        response = e.response;
-      }
+    let response;
+    try {
+      response = await axios.put(url, chapterDraft, config);
+    } catch (e) {
+      response = e.response;
+    }
 
-      switch (response.status) {
-        case 200:
-          this.groupAutocomplete = response.data;
-          break;
-        case 401:
-          this.$store.commit("logout");
-          break;
-        default:
-          this.alert = response.statusText;
-      }
-    },
-  },
-  mounted() {
+    switch (response.status) {
+      case 200:
+        await this.$router.push(`/manga/${this.manga_id}/${response.id}`);
+        break;
+      case 404:
+        await this.$router.push("/");
+        break;
+      case 401:
+        this.$store.commit("logout");
+        break;
+      case 422:
+        this.alert = "The ID provided isn't an UUID";
+        break;
+      default:
+        this.alert = response.data?.detail ?? response.statusText;
+    }
+  }
+
+  async autocomplete(): Promise<void> {
+    let url = `/api/autocomplete/groups`;
+
+    const config = this.authConfig;
+
+    let response;
+    try {
+      response = await axios.get(url, config);
+    } catch (e) {
+      response = e.response;
+    }
+
+    switch (response.status) {
+      case 200:
+        this.groupAutocomplete = response.data;
+        break;
+      case 401:
+        this.$store.commit("logout");
+        break;
+      default:
+        this.alert = response.data?.detail ?? response.statusText;
+    }
+  }
+
+  mounted(): void {
     if (this.chapter) {
       this.name = this.chapter.name;
       this.number = this.chapter.number;
       this.volume = this.chapter.volume;
       this.scan_group = this.chapter.scan_group;
     } else {
-      this.createSession(this.manga_id);
+      this.createSession(this.manga_id, null);
     }
     this.autocomplete();
-  },
-});
+  }
+}
 </script>
-
-<style scoped></style>

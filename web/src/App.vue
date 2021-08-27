@@ -9,32 +9,30 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import {Vue, Component, Watch} from "vue-property-decorator";
 import NavBar from "./components/NavBar.vue";
 import ThemeToggler from "@/components/ThemeToggler.vue";
 
-export default Vue.extend({
-  name: "App",
-
+@Component({
   components: {
     ThemeToggler,
     NavBar,
   },
-  computed: {
-    isConnected: function () {
-      return this.$store.getters.isConnected;
-    },
-  },
-  watch: {
-    isConnected: function () {
-      this.$router.replace("/");
-    },
-  },
+})
+export default class App extends Vue {
+   get isConnected() {
+    return this.$store.getters.isConnected;
+  }
+  @Watch("isConnected")
+  onLoginChange() {
+    this.$router.replace("/");
+  }
+
   mounted() {
     if (this.isConnected) this.$store.dispatch("getUserData");
     this.$store.dispatch("getSettings");
-  },
-});
+  }
+}
 </script>
 
 <style lang="scss">

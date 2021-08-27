@@ -26,58 +26,60 @@
   </v-container>
 </template>
 
-<script type="ts">
-import Vue from "vue";
+<script lang="ts">
+import { Vue, Component } from 'vue-property-decorator';
 import axios from "axios";
 import MangaRow from "@/components/MangaRow.vue";
 import UploadForm from "@/components/UploadForm.vue";
 
-export default Vue.extend({
-  components: {UploadForm, MangaRow},
-  data() {return {
-    manga: null,
-    chapter_id: this.$route.params.chapter,
-    chapter: null,
-    alert: "",
-  }},
-  computed: {
-    isConnected() {
-      return this.$store.getters.isConnected;
-    },
-  },
-  methods: {
-    async getChapter() {
-      let url = `/api/chapter/${this.chapter_id}`;
+@Component({
+  components: { MangaRow, UploadForm },
+})
+export default class About extends Vue{
+  manga = null;
+  chapter = null;
+  alert = "";
 
-      let response;
-      try {
-        response = await axios.get(url);
-      } catch (e) {
-        response = e.response;
-      }
+  get chapterId(): string {
+    return this.$route.params.chapter;
+  }
 
-      switch (response.status) {
-        case 200:
-          this.chapter = response.data;
-          this.manga = response.data.manga;
-          break;
-        case 404:
-          this.alert = "Chapter not found";
-          break;
-        case 422:
-          this.alert = "The ID provided isn't an UUID";
-          break;
-        default:
-          this.alert = response.statusText;
-      }
-    },
-  },
-  mounted() {
+  get isConnected(): boolean {
+    return this.$store.getters.isConnected;
+  }
+
+  async getChapter(): Promise<void> {
+    let url = `/api/chapter/${this.chapterId}`;
+
+    let response;
+    try {
+      response = await axios.get(url);
+    } catch (e) {
+      response = e.response;
+    }
+
+    switch (response.status) {
+      case 200:
+        this.chapter = response.data;
+        this.manga = response.data.manga;
+        break;
+      case 404:
+        this.alert = "Chapter not found";
+        break;
+      case 422:
+        this.alert = "The ID provided isn't an UUID";
+        break;
+      default:
+        this.alert = response.data?.detail ?? response.statusText;
+    }
+  }
+
+  mounted(): void {
     if (!this.isConnected) {
       this.$router.replace("/")
     } else {
       this.getChapter();
     }
-  },
-});
+  }
+}
 </script>

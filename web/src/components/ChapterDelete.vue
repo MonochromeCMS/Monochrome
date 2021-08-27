@@ -26,53 +26,48 @@
   </v-dialog>
 </template>
 
-<script>
-import Vue from "vue";
-import axios from "axios";
+<script lang="ts">
+import { Vue, Component, Prop } from "vue-property-decorator";
+import axios, { AxiosRequestConfig } from "axios";
 
-export default Vue.extend({
-  name: "ChapterDelete",
-  props: ["id"],
-  data: () => ({
-    dialog: false,
-    alert: "",
-  }),
-  computed: {
-    authConfig() {
-      return this.$store.getters.authConfig;
-    },
-  },
-  methods: {
-    async deleteChapter() {
-      const config = this.authConfig;
+@Component
+export default class ChapterDelete extends Vue {
+  dialog = false;
+  alert = "";
 
-      let url = `/api/chapter/${this.id}`;
+  @Prop() readonly id!: string;
 
-      let response;
-      try {
-        response = await axios.delete(url, config);
-      } catch (e) {
-        response = e.response;
-      }
+  get authConfig(): AxiosRequestConfig {
+    return this.$store.getters.authConfig;
+  }
 
-      switch (response.status) {
-        case 200:
-        case 404:
-          this.$emit("input", true);
-          this.dialog = false;
-          break;
-        case 401:
-          this.$store.commit("logout");
-          break;
-        case 422:
-          this.alert = "The ID provided isn't an UUID";
-          break;
-        default:
-          this.alert = response.statusText;
-      }
-    },
-  },
-});
+  async deleteChapter(): Promise<void> {
+    const config = this.authConfig;
+
+    let url = `/api/chapter/${this.id}`;
+
+    let response;
+    try {
+      response = await axios.delete(url, config);
+    } catch (e) {
+      response = e.response;
+    }
+
+    switch (response.status) {
+      case 200:
+      case 404:
+        this.$emit("input", true);
+        this.dialog = false;
+        break;
+      case 401:
+        this.$store.commit("logout");
+        break;
+      case 422:
+        this.alert = "The ID provided isn't an UUID";
+        break;
+      default:
+        this.alert = response.data.detail ?? response.statusText;
+    }
+  }
+}
 </script>
-
-<style scoped></style>

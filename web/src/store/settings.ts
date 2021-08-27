@@ -1,5 +1,5 @@
 import type { ActionContext } from "vuex";
-import type { AxiosRequestConfig, AxiosResponse } from "axios";
+import type { AxiosResponse } from "axios";
 import axios from "axios";
 
 export interface SettingsState {
@@ -30,7 +30,6 @@ const getters = {
 
 const actions = {
   async getSettings({
-    state,
     commit,
   }: ActionContext<SettingsState, any>): Promise<AxiosResponse> {
     const url = "/api/settings";
@@ -50,7 +49,7 @@ const actions = {
     }
   },
   async editSettings(
-    { state, rootGetters, commit, dispatch }: ActionContext<SettingsState, any>,
+    { rootGetters, commit, dispatch }: ActionContext<SettingsState, any>,
     settings: SettingsState
   ): Promise<AxiosResponse> {
     const url = "/api/settings";

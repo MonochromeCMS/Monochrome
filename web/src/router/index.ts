@@ -38,10 +38,10 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: "/chapters/:chapter",
-    name: "ChapterDetail",
+    name: "ChapterReader",
     component: () =>
       import(
-        /* webpackChunkName: "chapter_edit" */ "../views/ChapterDetail.vue"
+        /* webpackChunkName: "chapter_edit" */ "../views/ChapterReader.vue"
       ),
   },
   {

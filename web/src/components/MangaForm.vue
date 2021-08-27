@@ -106,7 +106,8 @@
   </validation-observer>
 </template>
 
-<script>
+<script lang="ts">
+import { Vue, Component, Prop } from "vue-property-decorator";
 import { required, digits } from "vee-validate/dist/rules";
 import {
   extend,
@@ -114,8 +115,7 @@ import {
   setInteractionMode,
   ValidationObserver,
 } from "vee-validate";
-import Vue from "vue";
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import MangaRow from "@/components/MangaRow.vue";
 
 setInteractionMode("eager");
@@ -129,155 +129,158 @@ extend("digits", {
   message: "{_field_} requires {length} digits ",
 });
 
-export default Vue.extend({
-  name: "MangaForm",
+@Component({
   components: {
     MangaRow,
     ValidationProvider,
     ValidationObserver,
   },
-  props: ["manga"],
-  data: () => ({
-    title: "",
-    description: "",
-    author: "",
-    artist: "",
-    year: null,
-    status: null,
-    alert: "",
-    cover: null,
-    buffer: null,
-    statusItems: [
-      { value: "ongoing", text: "Ongoing" },
-      { value: "hiatus", text: "Hiatus" },
-      { value: "completed", text: "Completed" },
-      { value: "cancelled", text: "Cancelled" },
-    ],
-  }),
-  computed: {
-    params() {
-      return {
-        title: this.title,
-        description: this.description,
-        author: this.author,
-        artist: this.artist,
-        year: this.year || null,
-        status: this.status,
-      };
-    },
-    authConfig() {
-      return this.$store.getters.authConfig;
-    },
-  },
-  methods: {
-    url(blob) {
-      if (blob) {
-        return blob ? URL.createObjectURL(blob) : null;
+})
+export default class MangaForm extends Vue {
+  @Prop() readonly manga!: Record<string, any>;
+
+  title = "";
+  description = "";
+  author = "";
+  artist = "";
+  year = null;
+  status = null;
+  alert = "";
+  cover = null;
+  buffer = null;
+  statusItems = [
+    { value: "ongoing", text: "Ongoing" },
+    { value: "hiatus", text: "Hiatus" },
+    { value: "completed", text: "Completed" },
+    { value: "cancelled", text: "Cancelled" },
+  ];
+
+  get params(): any {
+    return {
+      title: this.title,
+      description: this.description,
+      author: this.author,
+      artist: this.artist,
+      year: this.year || null,
+      status: this.status,
+    };
+  }
+
+  get authConfig(): AxiosRequestConfig {
+    return this.$store.getters.authConfig;
+  }
+
+  url(blob: File | null): string | null {
+    if (blob) {
+      return blob ? URL.createObjectURL(blob) : null;
+    } else {
+      return this.manga
+        ? `/media/${this.manga.id}/cover.jpg?version=${this.manga.version}`
+        : null;
+    }
+  }
+
+  async submit(): Promise<void> {
+    //@ts-ignore I can't define this $ref, so let's assume it works
+    const valid = await this.$refs.observer.validate();
+    if (valid) {
+      if (this.manga) {
+        await this.editManga(this.params, this.manga.id);
       } else {
-        return this.manga
-          ? `/media/${this.manga.id}/cover.jpg?version=${this.manga.version}`
-          : null;
+        await this.createManga(this.params);
       }
-    },
-    async submit() {
-      const valid = await this.$refs.observer.validate();
-      if (valid) {
-        if (this.manga) {
-          await this.editManga(this.params, this.manga.id);
+    }
+  }
+
+  clear(): void {
+    this.alert = "";
+    this.title = "";
+    this.description = "";
+    this.author = "";
+    this.artist = "";
+    this.year = null;
+    this.status = null;
+  }
+
+  async createManga(params: any): Promise<void> {
+    const config = this.authConfig;
+    config.headers["Content-Type"] = "application/json";
+
+    let response;
+    try {
+      response = await axios.post("/api/manga", params, config);
+    } catch (e) {
+      response = e.response;
+    }
+
+    switch (response.status) {
+      case 201:
+        await this.setCover(response.data.id, this.cover);
+        break;
+      case 401:
+        this.$store.commit("logout");
+        break;
+      default:
+        this.alert = response.data.detail ?? response.statusText;
+    }
+  }
+
+  async editManga(params: any, id: string): Promise<void> {
+    const config = this.authConfig;
+    config.headers["Content-Type"] = "application/json";
+
+    let response;
+    try {
+      response = await axios.put(`/api/manga/${id}`, params, config);
+    } catch (e) {
+      response = e.response;
+    }
+
+    switch (response.status) {
+      case 200:
+        if (this.cover) {
+          await this.setCover(id, this.cover);
         } else {
-          await this.createManga(this.params);
+          await this.$router.push(`/manga/${id}`);
         }
-      }
-    },
-    clear() {
-      this.alert = "";
-      this.username = "";
-      this.password = "";
-      this.$refs.observer.reset();
-    },
-    async createManga(params) {
-      const config = this.authConfig;
-      config.headers["Content-Type"] = "application/json";
+        break;
+      case 401:
+        this.$store.commit("logout");
+        break;
+      default:
+        this.alert = response.data.detail ?? response.statusText;
+    }
+  }
 
-      let response;
-      try {
-        response = await axios.post("/api/manga", params, config);
-      } catch (e) {
-        response = e.response;
-      }
+  async setCover(manga_id: string, cover: File | null): Promise<void> {
+    if (!cover) return;
 
-      //TODO: Check the status, show error if needed
-      switch (response.status) {
-        case 201:
-          await this.setCover(response.data.id, this.cover);
-          break;
-        case 401:
-          this.$store.commit("logout");
-          break;
-        default:
-          this.alert = response.statusText;
-      }
-    },
-    async editManga(params, id) {
-      const config = this.authConfig;
-      config.headers["Content-Type"] = "application/json";
+    const config = this.authConfig;
+    config.headers["Content-Type"] = "multipart/form-data";
 
-      let response;
-      try {
-        response = await axios.put(`/api/manga/${id}`, params, config);
-      } catch (e) {
-        response = e.response;
-      }
+    const form = new FormData();
+    form.append("payload", cover);
 
-      //TODO: Check the status, show error if needed
-      switch (response.status) {
-        case 200:
-          if (this.cover) {
-            await this.setCover(id, this.cover);
-          } else {
-            await this.$router.push(`/manga/${id}`);
-          }
-          break;
-        case 401:
-          this.$store.commit("logout");
-          break;
-        default:
-          this.alert = response.statusText;
-      }
-    },
-    async setCover(manga_id, cover) {
-      if (!cover) return;
+    let response;
+    try {
+      response = await axios.put(`/api/manga/${manga_id}/cover`, form, config);
+    } catch (e) {
+      response = e.response;
+    }
 
-      const config = this.authConfig;
-      config.headers["Content-Type"] = "multipart/form-data";
+    switch (response.status) {
+      case 200:
+        await this.$router.push(`/manga/${manga_id}`);
+        break;
+      case 401:
+        this.$store.commit("logout");
+        break;
+      default:
+        this.alert = response.data.detail ?? response.statusText;
+    }
+  }
 
-      const form = new FormData();
-      form.append("payload", cover);
-
-      let response;
-      try {
-        response = await axios.put(
-          `/api/manga/${manga_id}/cover`,
-          form,
-          config
-        );
-      } catch (e) {
-        response = e.response;
-      }
-
-      switch (response.status) {
-        case 200:
-          await this.$router.push(`/manga/${manga_id}`);
-          break;
-        case 401:
-          this.$store.commit("logout");
-          break;
-        default:
-          this.alert = response.statusText;
-      }
-    },
-  },
-  mounted() {
+  mounted(): void {
     if (this.manga) {
       this.title = this.manga.title;
       this.description = this.manga.description;
@@ -286,6 +289,6 @@ export default Vue.extend({
       this.year = this.manga.year;
       this.status = this.manga.status;
     }
-  },
-});
+  }
+}
 </script>

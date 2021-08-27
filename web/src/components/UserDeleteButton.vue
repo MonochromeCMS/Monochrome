@@ -27,40 +27,42 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="gray" text @click="dialog = false"> Cancel </v-btn>
-        <v-btn color="error" @click="deleteUser(user.id)"> Delete </v-btn>
+        <v-btn color="error" @click="deleteUser(user.id)" :disabled="loading"> Delete </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 
-<script>
-import Vue from "vue";
+<script lang="ts">
+import { Vue, Component, Prop, Emit } from "vue-property-decorator";
 
-export default Vue.extend({
-  name: "UserDeleteButton",
-  props: ["user", "disabled"],
-  data: () => ({
-    dialog: false,
-    alert: "",
-  }),
-  methods: {
-    update() {
-      this.$emit("update", true);
-    },
-    async deleteUser(user_id) {
-      this.loading = true;
-      const response = await this.$store.dispatch("deleteUser", user_id);
+@Component
+export default class UserDeleteButton extends Vue {
+  @Prop() readonly user!: any;
+  @Prop(Boolean) readonly disabled!: boolean;
 
-      switch (response.status) {
-        case 200:
-          this.$emit("update", true);
-          this.dialog = false;
-          break;
-        default:
-          this.alert = response.data.detail || response.statusText;
-      }
-      this.loading = false;
-    },
-  },
-});
+  loading = false;
+  dialog = false;
+  alert = "";
+
+  @Emit("update")
+  update(): boolean {
+    return true;
+  }
+
+  async deleteUser(user_id: string): Promise<void> {
+    this.loading = true;
+    const response = await this.$store.dispatch("deleteUser", user_id);
+
+    switch (response.status) {
+      case 200:
+        this.$emit("update", true);
+        this.dialog = false;
+        break;
+      default:
+        this.alert = response.data?.detail ?? response.statusText;
+    }
+    this.loading = false;
+  }
+}
 </script>

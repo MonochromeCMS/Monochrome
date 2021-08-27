@@ -15,7 +15,7 @@
           label="Username/email"
           required
           outlined
-        ></v-text-field>
+        />
       </validation-provider>
       <validation-provider v-slot="{ errors }" name="Password" rules="required">
         <v-text-field
@@ -27,7 +27,7 @@
           required
           outlined
           :type="showPass ? 'text' : 'password'"
-        ></v-text-field>
+        />
       </validation-provider>
       <div class="text-center">
         <v-btn type="submit" block color="background" class="text--primary">
@@ -38,7 +38,8 @@
   </validation-observer>
 </template>
 
-<script>
+<script lang="ts">
+import { Vue, Component } from "vue-property-decorator";
 import { required } from "vee-validate/dist/rules";
 import {
   extend,
@@ -46,7 +47,6 @@ import {
   setInteractionMode,
   ValidationObserver,
 } from "vee-validate";
-import Vue from "vue";
 
 setInteractionMode("eager");
 
@@ -55,50 +55,49 @@ extend("required", {
   message: "{_field_} can not be empty",
 });
 
-export default Vue.extend({
-  name: "LoginForm",
+@Component({
   components: {
     ValidationProvider,
     ValidationObserver,
   },
-  data: () => ({
-    username: "",
-    password: "",
-    showPass: false,
-    alert: "",
-  }),
-  computed: {
-    params() {
-      return {
-        username: this.username,
-        password: this.password,
-      };
-    },
-  },
-  methods: {
-    async submit() {
-      const valid = await this.$refs.observer.validate();
-      if (valid) {
-        await this.login(this.params); // action to login
-      }
-    },
-    clear() {
-      this.alert = "";
-      this.username = "";
-      this.password = "";
-    },
-    async login(params) {
-      const response = await this.$store.dispatch("login", params);
-      console.log(response);
-      //TODO: Check the status, show error if needed
-      switch (response.status) {
-        case 200:
-          this.clear();
-          break;
-        default:
-          this.alert = response.statusText;
-      }
-    },
-  },
-});
+})
+export default class LoginForm extends Vue {
+  username = "";
+  password = "";
+  showPass = false;
+  alert = "";
+
+  get params(): any {
+    return {
+      username: this.username,
+      password: this.password,
+    };
+  }
+
+  async submit(): Promise<void> {
+    //@ts-ignore I can't define this $ref, so let's assume it works
+    const valid = await this.$refs.observer.validate();
+    if (valid) {
+      await this.login(this.params); // action to login
+    }
+  }
+
+  clear(): void {
+    this.alert = "";
+    this.username = "";
+    this.password = "";
+  }
+
+  async login(params: any): Promise<void> {
+    const response = await this.$store.dispatch("login", params);
+
+    switch (response.status) {
+      case 200:
+        this.clear();
+        break;
+      default:
+        this.alert = response.data.detail ?? response.statusText;
+    }
+  }
+}
 </script>

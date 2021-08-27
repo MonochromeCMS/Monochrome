@@ -15,28 +15,26 @@
   </div>
 </template>
 
-<script>
-import Vue from "vue";
-import _debounce from "lodash/debounce";
+<script lang="ts">
+import { Vue, Component, Prop } from "vue-property-decorator";
+import { debounce } from "typescript-debounce-decorator";
 
-export default Vue.extend({
-  name: "SearchBar",
-  props: ["value"],
-  data: () => ({
-    progress: false,
-  }),
-  methods: {
-    _searchInput: _debounce(function (value) {
-      this.$emit("input", value);
-      this.$emit("update:value", value);
-      this.progress = false;
-    }, 1200),
-    searchInput(value) {
-      this.progress = true;
-      this._searchInput(value);
-    },
-  },
-});
+@Component
+export default class SearchBar extends Vue {
+  @Prop(String) value!: string;
+
+  progress = false;
+
+  @debounce(1200)
+  _searchInput(value: string): void {
+    this.$emit("input", value);
+    this.$emit("update:value", value);
+    this.progress = false;
+  }
+
+  searchInput(value: string): void {
+    this.progress = true;
+    this._searchInput(value);
+  }
+}
 </script>
-
-<style scoped></style>

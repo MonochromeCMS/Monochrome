@@ -48,26 +48,27 @@
   </v-container>
 </template>
 
-<script>
-import Vue from "vue";
-import UserEditButton from "@/components/UserEditButton";
-import UserDeleteButton from "@/components/UserDeleteButton";
+<script lang="ts">
+import { Vue, Component, Prop, Emit } from "vue-property-decorator";
+import UserEditButton from "@/components/UserEditButton.vue";
+import UserDeleteButton from "@/components/UserDeleteButton.vue";
 
-export default Vue.extend({
-  name: "UsersList",
+@Component({
   components: { UserDeleteButton, UserEditButton },
-  props: ["users", "loading"],
-  computed: {
-    userId() {
-      return this.$store.getters.userId;
-    },
-  },
-  methods: {
-    update() {
-      this.$emit("update", true);
-    },
-  },
-});
+})
+export default class UsersList extends Vue {
+  @Prop() readonly users!: any[];
+  @Prop(Boolean) readonly loading!: boolean;
+
+  get userId(): string {
+    return this.$store.getters.userId;
+  }
+
+  @Emit("update")
+  update(): boolean {
+    return true;
+  }
+}
 </script>
 
 <style lang="scss">

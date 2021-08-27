@@ -80,106 +80,110 @@
   </v-container>
 </template>
 
-<script>
-import Vue from "vue";
+<script lang="ts">
+import { Vue, Component, Prop, Watch } from "vue-property-decorator";
 import axios from "axios";
 import ChapterDelete from "@/components/ChapterDelete.vue";
 
-export default Vue.extend({
-  name: "MangaChapters",
+@Component({
   components: { ChapterDelete },
-  props: ["value", "mangaId"],
-  data: () => ({
-    chapters: [],
-    loading: true,
-    limit: 10,
-    page: 1,
-    innerValue: ["", ""],
-  }),
-  computed: {
-    pageAmount() {
-      return Math.ceil(this.chapters.length / this.limit);
-    },
-    chaptersPage() {
-      const start = this.limit * (this.page - 1);
-      return this.chapters.slice(start, start + this.limit);
-    },
-    isConnected() {
-      return this.$store.getters.isConnected;
-    },
-  },
-  methods: {
-    popChapter(index) {
-      this.chapters.splice(index, 1);
-    },
-    dispatchValue(error = null, chapter = null) {
-      const value = [
-        error || this.innerValue[0],
-        chapter || this.innerValue[1],
-      ];
-      this.innerValue = value;
-      this.$emit("input", value);
-      this.$emit("update:value", value);
-    },
-    async getChapters() {
-      let url = `/api/manga/${this.mangaId}/chapters`;
+})
+export default class MangaChapters extends Vue {
+  @Prop() readonly value!: string;
+  @Prop() readonly mangaId!: string;
 
-      let response;
-      try {
-        response = await axios.get(url);
-      } catch (e) {
-        response = e.response;
-      }
+  chapters: any[] = [];
+  loading = true;
+  limit = 10;
+  page = 1;
+  innerValue = ["", ""];
 
-      if (this.loading) {
-        await new Promise((resolve) => {
-          setTimeout(() => resolve("done!"), 500);
-        });
-      }
+  get pageAmount(): number {
+    return Math.ceil(this.chapters.length / this.limit);
+  }
+  get chaptersPage(): any[] {
+    const start = this.limit * (this.page - 1);
+    return this.chapters.slice(start, start + this.limit);
+  }
+  get isConnected(): boolean {
+    return this.$store.getters.isConnected;
+  }
 
-      switch (response.status) {
-        case 200:
-          this.chapters = response.data;
-          break;
-        case 422:
-          this.dispatchValue("The ID provided isn't an UUID");
-          break;
-        default:
-          this.dispatchValue(response.statusText);
-      }
+  popChapter(index: number): void {
+    this.chapters.splice(index, 1);
+  }
 
-      this.loading = false;
-    },
-    ago(val) {
-      val = 0 | ((Date.now() - val) / 1000);
-      const length = {
-        second: 60,
-        minute: 60,
-        hour: 24,
-        day: 7,
-        week: 4.35,
-        month: 12,
-        year: 10000,
-      };
+  dispatchValue(
+    error: string | null = null,
+    chapter: string | null = null
+  ): void {
+    const value = [error || this.innerValue[0], chapter || this.innerValue[1]];
+    this.innerValue = value;
+    this.$emit("input", value);
+    this.$emit("update:value", value);
+  }
 
-      for (const unit in length) {
-        const result = val % length[unit];
-        if (!(val = 0 | (val / length[unit])))
-          return result + " " + (result - 1 ? unit + "s" : unit);
-      }
-    },
-  },
-  watch: {
-    chapters() {
-      if (this.chapters.length > 0) {
-        this.dispatchValue(null, this.chapters[this.chapters.length - 1].id);
-      }
-    },
-  },
-  mounted() {
+  async getChapters(): Promise<void> {
+    let url = `/api/manga/${this.mangaId}/chapters`;
+
+    let response;
+    try {
+      response = await axios.get(url);
+    } catch (e) {
+      response = e.response;
+    }
+
+    if (this.loading) {
+      await new Promise((resolve) => {
+        setTimeout(() => resolve("done!"), 500);
+      });
+    }
+
+    switch (response.status) {
+      case 200:
+        this.chapters = response.data;
+        break;
+      case 422:
+        this.dispatchValue("The ID provided isn't an UUID");
+        break;
+      default:
+        this.dispatchValue(response.data.detail ?? response.statusText);
+    }
+
+    this.loading = false;
+  }
+
+  ago(val: number): string {
+    val = 0 | ((Date.now() - val) / 1000);
+    const length: Record<string, number> = {
+      second: 60,
+      minute: 60,
+      hour: 24,
+      day: 7,
+      week: 4.35,
+      month: 12,
+      year: 10000,
+    };
+
+    for (const unit of Object.keys(length)) {
+      const result = val % length[unit];
+      if (!(val = 0 | (val / length[unit])))
+        return result + " " + (result - 1 ? unit + "s" : unit);
+    }
+    return "ERROR";
+  }
+
+  @Watch("chapters")
+  onChaptersUpdate(): void {
+    if (this.chapters.length > 0) {
+      this.dispatchValue(null, this.chapters[this.chapters.length - 1]?.id);
+    }
+  }
+
+  mounted(): void {
     this.getChapters();
-  },
-});
+  }
+}
 </script>
 
 <style lang="scss">

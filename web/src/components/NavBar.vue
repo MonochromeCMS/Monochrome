@@ -61,39 +61,38 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { Vue, Component } from "vue-property-decorator";
 import AdminActions from "@/components/AdminActions.vue";
 
-export default Vue.extend({
-  name: "NavBar",
+@Component({
   components: { AdminActions },
-  data: (): Record<string, any> => ({
-    tabs: "/",
-    links: [
-      {
-        text: "Home",
-        to: "/",
-      },
-      {
-        text: "Manga",
-        to: "/manga",
-      },
-      {
-        text: "About",
-        to: "/about",
-      },
-    ],
-    drawer: false,
-  }),
-  computed: {
-    isConnected() {
-      return this.$store.getters.isConnected;
+})
+export default class NavBar extends Vue {
+  tabs = "/";
+  links = [
+    {
+      text: "Home",
+      to: "/",
     },
-    settings() {
-      return this.$store.getters.settings;
+    {
+      text: "Manga",
+      to: "/manga",
     },
-  },
-});
+    {
+      text: "About",
+      to: "/about",
+    },
+  ];
+  drawer = false;
+
+  get isConnected(): boolean {
+    return this.$store.getters.isConnected;
+  }
+
+  get settings(): any {
+    return this.$store.getters.settings;
+  }
+}
 </script>
 
 <style lang="scss">
