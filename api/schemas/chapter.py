@@ -2,13 +2,14 @@ from typing import Optional, List
 from uuid import UUID
 from datetime import datetime
 
-from pydantic import BaseModel, Field
+from fastapi_camelcase import CamelModel
+from pydantic import Field
 
 from .base import PaginationResponse
 from .manga import MangaResponse
 
 
-class ChapterSchema(BaseModel):
+class ChapterSchema(CamelModel):
     name: str = Field(description="Name of the chapter")
     volume: Optional[int] = Field(
         description="Volume this chapter comes from",
@@ -22,7 +23,7 @@ class ChapterSchema(BaseModel):
                 "name": "A World That Won't Reject Me",
                 "volume": 1,
                 "number": "19.5",
-                "scan_group": "Monochrome Scans",
+                "scanGroup": "Monochrome Scans",
             }
         }
 
@@ -57,8 +58,8 @@ class ChapterResponse(ChapterSchema):
                 "manga_id": "1e01d7f6-c4e1-4102-9dd0-a6fccc065978",
                 "version": 2,
                 "id": "4abe53f4-0eaa-4f31-9210-a625fa665e23",
-                "scan_group": "Monochrome Scans",
-                "upload_time": "2000-08-24 00:00:00",
+                "scanGroup": "Monochrome Scans",
+                "uploadTime": "2000-08-24 00:00:00",
             }
         }
 

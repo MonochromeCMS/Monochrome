@@ -1,11 +1,13 @@
 from uuid import UUID
 from typing import Optional, List
-from pydantic import BaseModel, Field, EmailStr
+
+from fastapi_camelcase import CamelModel
+from pydantic import Field, EmailStr
 
 from .base import PaginationResponse
 
 
-class TokenResponse(BaseModel):
+class TokenResponse(CamelModel):
     access_token: str = Field(description="JWT Auth token")
     token_type = Field(
         "bearer",
@@ -13,7 +15,7 @@ class TokenResponse(BaseModel):
     )
 
 
-class User(BaseModel):
+class User(CamelModel):
     username: str = Field(max_length=15)
     email: Optional[EmailStr]
 

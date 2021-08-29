@@ -27,7 +27,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator';
+import { Vue, Component } from "vue-property-decorator";
 import axios from "axios";
 import MangaRow from "@/components/MangaRow.vue";
 import UploadForm from "@/components/UploadForm.vue";
@@ -35,7 +35,7 @@ import UploadForm from "@/components/UploadForm.vue";
 @Component({
   components: { MangaRow, UploadForm },
 })
-export default class About extends Vue{
+export default class About extends Vue {
   manga = null;
   chapter = null;
   alert = "";
@@ -76,7 +76,7 @@ export default class About extends Vue{
 
   mounted(): void {
     if (!this.isConnected) {
-      this.$router.replace("/")
+      this.$router.replace("/");
     } else {
       this.getChapter();
     }

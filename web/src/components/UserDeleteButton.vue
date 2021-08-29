@@ -27,7 +27,9 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="gray" text @click="dialog = false"> Cancel </v-btn>
-        <v-btn color="error" @click="deleteUser(user.id)" :disabled="loading"> Delete </v-btn>
+        <v-btn color="error" @click="deleteUser(user.id)" :disabled="loading">
+          Delete
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -50,9 +52,9 @@ export default class UserDeleteButton extends Vue {
     return true;
   }
 
-  async deleteUser(user_id: string): Promise<void> {
+  async deleteUser(userId: string): Promise<void> {
     this.loading = true;
-    const response = await this.$store.dispatch("deleteUser", user_id);
+    const response = await this.$store.dispatch("deleteUser", userId);
 
     switch (response.status) {
       case 200:

@@ -10,14 +10,17 @@ Once those requirements are fulfilled you need to set up your [.env](#environmen
 
 ## docker-compose files
 Four different "environments" are available:
-* `production` Includes PWA support, HTTPS (requires a domain name and to be the only web server on the machine), and optimisations, the one you most likely want. `make install compose_file=docker-compose.prod.yml`
-* `production-nginx` Same as production but without the HTTPS, in case you have other web servers and have a reverse proxy or want to handle the HTTPS yourself (ex. intranet). `make install compose_file=docker-compose.nginx.yml`
-* `development` Only use this one for development or a quick preview. Optimised for development, allows for hot reload and faster builds but skips optimisations: `make install`
+* `production` Includes PWA support, HTTPS (requires a domain name and to be the only web server on the machine),
+  and optimisations, the one you most likely want. `make install compose_file=docker-compose.prod.yml`
+* `production-nginx` Same as production but without the HTTPS, in case you have other web servers and
+  have a reverse proxy or want to handle the HTTPS yourself (ex. intranet). `make install compose_file=docker-compose.nginx.yml`
+* `development` Only use this one for development or a quick preview. Optimised for development, 
+  allows for hot reload and faster builds but skips optimisations: `make install`
 * `testing` Used to perform the tests, more info on [Testing](#testing)
 
 ## Environment settings
 Monochrome uses a `.env` file to take your settings,
-an example is provided [here](/D34DPlayer/Monochrome/blob/main/.env.example).
+an example is provided [here](.env.example).
 
 ### Variables
 *Note: The database should be isolated by docker and only accessible by the Monochrome API, however using 
@@ -35,6 +38,14 @@ unique username and password is very recommended.*
 * `TITLE` Name of your website, used for stuff like the title of the tab when you open the website.
 * `DESCRIPTION` Description of your website.
 
+# Screenshots
+
+![Screenshot 1](.github/assets/monochrome_1.png)
+![Screenshot 2](.github/assets/monochrome_2.png)
+![Screenshot 3](.github/assets/monochrome_3.png)
+![Screenshot 4](.github/assets/monochrome_4.png)
+![Screenshot 5](.github/assets/monochrome_5.png)
+
 ## Testing
 - `make test-back` Launches the backend tests
 
@@ -50,15 +61,15 @@ unique username and password is very recommended.*
 
 ## Progress
 * API
-  * Creation 🟢100%
+  * Creation 🟢100% (new features can always be added)
   * Documentation 🟡42%
     * OpenAPI 🟠33%
     * Cleaner code 🟡50%
-  * Testing 🟠33%
+  * Testing 🟠40%
     * Unit 🟢100%
-    * Integration 🔴0%
+    * Integration 🔴10%
 * Frontend 
-  * Creation 🟡70%
+  * Creation 🟢100% (new features can always be added)
     * Latest chapters 🟢100%
     * Manga list 🟢100%
       * Index preview 🟢100%
@@ -72,11 +83,11 @@ unique username and password is very recommended.*
     * Chapter reader 🟢100%
     * Upload chapters 🟢100%
     * Delete chapters 🟢100%
-    * Admin 🟡66%
+    * Admin 🟢100%
       * Login 🟢100%
       * User management 🟢100%
-      * Interface customization 🔴33% (meta at build)
-    * About page 🔴0%
+      * Interface customization 🟢100%
+    * About page 🟢100%
   * Cleaner code 🟡??% (basically reading everything back and adding comments and modularity)
   * Testing 🔴0% (It's a pain so no promises)
 * Reverse proxy 
@@ -84,9 +95,10 @@ unique username and password is very recommended.*
     * Developpement build 🟢100%
     * Production build with frontend compilation 🟢100%
 * Find a way to deploy this more easily
-  * Heroku?
-  * Docker swarm?
-  * Kubernetes?
+  * Heroku? (won't work easily bcs we rely on persistent data)
+  * Docker swarm? (shouldn't be too hard, but I don't know how useful it'd be)
+  * Kubernetes? (not really worth it, expensive and only useful in big environments)
+  * Ansible?
   
 Credits:
 * Base API template: https://github.com/grillazz/fastapi-sqlalchemy-asyncpg

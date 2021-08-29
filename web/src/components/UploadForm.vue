@@ -47,7 +47,7 @@
             rules="required"
           >
             <v-combobox
-              v-model="scan_group"
+              v-model="scanGroup"
               :items="groupAutocomplete"
               :error-messages="errors"
               label="Scan Group"
@@ -73,12 +73,12 @@
       <v-btn
         v-if="chapter && !session"
         color="info"
-        @click="createSession(manga_id, chapter.id)"
+        @click="createSession(mangaId, chapter.id)"
       >
         Edit Pages
       </v-btn>
 
-      <page-input v-if="session" :session="session" v-model="page_order" />
+      <page-input v-if="session" :session="session" v-model="pageOrder" />
 
       <div class="text-center mt-4">
         <v-btn type="submit" block color="background" class="text--primary">
@@ -122,7 +122,7 @@ extend("regex", {
   components: { PageInput, ValidationProvider, ValidationObserver },
 })
 export default class UploadForm extends Vue {
-  @Prop(String) readonly manga_id!: string;
+  @Prop(String) readonly mangaId!: string;
   @Prop() readonly chapter!: any;
 
   groupAutocomplete = [];
@@ -131,26 +131,26 @@ export default class UploadForm extends Vue {
   volume = null;
   number = null;
   session: any = null;
-  page_order = [];
-  scan_group = "no group";
+  pageOrder = [];
+  scanGroup = "no group";
 
   get authConfig(): AxiosRequestConfig {
     return this.$store.getters.authConfig;
   }
 
-  get chapter_draft(): any {
+  get chapterDraft(): any {
     return {
       name: this.name,
       number: this.number,
       volume: this.volume,
-      scan_group: this.scan_group,
+      scanGroup: this.scanGroup,
     };
   }
 
   get params(): any {
     return {
-      chapter_draft: this.chapter_draft,
-      page_order: this.page_order,
+      chapterDraft: this.chapterDraft,
+      pageOrder: this.pageOrder,
     };
   }
 
@@ -160,21 +160,21 @@ export default class UploadForm extends Vue {
     if (valid) {
       switch (true) {
         case this.chapter && !this.session:
-          await this.editChapter(this.chapter_draft);
+          await this.editChapter(this.chapterDraft);
           break;
-        case this.session && this.page_order.length > 0:
+        case this.session && this.pageOrder.length > 0:
           await this.commitSession(this.params);
       }
     }
   }
 
-  async createSession(manga_id: string, chapter: string | null): Promise<void> {
+  async createSession(mangaId: string, chapter: string | null): Promise<void> {
     let url = `/api/upload/begin`;
 
     const config = this.authConfig;
     config.headers["Content-Type"] = "application/json";
 
-    const data = { manga_id, chapter };
+    const data = { mangaId, chapter };
 
     let response;
     try {
@@ -248,7 +248,7 @@ export default class UploadForm extends Vue {
 
     switch (response.status) {
       case 200:
-        await this.$router.push(`/manga/${this.manga_id}/${response.id}`);
+        await this.$router.push(`/manga/${this.mangaId}/${response.id}`);
         break;
       case 404:
         await this.$router.push("/");
@@ -293,9 +293,9 @@ export default class UploadForm extends Vue {
       this.name = this.chapter.name;
       this.number = this.chapter.number;
       this.volume = this.chapter.volume;
-      this.scan_group = this.chapter.scan_group;
+      this.scanGroup = this.chapter.scanGroup;
     } else {
-      this.createSession(this.manga_id, null);
+      this.createSession(this.mangaId, null);
     }
     this.autocomplete();
   }

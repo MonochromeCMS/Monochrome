@@ -60,7 +60,7 @@
           <v-row align="center">
             <v-col cols="3">
               <v-img
-                :src="`/media/${chapter.manga_id}/cover.jpg?version=${chapter.manga.version}`"
+                :src="`/media/${chapter.mangaId}/cover.jpg?version=${chapter.manga.version}`"
                 max-height="7rem"
               />
             </v-col>
@@ -75,9 +75,9 @@
                   }`
                 }}
               </h3>
-              <h4 class="text-caption">{{ chapter.scan_group }}</h4>
+              <h4 class="text-caption">{{ chapter.scanGroup }}</h4>
               <v-chip color="backgroundAlt" class="chip-tag">
-                {{ ago(new Date(chapter.upload_time).getTime()) }} ago
+                {{ ago(new Date(chapter.uploadTime).getTime()) }} ago
               </v-chip>
             </v-col>
           </v-row>

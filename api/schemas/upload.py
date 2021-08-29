@@ -1,12 +1,13 @@
 from typing import List, Optional
 from uuid import UUID
 
-from pydantic import BaseModel, Field
+from fastapi_camelcase import CamelModel
+from pydantic import Field
 
 from .chapter import ChapterSchema
 
 
-class BeginUploadSession(BaseModel):
+class BeginUploadSession(CamelModel):
     manga_id: UUID = Field(
         description="Manga this session is linked to",
     )
@@ -21,7 +22,7 @@ class BeginUploadSession(BaseModel):
         }
 
 
-class UploadedBlobResponse(BaseModel):
+class UploadedBlobResponse(CamelModel):
     id: UUID = Field(
         description="ID of the uploaded blob",
     )
@@ -52,6 +53,6 @@ class UploadSessionResponse(BeginUploadSession):
         orm_mode = True
 
 
-class CommitUploadSession(BaseModel):
+class CommitUploadSession(CamelModel):
     chapter_draft: ChapterSchema = Field(description="Details of the chapter")
     page_order: List[UUID] = Field(description="Order the pages should be uploaded in")

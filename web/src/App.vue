@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts">
-import {Vue, Component, Watch} from "vue-property-decorator";
+import { Vue, Component, Watch } from "vue-property-decorator";
 import NavBar from "./components/NavBar.vue";
 import ThemeToggler from "@/components/ThemeToggler.vue";
 
@@ -20,7 +20,7 @@ import ThemeToggler from "@/components/ThemeToggler.vue";
   },
 })
 export default class App extends Vue {
-   get isConnected() {
+  get isConnected() {
     return this.$store.getters.isConnected;
   }
   @Watch("isConnected")

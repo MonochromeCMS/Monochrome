@@ -5,10 +5,11 @@ from datetime import datetime
 from ..models.manga import Status
 from .base import PaginationResponse
 
-from pydantic import BaseModel, Field
+from fastapi_camelcase import CamelModel
+from pydantic import Field
 
 
-class MangaSchema(BaseModel):
+class MangaSchema(CamelModel):
     title: str = Field(description="Title of the manga")
     description: str = Field(
         description="Short description of the manga",
@@ -63,7 +64,7 @@ class MangaResponse(MangaSchema):
                 "year": 2021,
                 "status": Status.ongoing,
                 "version": 2,
-                "create_time": "2000-08-24 00:00:00",
+                "createTime": "2000-08-24 00:00:00",
             }
         }
 

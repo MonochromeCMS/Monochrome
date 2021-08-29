@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator';
+import { Vue, Component } from "vue-property-decorator";
 import axios from "axios";
 import MangaRow from "@/components/MangaRow.vue";
 import UploadForm from "@/components/UploadForm.vue";
@@ -70,7 +70,7 @@ export default class ChapterUpload extends Vue {
 
   mounted(): void {
     if (!this.isConnected) {
-      this.$router.replace("/")
+      this.$router.replace("/");
     } else {
       this.getManga();
     }

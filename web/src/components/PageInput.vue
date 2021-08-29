@@ -41,6 +41,12 @@
       multiple
       style="display: none"
     />
+    <div>
+      <ul>
+        <li>Supported image formats are JPEG, PNG, GIF, BMP and WebP.</li>
+        <li>You can upload multiple images at the same time.</li>
+      </ul>
+    </div>
   </v-container>
 </template>
 

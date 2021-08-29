@@ -33,14 +33,14 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator';
+import { Vue, Component } from "vue-property-decorator";
 import axios from "axios";
 import PagedReader from "@/components/PagedReader.vue";
 import VerticalReader from "@/components/VerticalReader.vue";
 import ReaderMenu from "@/components/ReaderMenu.vue";
 
 @Component({
-  components: {ReaderMenu, VerticalReader, PagedReader },
+  components: { ReaderMenu, VerticalReader, PagedReader },
 })
 export default class ChapterReader extends Vue {
   chapter = null;
@@ -52,11 +52,14 @@ export default class ChapterReader extends Vue {
   }
 
   get currentChapterIndex(): number {
-    return this.chapters.findIndex(el => el.id === this.chapterId);
+    return this.chapters.findIndex((el) => el.id === this.chapterId);
   }
 
   get previousChapter(): string | null {
-    if (this.currentChapterIndex !== -1 && this.currentChapterIndex < this.chapters.length - 1) {
+    if (
+      this.currentChapterIndex !== -1 &&
+      this.currentChapterIndex < this.chapters.length - 1
+    ) {
       return this.chapters[this.currentChapterIndex + 1].id;
     } else {
       return null;
@@ -72,7 +75,7 @@ export default class ChapterReader extends Vue {
   }
 
   get chapterItems(): any[] {
-    return this.chapters.map(el => ({
+    return this.chapters.map((el) => ({
       value: el.id,
       text: this.chapterName(el),
     }));
@@ -108,8 +111,10 @@ export default class ChapterReader extends Vue {
     switch (response.status) {
       case 200:
         this.chapter = response.data;
-        this.chapters = [{value: this.chapterId, text: this.chapterName(response.data)}];
-        await this.getChapters(response.data.manga_id);
+        this.chapters = [
+          { value: this.chapterId, text: this.chapterName(response.data) },
+        ];
+        await this.getChapters(response.data.mangaId);
         break;
       case 404:
         this.alert = "Chapter not found";
@@ -122,8 +127,8 @@ export default class ChapterReader extends Vue {
     }
   }
 
-  async getChapters(manga_id: string): Promise<void> {
-    let url = `/api/manga/${manga_id}/chapters`;
+  async getChapters(mangaId: string): Promise<void> {
+    let url = `/api/manga/${mangaId}/chapters`;
 
     let response;
     try {

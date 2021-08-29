@@ -50,8 +50,8 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Watch } from 'vue-property-decorator';
-import axios, {AxiosRequestConfig} from "axios";
+import { Vue, Component, Watch } from "vue-property-decorator";
+import axios, { AxiosRequestConfig } from "axios";
 import UsersList from "@/components/UsersList.vue";
 import UserForm from "@/components/UserForm.vue";
 
@@ -59,13 +59,13 @@ import UserForm from "@/components/UserForm.vue";
   components: { UsersList, UserForm },
 })
 export default class About extends Vue {
-    alert = "";
-    page = 1;
-    total = 0;
-    limit = 10;
-    users = [];
-    loading = true;
-    addDialog = false;
+  alert = "";
+  page = 1;
+  total = 0;
+  limit = 10;
+  users = [];
+  loading = true;
+  addDialog = false;
 
   get isConnected(): boolean {
     return this.$store.getters.isConnected;
@@ -83,7 +83,7 @@ export default class About extends Vue {
     return Math.ceil((this.total + 1) / this.limit);
   }
 
-  @Watch('page')
+  @Watch("page")
   onPageChange(): void {
     this.getUsers();
   }
@@ -122,7 +122,7 @@ export default class About extends Vue {
 
   mounted(): void {
     if (!this.isConnected) {
-      this.$router.replace("/")
+      this.$router.replace("/");
     } else {
       this.getUsers();
     }

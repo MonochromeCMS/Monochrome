@@ -153,9 +153,9 @@ export default class UserForm extends Vue {
     this.password = "";
   }
 
-  async editUser(user_id: string, params: any): Promise<void> {
+  async editUser(userId: string, params: any): Promise<void> {
     this.loading = true;
-    const response = await this.$store.dispatch("editUser", [user_id, params]);
+    const response = await this.$store.dispatch("editUser", [userId, params]);
 
     switch (response.status) {
       case 200:

@@ -1,9 +1,10 @@
 from typing import Optional
 
-from pydantic import BaseModel, Field
+from fastapi_camelcase import CamelModel
+from pydantic import Field
 
 
-class SettingsSchema(BaseModel):
+class SettingsSchema(CamelModel):
     title1: Optional[str] = Field(description="Name of the site (1st part)")
     title2: Optional[str] = Field(description="Name of the site (2nd part)")
     about: Optional[str] = Field(description="Text to show in the about page (markdown)")

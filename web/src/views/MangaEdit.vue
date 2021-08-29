@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator';
+import { Vue, Component } from "vue-property-decorator";
 import MangaForm from "@/components/MangaForm.vue";
 import axios from "axios";
 
@@ -63,7 +63,7 @@ export default class MangaEdit extends Vue {
 
   mounted(): void {
     if (!this.isConnected) {
-      this.$router.replace("/")
+      this.$router.replace("/");
     } else {
       this.getManga();
     }

@@ -17,6 +17,7 @@ fastapi = "*"
 slowapi = "*"
 hypercorn = "*"
 pydantic = {extras = ["email"], version = "*"}
+fastapi_camelcase = "*"
 python-jose = {extras = ["cryptography"], version = "*"}
 passlib = {extras = ["bcrypt"], version = "*"}
 asyncpg = "*"

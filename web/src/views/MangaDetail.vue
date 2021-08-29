@@ -76,8 +76,8 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator';
-import axios, {AxiosRequestConfig} from "axios";
+import { Vue, Component } from "vue-property-decorator";
+import axios, { AxiosRequestConfig } from "axios";
 import MangaRow from "@/components/MangaRow.vue";
 import MangaChapters from "@/components/MangaChapters.vue";
 
