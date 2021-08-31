@@ -4,8 +4,8 @@ import axios from "axios";
 import qs from "qs";
 
 interface TokenPayload {
-  access_token: string;
-  token_type: string;
+  accessToken: string;
+  tokenType: string;
 }
 
 interface User {
@@ -42,7 +42,7 @@ const state = (): UserState => ({
 
 const mutations = {
   setToken(state: UserState, payload: TokenPayload): void {
-    state.user.token = payload.access_token;
+    state.user.token = payload.accessToken;
   },
   logout(state: UserState): void {
     state.user = {
