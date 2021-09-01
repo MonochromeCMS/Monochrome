@@ -66,11 +66,11 @@ export default class PageInput extends Vue {
 
   @Prop() readonly session!: any;
 
-  @VModel() page_order!: any[];
+  @VModel() pageOrder!: any[];
 
   pages: any[] = [];
   loading = 0;
-  page_upload = null;
+  pageUpload = null;
   alert = "";
 
   get authConfig(): AxiosRequestConfig {
@@ -83,7 +83,7 @@ export default class PageInput extends Vue {
 
   @Watch("pages")
   onPagesChange(value: any[]): void {
-    this.page_order = value.map((el) => el.id);
+    this.pageOrder = value.map((el) => el.id);
   }
 
   uploadClick(): void {

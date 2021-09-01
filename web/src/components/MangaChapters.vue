@@ -40,11 +40,11 @@
               {{ item.name }}
             </v-col>
             <v-col cols="5" sm="3" md="2" class="ellipsis">
-              {{ item.scan_group }}
+              {{ item.scanGroup }}
             </v-col>
             <v-col cols="3" lg="2" class="pa-0 text-right hidden-xs-only">
               <v-chip color="backgroundAlt" class="ma-2">
-                {{ ago(new Date(item.upload_time).getTime()) }} ago
+                {{ ago(new Date(item.uploadTime).getTime()) }} ago
               </v-chip>
             </v-col>
           </v-row>

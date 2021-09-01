@@ -252,7 +252,7 @@ export default class MangaForm extends Vue {
     }
   }
 
-  async setCover(manga_id: string, cover: File | null): Promise<void> {
+  async setCover(mangaId: string, cover: File | null): Promise<void> {
     if (!cover) return;
 
     const config = this.authConfig;
@@ -263,14 +263,14 @@ export default class MangaForm extends Vue {
 
     let response;
     try {
-      response = await axios.put(`/api/manga/${manga_id}/cover`, form, config);
+      response = await axios.put(`/api/manga/${mangaId}/cover`, form, config);
     } catch (e) {
       response = e.response;
     }
 
     switch (response.status) {
       case 200:
-        await this.$router.push(`/manga/${manga_id}`);
+        await this.$router.push(`/manga/${mangaId}`);
         break;
       case 401:
         this.$store.commit("logout");

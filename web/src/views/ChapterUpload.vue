@@ -10,11 +10,11 @@
           <manga-row
             v-if="manga"
             :manga="manga"
-            :cover="`/media/${manga_id}/cover.jpg`"
+            :cover="`/media/${mangaId}/cover.jpg`"
             class="background rounded"
           />
           <v-card-text>
-            <upload-form :manga_id="manga_id" />
+            <upload-form :mangaId="mangaId" />
           </v-card-text>
         </v-card>
       </v-col>
@@ -35,7 +35,7 @@ export default class ChapterUpload extends Vue {
   manga = null;
   alert = "";
 
-  get manga_id(): string {
+  get mangaId(): string {
     return this.$route.params.manga;
   }
 
@@ -44,7 +44,7 @@ export default class ChapterUpload extends Vue {
   }
 
   async getManga(): Promise<void> {
-    let url = `/api/manga/${this.manga_id}`;
+    let url = `/api/manga/${this.mangaId}`;
 
     let response;
     try {

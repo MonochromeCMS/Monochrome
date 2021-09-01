@@ -16,7 +16,7 @@
           <v-card-text>
             <upload-form
               v-if="chapter"
-              :manga_id="manga.id"
+              :mangaId="manga.id"
               :chapter="chapter"
             />
           </v-card-text>
