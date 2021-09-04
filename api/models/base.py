@@ -29,6 +29,7 @@ class Base:
         try:
             self.version = self.version + 1 if self.version else 1
             db_session.add(self)
+            await db_session.commit()
         except SQLAlchemyError as ex:
             raise UnprocessableEntityHTTPException("Database error")
 
@@ -39,6 +40,7 @@ class Base:
         """
         try:
             await db_session.delete(self)
+            await db_session.commit()
             return "OK"
         except SQLAlchemyError as ex:
             raise UnprocessableEntityHTTPException("Database error")
