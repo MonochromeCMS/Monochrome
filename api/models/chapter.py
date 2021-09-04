@@ -1,6 +1,6 @@
 import uuid
 
-from sqlalchemy import Column, String, Integer, ForeignKey, DateTime, func, select, Float
+from sqlalchemy import Column, String, Integer, ForeignKey, DateTime, func, select, Float, Boolean
 from sqlalchemy.orm import relationship, joinedload
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.dialects.postgresql import UUID
@@ -15,6 +15,7 @@ class Chapter(Base):
     volume = Column(Integer, nullable=True)
     number = Column(Float, nullable=False)
     length = Column(Integer, nullable=False)
+    webtoon = Column(Boolean, default=False, nullable=False)
     upload_time = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     manga_id = Column(UUID(as_uuid=True), ForeignKey("manga.id", ondelete="CASCADE"), nullable=False)
     manga = relationship("Manga", back_populates="chapters")

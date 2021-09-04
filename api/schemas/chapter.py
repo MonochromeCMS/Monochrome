@@ -11,6 +11,7 @@ from .manga import MangaResponse
 
 class ChapterSchema(CamelModel):
     name: str = Field(description="Name of the chapter")
+    webtoon: bool = Field(description="If this chapter is a webtoon")
     volume: Optional[int] = Field(
         description="Volume this chapter comes from",
     )
@@ -22,6 +23,7 @@ class ChapterSchema(CamelModel):
             "example": {
                 "name": "A World That Won't Reject Me",
                 "volume": 1,
+                "webtoon": True,
                 "number": "19.5",
                 "scanGroup": "Monochrome Scans",
             }
@@ -53,6 +55,7 @@ class ChapterResponse(ChapterSchema):
             "example": {
                 "name": "A World That Won't Reject Me",
                 "volume": 1,
+                "webtoon": True,
                 "number": "19.5",
                 "length": 15,
                 "manga_id": "1e01d7f6-c4e1-4102-9dd0-a6fccc065978",
