@@ -1,7 +1,7 @@
 <template>
   <v-row class="ma-0">
     <v-col
-      :class="webtoon ? 'webtoon' : ''"
+      cols="12"
       v-for="index in length"
       :key="index"
     >
@@ -32,10 +32,8 @@ export default class VerticalReader extends Vue {
 </script>
 
 <style lang="scss">
-.webtoon {
-  padding: 0;
-}
 .default {
+  margin: auto;
   max-height: 150vh;
   max-width: 100%;
 }
@@ -43,7 +41,8 @@ export default class VerticalReader extends Vue {
   width: 100%;
 }
 .height {
-  max-height: calc(100vh - 10rem);
+  max-height: calc(100vh - 8rem);
+  margin: auto;
   max-width: 100%;
 }
 </style>
