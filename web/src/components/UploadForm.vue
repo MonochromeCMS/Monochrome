@@ -68,6 +68,16 @@
         ></v-text-field>
       </validation-provider>
 
+      <!-- NAME FIELD -->
+      <validation-provider v-slot="{ errors }" name="Webtoon">
+        <v-checkbox
+          v-model="webtoon"
+          :error-messages="errors"
+          label="This chapter is a webtoon (the webtoon reader will be used)"
+          hide-details="auto"
+        ></v-checkbox>
+      </validation-provider>
+
       <v-divider class="my-3" />
 
       <v-btn
@@ -130,6 +140,7 @@ export default class UploadForm extends Vue {
   name = "";
   volume = null;
   number = null;
+  webtoon = false;
   session: any = null;
   pageOrder = [];
   scanGroup = "no group";
@@ -143,6 +154,7 @@ export default class UploadForm extends Vue {
       name: this.name,
       number: this.number,
       volume: this.volume,
+      webtoon: this.webtoon,
       scanGroup: this.scanGroup,
     };
   }
@@ -293,6 +305,7 @@ export default class UploadForm extends Vue {
       this.name = this.chapter.name;
       this.number = this.chapter.number;
       this.volume = this.chapter.volume;
+      this.webtoon = this.chapter.webtoon;
       this.scanGroup = this.chapter.scanGroup;
     } else {
       this.createSession(this.mangaId, null);
