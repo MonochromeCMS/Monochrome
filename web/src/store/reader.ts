@@ -4,12 +4,14 @@ interface ReaderState {
   direction: fakeBoolean;
   readerMode: string;
   parity: fakeBoolean;
+  width: string;
   fit: string;
 }
 
 const state = (): ReaderState => ({
   direction: 0,
   parity: 0,
+  width: "75%",
   readerMode: "Single",
   fit: "default",
 });
@@ -27,6 +29,9 @@ const getters = {
   getFit(state: ReaderState): string {
     return state.fit;
   },
+  getWidth(state: ReaderState): string {
+    return state.width;
+  },
 };
 
 const mutations = {
@@ -41,6 +46,9 @@ const mutations = {
   },
   setFit(state: ReaderState, payload: string): void {
     state.fit = payload;
+  },
+  setWidth(state: ReaderState, payload: string): void {
+    state.width = payload;
   },
 };
 

@@ -11,7 +11,7 @@
           :webtoon="readerMode === 'Webtoon'"
         />
       </v-col>
-      <v-col cols="12" v-if="['Single', 'Double'].includes(readerMode)">
+      <v-col cols="12" v-else>
         <paged-reader
           :manga="chapter.manga.id"
           :chapter="chapter.id"
@@ -43,7 +43,7 @@ import ReaderMenu from "@/components/ReaderMenu.vue";
   components: { ReaderMenu, VerticalReader, PagedReader },
 })
 export default class ChapterReader extends Vue {
-  chapter = null;
+  chapter: any = null;
   chapters: any[] = [];
   alert = "";
 
@@ -82,7 +82,7 @@ export default class ChapterReader extends Vue {
   }
 
   get readerMode(): string {
-    return this.$store.getters.getReaderMode;
+    return this.chapter.webtoon ? "Webtoon" : this.$store.getters.getReaderMode;
   }
 
   async goToChapter(id: string | null): Promise<void> {

@@ -33,7 +33,23 @@
           v-model="readerMode"
           :items="modeItems"
         />
-        <v-row align="center" class="ma-1">
+        <v-slider
+          class="ma-4 mb-1"
+          v-if="readerMode === 'Webtoon'"
+          hide-details
+          v-model="width"
+          step="5"
+          min="5"
+          max="100"
+          color="background"
+          label="Width"
+          thumb-label
+        >
+          <template v-slot:thumb-label="{ value }">
+            {{ value }}%
+          </template>
+        </v-slider>
+        <v-row v-else align="center" class="ma-1">
           <v-col class="text-body-1"> Image fit: </v-col>
           <v-col class="text-right pa-2">
             <v-btn-toggle v-model="fit" mandatory>
@@ -82,12 +98,15 @@ export default class ReaderMenu extends Vue {
   @Prop() readonly chapter!: any;
   @Prop() readonly chapterItems!: any;
 
-  modeItems = ["Single", "Double", "Vertical", "Webtoon"];
   menu = false;
 
   @Emit()
   goToChapter(id: string): string {
     return id;
+  }
+
+  get modeItems(): string[] {
+    return this.chapter.webtoon ? ["Webtoon"] : ["Single", "Double", "Vertical"];
   }
 
   get doubleParity(): number {
@@ -122,6 +141,13 @@ export default class ReaderMenu extends Vue {
     }
   }
 
+  get width(): number {
+    return Number(this.$store.getters.getWidth.slice(0, -1));
+  }
+  set width(value: number) {
+    this.$store.commit("setWidth", `${value}%`);
+  }
+
   get direction(): number {
     return this.$store.getters.getDirection;
   }
@@ -130,10 +156,12 @@ export default class ReaderMenu extends Vue {
   }
 
   get readerMode(): string {
-    return this.$store.getters.getReaderMode;
+    return this.chapter.webtoon ? "Webtoon" : this.$store.getters.getReaderMode;
   }
   set readerMode(value: string) {
-    this.$store.commit("setReaderMode", value);
+    if (!this.chapter.webtoon) {
+      this.$store.commit("setReaderMode", value);
+    }
   }
 }
 </script>
