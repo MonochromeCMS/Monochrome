@@ -3,12 +3,28 @@ from typing import Optional
 from fastapi import HTTPException, status
 
 
+def _open_api(default: str, msg: Optional[str] = None):
+    return {
+        "content": {
+            "application/json": {
+                "example": {
+                    "detail": msg if msg else default,
+                },
+            },
+        },
+    }
+
+
 class BadRequestHTTPException(HTTPException):
     def __init__(self, msg: str):
         super().__init__(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=msg if msg else "Bad request",
         )
+
+    @staticmethod
+    def open_api(msg: Optional[str] = None):
+        return _open_api("Bad request", msg)
 
 
 class ForbiddenHTTPException(HTTPException):
@@ -18,6 +34,10 @@ class ForbiddenHTTPException(HTTPException):
             detail=msg if msg else "Requested resource is forbidden",
         )
 
+    @staticmethod
+    def open_api(msg: Optional[str] = None):
+        return _open_api("Requested resource is forbidden", msg)
+
 
 class NotFoundHTTPException(HTTPException):
     def __init__(self, msg: Optional[str] = None):
@@ -25,6 +45,10 @@ class NotFoundHTTPException(HTTPException):
             status_code=status.HTTP_404_NOT_FOUND,
             detail=msg if msg else "Requested resource is not found",
         )
+
+    @staticmethod
+    def open_api(msg: Optional[str] = None):
+        return _open_api("Requested resource is not found", msg)
 
 
 class ConflictHTTPException(HTTPException):
@@ -34,6 +58,10 @@ class ConflictHTTPException(HTTPException):
             detail=msg if msg else "Conflicting resource request",
         )
 
+    @staticmethod
+    def open_api(msg: Optional[str] = None):
+        return _open_api("Conflicting resource request", msg)
+
 
 class ServiceNotAvailableHTTPException(HTTPException):
     def __init__(self, msg: Optional[str] = None):
@@ -41,6 +69,10 @@ class ServiceNotAvailableHTTPException(HTTPException):
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail=msg if msg else "Service not available",
         )
+
+    @staticmethod
+    def open_api(msg: Optional[str] = None):
+        return _open_api("Service not available", msg)
 
 
 class UnprocessableEntityHTTPException(HTTPException):
@@ -50,6 +82,10 @@ class UnprocessableEntityHTTPException(HTTPException):
             detail=msg if msg else "The entity couldn't be processed",
         )
 
+    @staticmethod
+    def open_api(msg: Optional[str] = None):
+        return _open_api("The entity couldn't be processed", msg)
+
 
 class AuthFailedHTTPException(HTTPException):
     def __init__(self, msg: Optional[str] = None):
@@ -58,3 +94,7 @@ class AuthFailedHTTPException(HTTPException):
             detail=msg if msg else "Could not validate credentials",
             headers={"WWW-Authenticate": "Bearer"},
         )
+
+    @staticmethod
+    def open_api(msg: Optional[str] = None):
+        return _open_api("Could not validate credentials", msg)

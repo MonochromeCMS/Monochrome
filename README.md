@@ -62,8 +62,8 @@ unique username and password is very recommended.*
 ## Progress
 * API
   * Creation 🟢100% (new features can always be added)
-  * Documentation 🟡42%
-    * OpenAPI 🟠33%
+  * Documentation 🟡58%
+    * OpenAPI 🟡66%
     * Cleaner code 🟡50%
   * Testing 🟠40%
     * Unit 🟢100%

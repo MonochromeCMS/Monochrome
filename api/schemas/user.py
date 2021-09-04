@@ -2,12 +2,12 @@ from uuid import UUID
 from typing import Optional, List
 
 from fastapi_camelcase import CamelModel
-from pydantic import Field, EmailStr
+from pydantic import Field, EmailStr, BaseModel
 
 from .base import PaginationResponse
 
 
-class TokenResponse(CamelModel):
+class TokenResponse(BaseModel):
     access_token: str = Field(description="JWT Auth token")
     token_type = Field(
         "bearer",

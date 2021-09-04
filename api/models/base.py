@@ -29,9 +29,8 @@ class Base:
         try:
             self.version = self.version + 1 if self.version else 1
             db_session.add(self)
-            return await db_session.commit()
         except SQLAlchemyError as ex:
-            raise UnprocessableEntityHTTPException(repr(ex))
+            raise UnprocessableEntityHTTPException("Database error")
 
     async def delete(self, db_session: AsyncSession):
         """
@@ -40,10 +39,9 @@ class Base:
         """
         try:
             await db_session.delete(self)
-            await db_session.commit()
-            return True
+            return "OK"
         except SQLAlchemyError as ex:
-            raise UnprocessableEntityHTTPException(repr(ex))
+            raise UnprocessableEntityHTTPException("Database error")
 
     async def update(self, db_session: AsyncSession, **kwargs):
         """

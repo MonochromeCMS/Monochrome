@@ -16,6 +16,13 @@ from ..schemas.user import TokenResponse
 from ..models.user import User
 
 
+auth_responses = {
+    401: {
+        "description": "User isn't authenticated",
+        **AuthFailedHTTPException.open_api(),
+    },
+}
+
 settings = get_settings()
 
 router = APIRouter(tags=["Auth"])
@@ -60,7 +67,19 @@ async def is_connected(db_session: AsyncSession = Depends(get_db), token: str = 
     return user
 
 
-@router.post("/token", response_model=TokenResponse)
+token_responses = {
+    200: {
+        "description": "A token for the logged in user",
+        "model": TokenResponse
+    },
+    401: {
+        "description": "Credentials don't match",
+        **AuthFailedHTTPException.open_api("Wrong username/password"),
+    },
+}
+
+
+@router.post("/token", response_model=TokenResponse, responses=token_responses)
 @limiter.limit("3/minute")
 async def login_for_access_token(
     request: Request,
@@ -70,7 +89,7 @@ async def login_for_access_token(
     """Provides an OAuth2 token if the credentials are right."""
     user = await authenticate_user(db_session, form_data.username, form_data.password)
     if not user:
-        raise AuthFailedHTTPException()
+        raise AuthFailedHTTPException("Wrong username/password")
     access_token_expires = timedelta(minutes=settings.jwt_access_toke_expire_minutes)
     access_token = create_access_token(data={"sub": str(user.id)}, expires_delta=access_token_expires)
     return {"access_token": access_token, "token_type": "bearer"}
