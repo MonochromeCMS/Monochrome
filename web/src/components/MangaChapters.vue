@@ -51,13 +51,19 @@
         </router-link>
         <v-menu v-if="isConnected" offset-y>
           <template v-slot:activator="{ on, attrs }">
-            <v-btn icon v-on="on" v-bind="attrs" class="mr-1">
+            <v-btn
+              icon
+              v-on="on"
+              v-bind="attrs"
+              class="mr-1"
+              aria-label="More options"
+            >
               <v-icon>mdi-dots-vertical</v-icon>
             </v-btn>
           </template>
-          <v-btn block color="background" :to="`/chapters/${item.id}/edit`"
-            >Edit chapter</v-btn
-          >
+          <v-btn block color="background" :to="`/chapters/${item.id}/edit`">
+            Edit chapter
+          </v-btn>
           <chapter-delete :id="item.id" @input="popChapter(index)" />
         </v-menu>
       </v-col>

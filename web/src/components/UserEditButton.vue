@@ -1,7 +1,14 @@
 <template>
   <v-dialog v-model="dialog" max-width="30rem" persistent>
     <template v-slot:activator="{ on, attrs }">
-      <v-btn class="mx-2" width="3rem" color="info" v-bind="attrs" v-on="on">
+      <v-btn
+        class="mx-2"
+        width="3rem"
+        color="info"
+        v-bind="attrs"
+        v-on="on"
+        aria-label="Edit user"
+      >
         <v-icon>mdi-pencil</v-icon>
       </v-btn>
     </template>

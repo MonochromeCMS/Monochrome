@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <h3>Pages</h3>
+    <h2 class="text-h4 mt-0 mb-3">Pages</h2>
     <v-alert v-if="alert !== ''" type="error">{{ alert }}</v-alert>
     <draggable class="drag-pages" v-model="pages">
       <template v-for="(item, index) in pages">

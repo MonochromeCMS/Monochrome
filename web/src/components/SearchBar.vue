@@ -3,6 +3,7 @@
     <v-text-field
       hide-details
       clearable
+      label="Search"
       solo
       :value="value"
       color="primary"

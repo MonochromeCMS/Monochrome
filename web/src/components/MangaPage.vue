@@ -89,7 +89,7 @@ export default class MangaPage extends Vue {
   total = 0;
   statusColor = {
     ongoing: "green",
-    completed: "green darken-3",
+    completed: "green darken-2",
     hiatus: "orange",
     cancelled: "red",
   };

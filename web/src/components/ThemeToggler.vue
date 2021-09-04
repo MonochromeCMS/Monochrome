@@ -6,6 +6,7 @@
     color="primary"
     class="theme-toggle"
     @click="toggleTheme"
+    aria-hidden="true"
   >
     <v-icon large> mdi-lightbulb </v-icon>
   </v-btn>

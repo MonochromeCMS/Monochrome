@@ -39,6 +39,7 @@
           class="hidden-md-and-up ml-auto"
           v-on="on"
           v-bind="attrs"
+          aria-label="Navigation menu"
         >
           <v-icon>mdi-menu</v-icon>
         </v-btn>

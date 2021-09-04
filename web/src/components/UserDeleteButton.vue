@@ -8,6 +8,7 @@
         color="error"
         v-bind="attrs"
         v-on="on"
+        aria-label="Delete user"
       >
         <v-icon>mdi-delete</v-icon>
       </v-btn>

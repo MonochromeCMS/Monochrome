@@ -42,12 +42,13 @@
       </validation-provider>
 
       <div class="caption ma-3">
-        Markdown (or HTML) can be used to customize the About page. You can find
-        its syntax
+        Markdown (or HTML) can be used to customize the About page. More
+        information in the
         <a
           href="https://www.markdownguide.org/basic-syntax"
           class="text-decoration-none"
-          >here</a
+        >
+          Markdown documentation </a
         >.
       </div>
 
