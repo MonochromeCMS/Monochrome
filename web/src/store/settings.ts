@@ -1,21 +1,19 @@
 import type { ActionContext } from "vuex";
 import type { AxiosResponse } from "axios";
 import axios from "axios";
+import type {SettingsSchema} from "@/api/Settings";
+import {ApiResponse} from "@/api/Base";
+import Settings from "@/api/Settings";
 
-export interface SettingsState {
-  title1: string | null;
-  title2: string | null;
-  about: string | null;
-}
 
-const state = (): SettingsState => ({
-  title1: null,
-  title2: null,
-  about: null,
+const state = (): SettingsSchema => ({
+  title1: undefined,
+  title2: undefined,
+  about: undefined,
 });
 
 const mutations = {
-  setSettings(state: SettingsState, payload: SettingsState): void {
+  setSettings(state: SettingsSchema, payload: SettingsSchema): void {
     state.about = payload.about;
     state.title1 = payload.title1;
     state.title2 = payload.title2;
@@ -23,7 +21,7 @@ const mutations = {
 };
 
 const getters = {
-  settings(state: SettingsState): SettingsState {
+  settings(state: SettingsSchema): SettingsSchema {
     return state;
   },
 };
@@ -31,43 +29,14 @@ const getters = {
 const actions = {
   async getSettings({
     commit,
-  }: ActionContext<SettingsState, any>): Promise<AxiosResponse> {
-    const url = "/api/settings";
+  }: ActionContext<SettingsSchema, any>): Promise<ApiResponse<SettingsSchema>> {
+    const response = await Settings.get();
 
-    try {
-      const response = await axios(url, {
-        method: "GET",
-        headers: {
-          Accept: "*/*",
-        },
-      });
+    if (response.data) {
       commit("setSettings", response.data);
-      return response;
-    } catch (e) {
-      console.error(e);
-      return e.response;
     }
-  },
-  async editSettings(
-    { rootGetters, commit, dispatch }: ActionContext<SettingsState, any>,
-    settings: SettingsState
-  ): Promise<AxiosResponse> {
-    const url = "/api/settings";
 
-    const config = rootGetters.authConfig;
-    config.headers["Content-Type"] = "application/json";
-
-    try {
-      const response = await axios.put(url, settings, config);
-      dispatch("getSettings").then();
-      return response;
-    } catch (e) {
-      console.error(e);
-      if (e.response.status === 401) {
-        commit("logout");
-      }
-      return e.response;
-    }
+    return response;
   },
 };
 

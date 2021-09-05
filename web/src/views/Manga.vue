@@ -12,8 +12,9 @@
               class="my-2 mx-auto"
               to="/manga/new"
               color="background"
-              >Add a manga</v-btn
             >
+              Add a manga
+            </v-btn>
           </v-card-actions>
         </v-card>
       </v-col>

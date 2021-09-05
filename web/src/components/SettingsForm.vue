@@ -78,6 +78,8 @@ import {
 } from "vee-validate";
 import { Vue, Component, Watch } from "vue-property-decorator";
 import VueMarkdown from "vue-markdown";
+import Settings, {SettingsSchema} from "@/api/Settings";
+import type {AxiosRequestConfig} from "axios";
 
 setInteractionMode("eager");
 
@@ -103,7 +105,11 @@ export default class SettingsForm extends Vue {
     };
   }
 
-  get settings(): any {
+  get authConfig(): AxiosRequestConfig {
+    return this.$store.getters.authConfig;
+  }
+
+  get settings(): SettingsSchema {
     return this.$store.getters.settings;
   }
 
@@ -114,19 +120,19 @@ export default class SettingsForm extends Vue {
       await this.editSettings(this.params);
     }
   }
-  async editSettings(params: any): Promise<void> {
+  async editSettings(params: SettingsSchema): Promise<void> {
     this.success = false;
 
-    const response = await this.$store.dispatch("editSettings", params);
+    const response = await Settings.edit(params, this.authConfig);
 
-    switch (response.status) {
-      case 200:
-        this.success = true;
-        break;
-      case 401:
-        break;
-      default:
-        this.alert = response.data?.detail ?? response.statusText;
+    if (response.data) {
+      this.$store.commit("setSettings", response.data);
+      this.success = true;
+    } else {
+      this.alert = response.error ?? "";
+    }
+    if (response.status === 401) {
+      this.$store.commit("logout");
     }
   }
 

@@ -73,16 +73,16 @@
 </template>
 
 <script lang="ts">
-import axios from "axios";
 import { Vue, Component, Watch } from "vue-property-decorator";
 import SearchBar from "@/components/SearchBar.vue";
+import Manga, {MangaResponse} from "@/api/Manga";
 
 @Component({
   components: { SearchBar },
 })
 export default class MangaPage extends Vue {
   loading = true;
-  rawManga = [];
+  rawManga: MangaResponse[] = [];
   limit = 12;
   page = 1;
   alert = "";
@@ -96,7 +96,7 @@ export default class MangaPage extends Vue {
   search: any = "";
 
   get manga(): any[] {
-    return this.rawManga.map((el: any) => ({
+    return this.rawManga.map(el => ({
       cover: `/media/${el.id}/cover.jpg?version=${el.version}`,
       title: el.title,
       subtitle: el.author,
@@ -120,26 +120,13 @@ export default class MangaPage extends Vue {
       url += `&title=${this.search}`;
     }
 
-    let response;
-    try {
-      response = await axios.get(url);
-    } catch (e) {
-      response = e.response;
-    }
+    const response = await Manga.search(this.search, this.limit, this.offset, this.loading);
 
-    if (this.loading) {
-      await new Promise((resolve) => {
-        setTimeout(() => resolve("done!"), 500);
-      });
-    }
-
-    switch (response.status) {
-      case 200:
-        this.rawManga = response.data.results;
-        this.total = response.data.total;
-        break;
-      default:
-        this.alert = response.data.detail ?? response.statusText;
+    if (response.data) {
+      this.rawManga = response.data.results;
+      this.total = response.data.total;
+    } else {
+      this.alert = response.error ?? "";
     }
 
     this.loading = false;

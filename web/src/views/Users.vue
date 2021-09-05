@@ -51,9 +51,10 @@
 
 <script lang="ts">
 import { Vue, Component, Watch } from "vue-property-decorator";
-import axios, { AxiosRequestConfig } from "axios";
+import type { AxiosRequestConfig } from "axios";
 import UsersList from "@/components/UsersList.vue";
 import UserForm from "@/components/UserForm.vue";
+import User, {UserResponse} from "@/api/User";
 
 @Component({
   components: { UsersList, UserForm },
@@ -63,7 +64,7 @@ export default class About extends Vue {
   page = 1;
   total = 0;
   limit = 10;
-  users = [];
+  users: UserResponse[] = [];
   loading = true;
   addDialog = false;
 
@@ -89,34 +90,20 @@ export default class About extends Vue {
   }
 
   async getUsers(): Promise<void> {
-    let url = `/api/user?offset=${this.offset}&limit=${this.limit}`;
-
     let config = this.authConfig;
 
-    let response;
-    try {
-      response = await axios.get(url, config);
-    } catch (e) {
-      response = e.response;
+    const response = await User.get_all(config, this.limit, this.offset, this.loading);
+
+    if (response.data) {
+      this.total = response.data.total;
+      this.users = response.data.results;
+    } else {
+      this.alert = response.error ?? "";
+    }
+    if (response.status === 401) {
+      this.$store.commit("logout");
     }
 
-    if (this.loading) {
-      await new Promise((resolve) => {
-        setTimeout(() => resolve("done!"), 500);
-      });
-    }
-
-    switch (response.status) {
-      case 200:
-        this.total = response.data.total;
-        this.users = response.data.results;
-        break;
-      case 401:
-        this.$store.commit("logout");
-        break;
-      default:
-        this.alert = response.statusText;
-    }
     this.loading = false;
   }
 

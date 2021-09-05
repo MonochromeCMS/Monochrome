@@ -28,7 +28,7 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="gray" text @click="dialog = false"> Cancel </v-btn>
-        <v-btn color="error" @click="deleteUser(user.id)" :disabled="loading">
+        <v-btn color="error" @click="deleteUser(user.id)" :loading="loading">
           Delete
         </v-btn>
       </v-card-actions>
@@ -38,6 +38,8 @@
 
 <script lang="ts">
 import { Vue, Component, Prop, Emit } from "vue-property-decorator";
+import User from "@/api/User";
+import type {AxiosRequestConfig} from "axios";
 
 @Component
 export default class UserDeleteButton extends Vue {
@@ -53,17 +55,22 @@ export default class UserDeleteButton extends Vue {
     return true;
   }
 
+  get authConfig(): AxiosRequestConfig {
+    return this.$store.getters.authConfig;
+  }
+
   async deleteUser(userId: string): Promise<void> {
     this.loading = true;
-    const response = await this.$store.dispatch("deleteUser", userId);
+    const response = await User.delete(userId, this.authConfig);
 
-    switch (response.status) {
-      case 200:
-        this.$emit("update", true);
-        this.dialog = false;
-        break;
-      default:
-        this.alert = response.data?.detail ?? response.statusText;
+    if (response.data) {
+      this.$emit("update", true);
+      this.dialog = false;
+    } else {
+      this.alert = response.error ?? "";
+    }
+    if (response.status === 401) {
+      this.$store.commit("logout");
     }
     this.loading = false;
   }

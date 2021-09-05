@@ -28,7 +28,8 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from "vue-property-decorator";
-import axios, { AxiosRequestConfig } from "axios";
+import type { AxiosRequestConfig } from "axios";
+import Chapter from "@/api/Chapter";
 
 @Component
 export default class ChapterDelete extends Vue {
@@ -42,31 +43,17 @@ export default class ChapterDelete extends Vue {
   }
 
   async deleteChapter(): Promise<void> {
-    const config = this.authConfig;
+    const response = await Chapter.delete(this.id, this.authConfig);
 
-    let url = `/api/chapter/${this.id}`;
-
-    let response;
-    try {
-      response = await axios.delete(url, config);
-    } catch (e) {
-      response = e.response;
+    if (response.data) {
+      this.$emit("input", true);
+      this.dialog = false;
+    } else {
+      this.alert = response.error ?? "";
     }
 
-    switch (response.status) {
-      case 200:
-      case 404:
-        this.$emit("input", true);
-        this.dialog = false;
-        break;
-      case 401:
-        this.$store.commit("logout");
-        break;
-      case 422:
-        this.alert = "The ID provided isn't an UUID";
-        break;
-      default:
-        this.alert = response.data.detail ?? response.statusText;
+    if (response.status === 401) {
+      this.$store.commit("logout");
     }
   }
 }

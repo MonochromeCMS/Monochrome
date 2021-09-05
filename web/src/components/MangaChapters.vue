@@ -88,8 +88,9 @@
 
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from "vue-property-decorator";
-import axios from "axios";
 import ChapterDelete from "@/components/ChapterDelete.vue";
+import Chapter, {ChapterResponse} from "@/api/Chapter";
+import Manga from "@/api/Manga";
 
 @Component({
   components: { ChapterDelete },
@@ -98,7 +99,7 @@ export default class MangaChapters extends Vue {
   @Prop() readonly value!: string;
   @Prop() readonly mangaId!: string;
 
-  chapters: any[] = [];
+  chapters: ChapterResponse[] = [];
   loading = true;
   limit = 10;
   page = 1;
@@ -130,30 +131,12 @@ export default class MangaChapters extends Vue {
   }
 
   async getChapters(): Promise<void> {
-    let url = `/api/manga/${this.mangaId}/chapters`;
+    const response = await Manga.chapters(this.mangaId, this.loading);
 
-    let response;
-    try {
-      response = await axios.get(url);
-    } catch (e) {
-      response = e.response;
-    }
-
-    if (this.loading) {
-      await new Promise((resolve) => {
-        setTimeout(() => resolve("done!"), 500);
-      });
-    }
-
-    switch (response.status) {
-      case 200:
-        this.chapters = response.data;
-        break;
-      case 422:
-        this.dispatchValue("The ID provided isn't an UUID");
-        break;
-      default:
-        this.dispatchValue(response.data.detail ?? response.statusText);
+    if (response.data) {
+      this.chapters = response.data;
+    } else {
+      this.dispatchValue(response.error ?? "");
     }
 
     this.loading = false;

@@ -49,12 +49,12 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
-import axios from "axios";
+import Manga, {MangaResponse} from "@/api/Manga";
 
 @Component
 export default class LatestManga extends Vue {
   loading = true;
-  rawManga = [];
+  rawManga: MangaResponse[] = [];
   offset = 0;
   limit = 5;
   alert = "";
@@ -62,7 +62,7 @@ export default class LatestManga extends Vue {
 
   get manga(): any[] {
     let m = this.rawManga
-      .map((el: any) => [
+      .map(el => [
         {
           avatar: `/media/${el.id}/cover.jpg?version=${el.version}`,
           title: el.title,
@@ -78,16 +78,13 @@ export default class LatestManga extends Vue {
   }
 
   async getManga(): Promise<void> {
-    const url = `/api/manga?limit=${this.limit}&offset=${this.offset}`;
-    const response = await axios.get(url);
+    const response = await Manga.search(null, this.limit, this.offset, this.loading);
 
-    switch (response.status) {
-      case 200:
-        this.rawManga = response.data.results;
-        this.total = response.data.total;
-        break;
-      default:
-        this.alert = response.data.detail ?? response.statusText;
+    if (response.data) {
+      this.rawManga = response.data.results;
+      this.total = response.data.total;
+    } else {
+      this.alert = response.error ?? "";
     }
 
     this.loading = false;

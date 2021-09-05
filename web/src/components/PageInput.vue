@@ -24,7 +24,7 @@
         </v-col>
       </template>
       <v-col cols="6" sm="4" md="3" xl="2">
-        <v-card color="background" @click="uploadClick" :loading="!!loading">
+        <v-card color="background" @click="uploadClick" :loading="loading ? 'primary' : false">
           <v-responsive :aspect-ratio="4 / 5">
             <div class="d-flex fill-height">
               <v-icon x-large class="ma-auto d-block">mdi-plus</v-icon>
@@ -53,8 +53,9 @@
 <script lang="ts">
 import { Vue, Component, Prop, VModel, Watch } from "vue-property-decorator";
 import draggable from "vuedraggable";
-import axios, { AxiosRequestConfig } from "axios";
+import type { AxiosRequestConfig } from "axios";
 import naturalCompare from "natural-compare-lite";
+import Upload, {UploadedBlobResponse} from "@/api/Upload";
 
 @Component({
   components: { draggable },
@@ -68,7 +69,7 @@ export default class PageInput extends Vue {
 
   @VModel() pageOrder!: any[];
 
-  pages: any[] = [];
+  pages: UploadedBlobResponse[] = [];
   loading = 0;
   pageUpload = null;
   alert = "";
@@ -100,67 +101,34 @@ export default class PageInput extends Vue {
   }
 
   async uploadFiles(files: File[]): Promise<void> {
-    let url = `/api/upload/${this.session.id}`;
-
     this.loading += 1;
 
-    const config = this.authConfig;
-    config.headers["Content-Type"] = "text";
+    const response = await Upload.upload(this.session.id, files, this.authConfig);
 
-    const form = new FormData();
-    files.forEach((file) => form.append("payload", file));
-
-    let response;
-    try {
-      response = await axios.post(url, form, config);
-    } catch (e) {
-      response = e.response;
+    if (response.data) {
+      this.pages.push(...response.data);
+    } else {
+      this.alert = response.error ?? "";
     }
-
-    switch (response.status) {
-      case 201:
-        this.pages = this.pages.concat(response.data);
-        break;
-      case 404:
-        this.alert = "Session not found";
-        break;
-      case 422:
-        this.alert = "The ID provided isn't an UUID";
-        break;
-      case 401:
-        this.$store.commit("logout");
-        break;
-      default:
-        this.alert = response.statusText;
+    if (response.status === 401) {
+      this.$store.commit("logout");
     }
 
     this.loading -= 1;
   }
 
   async deletePage(index: number, id: string): Promise<void> {
-    let url = `/api/upload/${this.session.id}/${id}`;
+    const response = await Upload.deleteBlob(this.session.id, id, this.authConfig);
 
-    const config = this.authConfig;
-
-    let response;
-    try {
-      response = await axios.delete(url, config);
-    } catch (e) {
-      response = e.response;
-    }
-
-    switch (response.status) {
-      case 200:
-      case 404:
-        this.pages = this.pages
+    if (response.data || response.status === 404) {
+      this.pages = this.pages
           .slice(0, index)
           .concat(this.pages.slice(index + 1));
-        break;
-      case 401:
-        this.$store.commit("logout");
-        break;
-      default:
-        this.alert = response.statusText;
+    } else {
+      this.alert = response.error ?? "";
+    }
+    if (response.status === 401) {
+      this.$store.commit("logout");
     }
   }
 

@@ -115,8 +115,9 @@ import {
   setInteractionMode,
   ValidationObserver,
 } from "vee-validate";
-import axios, { AxiosRequestConfig } from "axios";
+import type { AxiosRequestConfig } from "axios";
 import MangaRow from "@/components/MangaRow.vue";
+import Manga, {MangaResponse, MangaSchema, Status} from "@/api/Manga";
 
 setInteractionMode("eager");
 
@@ -137,14 +138,14 @@ extend("digits", {
   },
 })
 export default class MangaForm extends Vue {
-  @Prop() readonly manga!: Record<string, any>;
+  @Prop() readonly manga!: MangaResponse;
 
   title = "";
   description = "";
   author = "";
   artist = "";
   year = null;
-  status = null;
+  status: Status = null;
   alert = "";
   cover = null;
   buffer = null;
@@ -155,7 +156,7 @@ export default class MangaForm extends Vue {
     { value: "cancelled", text: "Cancelled" },
   ];
 
-  get params(): any {
+  get params(): MangaSchema {
     return {
       title: this.title,
       description: this.description,
@@ -202,81 +203,46 @@ export default class MangaForm extends Vue {
     this.status = null;
   }
 
-  async createManga(params: any): Promise<void> {
-    const config = this.authConfig;
-    config.headers["Content-Type"] = "application/json";
+  async createManga(params: MangaSchema): Promise<void> {
+    const response = await Manga.create(params, this.authConfig);
 
-    let response;
-    try {
-      response = await axios.post("/api/manga", params, config);
-    } catch (e) {
-      response = e.response;
+    if (response.data) {
+      await this.setCover(response.data.id, this.cover);
+    } else {
+      this.alert = response.error ?? "";
     }
-
-    switch (response.status) {
-      case 201:
-        await this.setCover(response.data.id, this.cover);
-        break;
-      case 401:
-        this.$store.commit("logout");
-        break;
-      default:
-        this.alert = response.data.detail ?? response.statusText;
+    if (response.status === 401) {
+      this.$store.commit("logout");
     }
   }
 
-  async editManga(params: any, id: string): Promise<void> {
-    const config = this.authConfig;
-    config.headers["Content-Type"] = "application/json";
+  async editManga(params: MangaSchema, id: string): Promise<void> {
+    const response = await Manga.edit(id, params, this.authConfig);
 
-    let response;
-    try {
-      response = await axios.put(`/api/manga/${id}`, params, config);
-    } catch (e) {
-      response = e.response;
+    if (response.data) {
+      if (this.cover) {
+        await this.setCover(id, this.cover);
+      } else {
+        await this.$router.push(`/manga/${id}`);
+      }
+    } else {
+      this.alert = response.error ?? "";
     }
-
-    switch (response.status) {
-      case 200:
-        if (this.cover) {
-          await this.setCover(id, this.cover);
-        } else {
-          await this.$router.push(`/manga/${id}`);
-        }
-        break;
-      case 401:
-        this.$store.commit("logout");
-        break;
-      default:
-        this.alert = response.data.detail ?? response.statusText;
+    if (response.status === 401) {
+      this.$store.commit("logout");
     }
   }
 
-  async setCover(mangaId: string, cover: File | null): Promise<void> {
-    if (!cover) return;
+  async setCover(mangaId: string, cover: File): Promise<void> {
+    const response = await Manga.setCover(mangaId, cover, this.authConfig);
 
-    const config = this.authConfig;
-    config.headers["Content-Type"] = "multipart/form-data";
-
-    const form = new FormData();
-    form.append("payload", cover);
-
-    let response;
-    try {
-      response = await axios.put(`/api/manga/${mangaId}/cover`, form, config);
-    } catch (e) {
-      response = e.response;
+    if (response.data) {
+      await this.$router.push(`/manga/${mangaId}`);
+    } else {
+      this.alert = response.error ?? "";
     }
-
-    switch (response.status) {
-      case 200:
-        await this.$router.push(`/manga/${mangaId}`);
-        break;
-      case 401:
-        this.$store.commit("logout");
-        break;
-      default:
-        this.alert = response.data.detail ?? response.statusText;
+    if (response.status === 401) {
+      this.$store.commit("logout");
     }
   }
 

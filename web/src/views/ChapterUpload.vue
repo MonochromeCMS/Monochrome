@@ -24,9 +24,9 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
-import axios from "axios";
 import MangaRow from "@/components/MangaRow.vue";
 import UploadForm from "@/components/UploadForm.vue";
+import Manga from "@/api/Manga";
 
 @Component({
   components: { MangaRow, UploadForm },
@@ -44,27 +44,12 @@ export default class ChapterUpload extends Vue {
   }
 
   async getManga(): Promise<void> {
-    let url = `/api/manga/${this.mangaId}`;
+    const response = await Manga.get(this.mangaId);
 
-    let response;
-    try {
-      response = await axios.get(url);
-    } catch (e) {
-      response = e.response;
-    }
-
-    switch (response.status) {
-      case 200:
-        this.manga = response.data;
-        break;
-      case 404:
-        this.alert = "Manga not found";
-        break;
-      case 422:
-        this.alert = "The ID provided isn't an UUID";
-        break;
-      default:
-        this.alert = response.data?.detail ?? response.statusText;
+    if (response.data) {
+      this.manga = response.data;
+    } else {
+      this.alert = response.error ?? "";
     }
   }
 

@@ -28,16 +28,17 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
-import axios from "axios";
 import MangaRow from "@/components/MangaRow.vue";
 import UploadForm from "@/components/UploadForm.vue";
+import Chapter, {DetailedChapterResponse} from "@/api/Chapter";
+import {MangaResponse} from "@/api/Manga";
 
 @Component({
   components: { MangaRow, UploadForm },
 })
 export default class About extends Vue {
-  manga = null;
-  chapter = null;
+  manga: MangaResponse = null;
+  chapter: DetailedChapterResponse = null;
   alert = "";
 
   get chapterId(): string {
@@ -49,28 +50,13 @@ export default class About extends Vue {
   }
 
   async getChapter(): Promise<void> {
-    let url = `/api/chapter/${this.chapterId}`;
+    const response = await Chapter.get(this.chapterId);
 
-    let response;
-    try {
-      response = await axios.get(url);
-    } catch (e) {
-      response = e.response;
-    }
-
-    switch (response.status) {
-      case 200:
-        this.chapter = response.data;
-        this.manga = response.data.manga;
-        break;
-      case 404:
-        this.alert = "Chapter not found";
-        break;
-      case 422:
-        this.alert = "The ID provided isn't an UUID";
-        break;
-      default:
-        this.alert = response.data?.detail ?? response.statusText;
+    if (response.data) {
+      this.chapter = response.data;
+      this.manga = response.data.manga;
+    } else {
+      this.alert = response.error ?? "";
     }
   }
 

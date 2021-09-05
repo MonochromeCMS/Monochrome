@@ -78,6 +78,8 @@ import {
   ValidationObserver,
 } from "vee-validate";
 import { Vue, Component, Emit, Prop } from "vue-property-decorator";
+import type {AxiosRequestConfig} from "axios";
+import User, {UserSchema} from "@/api/User";
 
 setInteractionMode("eager");
 
@@ -129,6 +131,10 @@ export default class UserForm extends Vue {
     };
   }
 
+  get authConfig(): AxiosRequestConfig {
+    return this.$store.getters.authConfig;
+  }
+
   @Emit("close")
   close(): boolean {
     return true;
@@ -153,34 +159,38 @@ export default class UserForm extends Vue {
     this.password = "";
   }
 
-  async editUser(userId: string, params: any): Promise<void> {
+  async editUser(userId: string, params: UserSchema): Promise<void> {
     this.loading = true;
-    const response = await this.$store.dispatch("editUser", [userId, params]);
+    const response = await User.edit(userId, params, this.authConfig);
 
-    switch (response.status) {
-      case 200:
-        this.$emit("update", true);
-        this.close();
-        break;
-      default:
-        this.alert = response.data.detail || response.statusText;
+    if (response.data) {
+      this.$emit("update", true);
+      this.close();
+    } else {
+      this.alert = response.error ?? "";
     }
+    if (response.status === 401) {
+      this.$store.commit("logout");
+    }
+
     this.loading = false;
   }
 
-  async addUser(params: any): Promise<void> {
+  async addUser(params: UserSchema): Promise<void> {
     this.loading = true;
-    const response = await this.$store.dispatch("createUser", params);
+    const response = await User.create(params, this.authConfig);
 
-    switch (response.status) {
-      case 201:
-        this.$emit("update", true);
-        this.clear();
-        this.close();
-        break;
-      default:
-        this.alert = response.data?.detail ?? response.statusText;
+    if (response.data) {
+      this.$emit("update", true);
+      this.clear();
+      this.close();
+    } else {
+      this.alert = response.error ?? "";
     }
+    if (response.status === 401) {
+      this.$store.commit("logout");
+    }
+
     this.loading = false;
   }
 }

@@ -34,17 +34,18 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
-import axios from "axios";
 import PagedReader from "@/components/PagedReader.vue";
 import VerticalReader from "@/components/VerticalReader.vue";
 import ReaderMenu from "@/components/ReaderMenu.vue";
+import Chapter, {ChapterResponse} from "@/api/Chapter";
+import Manga from "@/api/Manga";
 
 @Component({
   components: { ReaderMenu, VerticalReader, PagedReader },
 })
 export default class ChapterReader extends Vue {
   chapter: any = null;
-  chapters: any[] = [];
+  chapters: ChapterResponse[] = [];
   alert = "";
 
   get chapterId(): string {
@@ -99,53 +100,28 @@ export default class ChapterReader extends Vue {
   }
 
   async getChapter(): Promise<void> {
-    let url = `/api/chapter/${this.chapterId}`;
+    const response = await Chapter.get(this.chapterId);
 
-    let response;
-    try {
-      response = await axios.get(url);
-    } catch (e) {
-      response = e.response;
-    }
-
-    switch (response.status) {
-      case 200:
-        this.chapter = response.data;
-        this.chapters = [
-          { value: this.chapterId, text: this.chapterName(response.data) },
-        ];
-        await this.getChapters(response.data.mangaId);
-        break;
-      case 404:
-        this.alert = "Chapter not found";
-        break;
-      case 422:
-        this.alert = "The ID provided isn't an UUID";
-        break;
-      default:
-        this.alert = response.data?.detail ?? response.statusText;
+    if (response.data) {
+      this.chapter = response.data;
+      this.chapters = [
+        { value: this.chapterId, text: this.chapterName(response.data) },
+      ];
+      await this.getChapters(response.data.mangaId);
+    } else {
+      this.alert = response.error ?? "";
     }
   }
 
   async getChapters(mangaId: string): Promise<void> {
     let url = `/api/manga/${mangaId}/chapters`;
 
-    let response;
-    try {
-      response = await axios.get(url);
-    } catch (e) {
-      response = e.response;
-    }
+    const response = await Manga.chapters(mangaId);
 
-    switch (response.status) {
-      case 200:
-        this.chapters = response.data;
-        break;
-      case 422:
-        this.alert = "The ID provided isn't an UUID";
-        break;
-      default:
-        this.alert = response.statusText;
+    if (response.data) {
+      this.chapters = response.data;
+    } else {
+      this.alert = response.error ?? "";
     }
   }
 

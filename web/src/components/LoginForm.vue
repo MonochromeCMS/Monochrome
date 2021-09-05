@@ -91,12 +91,10 @@ export default class LoginForm extends Vue {
   async login(params: any): Promise<void> {
     const response = await this.$store.dispatch("login", params);
 
-    switch (response.status) {
-      case 200:
-        this.clear();
-        break;
-      default:
-        this.alert = response.data.detail ?? response.statusText;
+    if (response.data) {
+      this.clear();
+    } else {
+      this.alert = response.error ?? "";
     }
   }
 }

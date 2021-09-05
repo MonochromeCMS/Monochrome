@@ -77,15 +77,16 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
-import axios, { AxiosRequestConfig } from "axios";
+import type { AxiosRequestConfig } from "axios";
 import MangaRow from "@/components/MangaRow.vue";
 import MangaChapters from "@/components/MangaChapters.vue";
+import Manga, {MangaResponse} from "@/api/Manga";
 
 @Component({
   components: { MangaChapters, MangaRow },
 })
 export default class MangaDetail extends Vue {
-  manga: any = null;
+  manga: MangaResponse = null;
   loading = true;
   mangaAlert = "";
   chapterModel = ["", ""];
@@ -119,33 +120,12 @@ export default class MangaDetail extends Vue {
   }
 
   async getManga(): Promise<void> {
-    let url = `/api/manga/${this.mangaId}`;
+    const response = await Manga.get(this.mangaId, this.loading);
 
-    let response;
-    try {
-      response = await axios.get(url);
-    } catch (e) {
-      response = e.response;
-    }
-
-    if (this.loading) {
-      await new Promise((resolve) => {
-        setTimeout(() => resolve("done!"), 500);
-      });
-    }
-
-    switch (response.status) {
-      case 200:
-        this.manga = response.data;
-        break;
-      case 404:
-        this.mangaAlert = "Manga not found";
-        break;
-      case 422:
-        this.mangaAlert = "The ID provided isn't an UUID";
-        break;
-      default:
-        this.mangaAlert = response.data?.detail ?? response.statusText;
+    if (response.data) {
+      this.manga = response.data;
+    } else {
+      this.alert = response.error ?? "";
     }
 
     this.loading = false;
@@ -153,29 +133,15 @@ export default class MangaDetail extends Vue {
 
   async deleteManga(): Promise<void> {
     const config = this.authConfig;
+    const response = await Manga.delete(this.mangaId, config);
 
-    let url = `/api/manga/${this.mangaId}`;
-
-    let response;
-    try {
-      response = await axios.delete(url, config);
-    } catch (e) {
-      response = e.response;
+    if (response.data || response.status === 404) {
+      await this.$router.push("/manga");
+    } else {
+      this.mangaAlert = response.error ?? "";
     }
-
-    switch (response.status) {
-      case 200:
-      case 404:
-        await this.$router.push("/manga");
-        break;
-      case 401:
-        this.$store.commit("logout");
-        break;
-      case 422:
-        this.mangaAlert = "The ID provided isn't an UUID";
-        break;
-      default:
-        this.mangaAlert = response.data?.detail ?? response.statusText;
+    if (response.status === 401) {
+      this.$store.commit("logout");
     }
 
     this.deleteDialog = false;

@@ -100,7 +100,7 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
-import axios from "axios";
+import Chapter, {DetailedChapterResponse} from "@/api/Chapter";
 
 @Component
 export default class LatestChapters extends Vue {
@@ -109,7 +109,7 @@ export default class LatestChapters extends Vue {
   total = 0;
   loading = true;
   alert = "";
-  chapters = [];
+  chapters: DetailedChapterResponse[] = [];
 
   get pageAmount(): number {
     return Math.ceil(this.total / this.limit);
@@ -124,28 +124,13 @@ export default class LatestChapters extends Vue {
   }
 
   async getChapters(): Promise<void> {
-    let url = `/api/chapter?limit=${this.limit}&offset=${this.offset}`;
+    const response = await Chapter.latest(this.limit, this.offset, this.loading);
 
-    let response;
-    try {
-      response = await axios.get(url);
-    } catch (e) {
-      response = e.response;
-    }
-
-    if (this.loading) {
-      await new Promise((resolve) => {
-        setTimeout(() => resolve("done!"), 500);
-      });
-    }
-
-    switch (response.status) {
-      case 200:
-        this.chapters = response.data.results;
-        this.total = response.data.total;
-        break;
-      default:
-        this.alert = response.statusText;
+    if (response.data) {
+      this.chapters = response.data.results;
+      this.total = response.data.total;
+    } else {
+      this.alert = response.error ?? "";
     }
 
     this.loading = false;

@@ -40,8 +40,8 @@
           v-model="width"
           step="5"
           min="5"
+          thumb-color="text--primary background"
           max="100"
-          color="background"
           label="Width"
           thumb-label
         >
