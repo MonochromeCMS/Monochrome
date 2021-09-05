@@ -7,6 +7,7 @@ from PIL import Image
 from uuid import UUID
 from fastapi import APIRouter, Depends, File, UploadFile, status, BackgroundTasks
 from fastapi.responses import JSONResponse
+from fastapi.encoders import jsonable_encoder
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from .auth import is_connected, auth_responses
@@ -17,7 +18,7 @@ from ..models.manga import Manga
 from ..models.chapter import Chapter
 from ..models.upload import UploadSession, UploadedBlob
 from ..schemas.chapter import ChapterResponse
-from ..schemas.upload import BeginUploadSession, CommitUploadSession, UploadSessionResponse, UploadedBlobResponse
+from ..schemas.upload import UploadSessionSchema, CommitUploadSession, UploadSessionResponse, UploadedBlobResponse
 
 global_settings = get_settings()
 
@@ -50,7 +51,7 @@ post_responses = {
 
 @router.post("/begin", status_code=status.HTTP_201_CREATED, response_model=UploadSessionResponse, responses=post_responses)
 async def begin_upload_session(
-        payload: BeginUploadSession,
+        payload: UploadSessionSchema,
         db_session: AsyncSession = Depends(get_db),
 ):
     await Manga.find(db_session, payload.manga_id, NotFoundHTTPException("Manga not found"))
@@ -86,7 +87,7 @@ get_responses = {
 }
 
 
-@router.get("/{id}", response_model=UploadSessionResponse, dependencies=[Depends(is_connected)])
+@router.get("/{id}", response_model=UploadSessionResponse, dependencies=[Depends(is_connected)], responses=get_responses)
 async def get_upload_session(
         id: UUID,
         db_session: AsyncSession = Depends(get_db),
@@ -233,7 +234,8 @@ async def commit_upload_session(
     await session.delete(db_session)
     tasks.add_task(commit_session_images, chapter, payload.page_order, edit)
     tasks.add_task(delete_session_images, set(blobs).difference(payload.page_order))
-    return JSONResponse(status_code=200 if edit else 201, content=ChapterResponse(chapter).dict())
+    content = jsonable_encoder(ChapterResponse.from_orm(chapter))
+    return JSONResponse(status_code=(200 if edit else 201), content=content)
 
 
 delete_blob_responses = {

@@ -6,8 +6,8 @@ from api.tests.unit.test_schemas_chapter import TestChapterSchema
 import api.schemas.upload as sch
 
 
-class TestBeginUploadSession(BaseModelTest):
-    schema = sch.BeginUploadSession
+class TestUploadSessionSchema(BaseModelTest):
+    schema = sch.UploadSessionSchema
     example_data = {
         "manga_id": UUID("1e01d7f6-c4e1-4102-9dd0-a6fccc065978"),
         "chapter_id": UUID("116bdaa6-f62d-4b53-98b2-237adbaad788"),
@@ -63,7 +63,7 @@ class TestUploadedBlobResponse(BaseModelTest):
 
 class TestUploadSessionResponse(BaseModelTest):
     schema = sch.UploadSessionResponse
-    parent = TestBeginUploadSession
+    parent = TestUploadSessionSchema
     example_data = {
         **parent.example_data,
         "id": UUID("6970baa2-4932-497d-a3e0-4b5545252dc6"),

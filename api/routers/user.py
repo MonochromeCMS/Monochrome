@@ -138,7 +138,16 @@ async def create_user(payload: UserSchema, db_session: AsyncSession = Depends(ge
     return user
 
 
-@router.get("", response_model=UsersResponse)
+get_all_responses = {
+    **auth_responses,
+    200: {
+        "description": "The created user",
+        "model": UsersResponse,
+    },
+}
+
+
+@router.get("", response_model=UsersResponse, responses=get_all_responses)
 async def get_users(
     limit: Optional[int] = Query(10, ge=1, le=100),
     offset: Optional[int] = Query(0, ge=0),

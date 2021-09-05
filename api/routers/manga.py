@@ -157,7 +157,7 @@ put_cover_responses = {
 }
 
 
-@router.put("/{id}/cover", dependencies=[Depends(is_connected)])
+@router.put("/{id}/cover", dependencies=[Depends(is_connected)], responses=put_cover_responses)
 async def set_manga_cover(
     id: UUID,
     tasks: BackgroundTasks,

@@ -7,7 +7,7 @@ from pydantic import Field
 from .chapter import ChapterSchema
 
 
-class BeginUploadSession(CamelModel):
+class UploadSessionSchema(CamelModel):
     manga_id: UUID = Field(
         description="Manga this session is linked to",
     )
@@ -40,7 +40,7 @@ class UploadedBlobResponse(CamelModel):
         }
 
 
-class UploadSessionResponse(BeginUploadSession):
+class UploadSessionResponse(UploadSessionSchema):
     id: UUID = Field(
         description="ID of the upload session",
     )

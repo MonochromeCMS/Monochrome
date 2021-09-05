@@ -25,9 +25,9 @@ auth_responses = {
 
 settings = get_settings()
 
-router = APIRouter(tags=["Auth"])
+router = APIRouter(tags=["Auth"], prefix="/auth")
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
