@@ -49,7 +49,7 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
-import Manga, {MangaResponse} from "@/api/Manga";
+import Manga, { MangaResponse } from "@/api/Manga";
 
 @Component
 export default class LatestManga extends Vue {
@@ -62,7 +62,7 @@ export default class LatestManga extends Vue {
 
   get manga(): any[] {
     let m = this.rawManga
-      .map(el => [
+      .map((el) => [
         {
           avatar: `/media/${el.id}/cover.jpg?version=${el.version}`,
           title: el.title,
@@ -78,7 +78,12 @@ export default class LatestManga extends Vue {
   }
 
   async getManga(): Promise<void> {
-    const response = await Manga.search(null, this.limit, this.offset, this.loading);
+    const response = await Manga.search(
+      null,
+      this.limit,
+      this.offset,
+      this.loading
+    );
 
     if (response.data) {
       this.rawManga = response.data.results;

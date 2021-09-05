@@ -110,8 +110,8 @@ import {
 import { Vue, Component, Prop } from "vue-property-decorator";
 import type { AxiosRequestConfig } from "axios";
 import PageInput from "@/components/PageInput.vue";
-import Upload, {UploadSessionResponse} from "@/api/Upload";
-import Chapter, {ChapterSchema} from "@/api/Chapter";
+import Upload, { UploadSessionResponse } from "@/api/Upload";
+import Chapter, { ChapterSchema } from "@/api/Chapter";
 import Autocomplete from "@/api/Autocomplete";
 
 setInteractionMode("eager");
@@ -155,8 +155,8 @@ export default class UploadForm extends Vue {
   get chapterDraft(): ChapterSchema {
     return {
       name: this.name,
-      number: this.number,
-      volume: this.volume,
+      number: this.number ?? 0,
+      volume: this.volume ?? undefined,
       webtoon: this.webtoon,
       scanGroup: this.scanGroup,
     };
@@ -190,13 +190,21 @@ export default class UploadForm extends Vue {
     }
   }
 
-  async commitSession(chapterDraft: ChapterSchema, pageOrder: string[]): Promise<void> {
+  async commitSession(
+    chapterDraft: ChapterSchema,
+    pageOrder: string[]
+  ): Promise<void> {
     if (!this.session?.id) {
       return;
     }
 
     const config = this.authConfig;
-    const response = await Upload.commit(this.session.id, chapterDraft, pageOrder, config);
+    const response = await Upload.commit(
+      this.session.id,
+      chapterDraft,
+      pageOrder,
+      config
+    );
 
     if (response.data) {
       await this.$router.push(`/chapters/${response.data.id}`);
@@ -209,10 +217,14 @@ export default class UploadForm extends Vue {
   }
 
   async editChapter(chapterDraft: ChapterSchema): Promise<void> {
-    const response = await Chapter.edit(this.chapter.id, chapterDraft, this.authConfig);
+    const response = await Chapter.edit(
+      this.chapter.id,
+      chapterDraft,
+      this.authConfig
+    );
 
     if (response.data) {
-      await this.$router.push(`/manga/${this.mangaId}/${response.id}`);
+      await this.$router.push(`/manga/${this.mangaId}/${response.data.id}`);
     } else {
       this.alert = response.error ?? "";
     }
@@ -222,8 +234,6 @@ export default class UploadForm extends Vue {
   }
 
   async autocomplete(): Promise<void> {
-    let url = `/api/autocomplete/groups`;
-
     const response = await Autocomplete.groups();
 
     if (response.data) {

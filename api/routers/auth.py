@@ -68,10 +68,7 @@ async def is_connected(db_session: AsyncSession = Depends(get_db), token: str = 
 
 
 token_responses = {
-    200: {
-        "description": "A token for the logged in user",
-        "model": TokenResponse
-    },
+    200: {"description": "A token for the logged in user", "model": TokenResponse},
     401: {
         "description": "Credentials don't match",
         **AuthFailedHTTPException.open_api("Wrong username/password"),

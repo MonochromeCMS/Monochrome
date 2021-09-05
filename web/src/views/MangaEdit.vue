@@ -19,13 +19,13 @@
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
 import MangaForm from "@/components/MangaForm.vue";
-import Manga from "@/api/Manga";
+import Manga, { MangaResponse } from "@/api/Manga";
 
 @Component({
   components: { MangaForm },
 })
 export default class MangaEdit extends Vue {
-  manga = null;
+  manga: MangaResponse | null = null;
   alert = "";
 
   get id(): string {

@@ -37,15 +37,15 @@ import { Vue, Component } from "vue-property-decorator";
 import PagedReader from "@/components/PagedReader.vue";
 import VerticalReader from "@/components/VerticalReader.vue";
 import ReaderMenu from "@/components/ReaderMenu.vue";
-import Chapter, {ChapterResponse} from "@/api/Chapter";
+import Chapter, { DetailedChapterResponse } from "@/api/Chapter";
 import Manga from "@/api/Manga";
 
 @Component({
   components: { ReaderMenu, VerticalReader, PagedReader },
 })
 export default class ChapterReader extends Vue {
-  chapter: any = null;
-  chapters: ChapterResponse[] = [];
+  chapter: DetailedChapterResponse | null = null;
+  chapters: any[] = [];
   alert = "";
 
   get chapterId(): string {
@@ -83,7 +83,9 @@ export default class ChapterReader extends Vue {
   }
 
   get readerMode(): string {
-    return this.chapter.webtoon ? "Webtoon" : this.$store.getters.getReaderMode;
+    return this.chapter?.webtoon
+      ? "Webtoon"
+      : this.$store.getters.getReaderMode;
   }
 
   async goToChapter(id: string | null): Promise<void> {
@@ -114,8 +116,6 @@ export default class ChapterReader extends Vue {
   }
 
   async getChapters(mangaId: string): Promise<void> {
-    let url = `/api/manga/${mangaId}/chapters`;
-
     const response = await Manga.chapters(mangaId);
 
     if (response.data) {

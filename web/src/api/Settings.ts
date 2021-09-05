@@ -1,5 +1,5 @@
-import Base, {ApiResponse} from "./Base";
-import type {AxiosRequestConfig} from "axios";
+import Base, { ApiResponse } from "./Base";
+import type { AxiosRequestConfig } from "axios";
 
 export interface SettingsSchema {
   title1?: string;
@@ -13,7 +13,9 @@ export default class Settings extends Base {
   public static async get() {
     const response = await Settings._get("", {});
 
-    const result: ApiResponse<SettingsSchema> = Settings._apiResponse(response.status);
+    const result: ApiResponse<SettingsSchema> = Settings._apiResponse(
+      response.status
+    );
 
     switch (response.status) {
       case 200:
@@ -27,7 +29,9 @@ export default class Settings extends Base {
 
   public static async edit(data: SettingsSchema, auth: AxiosRequestConfig) {
     const response = await Settings._put("", data, auth);
-    const result: ApiResponse<SettingsSchema> = Settings._apiResponse(response.status);
+    const result: ApiResponse<SettingsSchema> = Settings._apiResponse(
+      response.status
+    );
 
     switch (response.status) {
       case 200:

@@ -1,6 +1,6 @@
 import Base from "./Base";
-import type {ApiResponse, Pagination} from "./Base";
-import type {AxiosRequestConfig} from "axios";
+import type { ApiResponse, Pagination } from "./Base";
+import type { AxiosRequestConfig } from "axios";
 
 export interface IUser {
   username: string;
@@ -20,11 +20,18 @@ export type UsersResponse = Pagination<UserResponse>;
 export default class User extends Base {
   public static readonly prefix: string = "/api/user";
 
-  public static async get_all(auth: AxiosRequestConfig, limit: number = 10, offset: number = 0, delay: boolean = false) {
+  public static async get_all(
+    auth: AxiosRequestConfig,
+    limit = 10,
+    offset = 0,
+    delay = false
+  ) {
     const url = `?limit=${limit}&offset=${offset}`;
     const response = await User._get(url, auth, delay);
 
-    const result: ApiResponse<UsersResponse> = User._apiResponse(response.status);
+    const result: ApiResponse<UsersResponse> = User._apiResponse(
+      response.status
+    );
 
     switch (response.status) {
       case 200:
@@ -32,10 +39,10 @@ export default class User extends Base {
         break;
       case 401:
         result.error = "Please log in again";
-      break;
+        break;
       case 422:
         result.error = "The data provided is not valid";
-      break;
+        break;
       default:
         result.error = response.data.detail ?? response.statusText;
     }
@@ -45,7 +52,9 @@ export default class User extends Base {
   public static async me(auth: AxiosRequestConfig) {
     const response = await User._get("/me", auth);
 
-    const result: ApiResponse<UserResponse> = User._apiResponse(response.status);
+    const result: ApiResponse<UserResponse> = User._apiResponse(
+      response.status
+    );
 
     switch (response.status) {
       case 200:
@@ -63,7 +72,9 @@ export default class User extends Base {
   public static async get(userId: string, auth: AxiosRequestConfig) {
     const response = await User._get(`/${userId}`, auth);
 
-    const result: ApiResponse<UserResponse> = User._apiResponse(response.status);
+    const result: ApiResponse<UserResponse> = User._apiResponse(
+      response.status
+    );
 
     switch (response.status) {
       case 200:
@@ -84,10 +95,16 @@ export default class User extends Base {
     return result;
   }
 
-  public static async edit(userId: string, data: UserSchema, auth: AxiosRequestConfig) {
+  public static async edit(
+    userId: string,
+    data: UserSchema,
+    auth: AxiosRequestConfig
+  ) {
     const response = await User._put(`/${userId}`, data, auth);
 
-    const result: ApiResponse<UserResponse> = User._apiResponse(response.status);
+    const result: ApiResponse<UserResponse> = User._apiResponse(
+      response.status
+    );
 
     switch (response.status) {
       case 200:
@@ -141,7 +158,9 @@ export default class User extends Base {
   public static async create(data: UserSchema, auth: AxiosRequestConfig) {
     const response = await User._post("", data, auth);
 
-    const result: ApiResponse<UserResponse> = User._apiResponse(response.status);
+    const result: ApiResponse<UserResponse> = User._apiResponse(
+      response.status
+    );
 
     switch (response.status) {
       case 201:

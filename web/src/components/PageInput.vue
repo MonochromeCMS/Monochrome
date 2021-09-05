@@ -24,7 +24,11 @@
         </v-col>
       </template>
       <v-col cols="6" sm="4" md="3" xl="2">
-        <v-card color="background" @click="uploadClick" :loading="loading ? 'primary' : false">
+        <v-card
+          color="background"
+          @click="uploadClick"
+          :loading="loading ? 'primary' : false"
+        >
           <v-responsive :aspect-ratio="4 / 5">
             <div class="d-flex fill-height">
               <v-icon x-large class="ma-auto d-block">mdi-plus</v-icon>
@@ -55,7 +59,7 @@ import { Vue, Component, Prop, VModel, Watch } from "vue-property-decorator";
 import draggable from "vuedraggable";
 import type { AxiosRequestConfig } from "axios";
 import naturalCompare from "natural-compare-lite";
-import Upload, {UploadedBlobResponse} from "@/api/Upload";
+import Upload, { UploadedBlobResponse } from "@/api/Upload";
 
 @Component({
   components: { draggable },
@@ -103,7 +107,11 @@ export default class PageInput extends Vue {
   async uploadFiles(files: File[]): Promise<void> {
     this.loading += 1;
 
-    const response = await Upload.upload(this.session.id, files, this.authConfig);
+    const response = await Upload.upload(
+      this.session.id,
+      files,
+      this.authConfig
+    );
 
     if (response.data) {
       this.pages.push(...response.data);
@@ -118,12 +126,16 @@ export default class PageInput extends Vue {
   }
 
   async deletePage(index: number, id: string): Promise<void> {
-    const response = await Upload.deleteBlob(this.session.id, id, this.authConfig);
+    const response = await Upload.deleteBlob(
+      this.session.id,
+      id,
+      this.authConfig
+    );
 
     if (response.data || response.status === 404) {
       this.pages = this.pages
-          .slice(0, index)
-          .concat(this.pages.slice(index + 1));
+        .slice(0, index)
+        .concat(this.pages.slice(index + 1));
     } else {
       this.alert = response.error ?? "";
     }

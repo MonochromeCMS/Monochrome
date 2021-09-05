@@ -39,7 +39,7 @@
 <script lang="ts">
 import { Vue, Component, Prop, Emit } from "vue-property-decorator";
 import User from "@/api/User";
-import type {AxiosRequestConfig} from "axios";
+import type { AxiosRequestConfig } from "axios";
 
 @Component
 export default class UserDeleteButton extends Vue {

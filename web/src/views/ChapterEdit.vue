@@ -30,15 +30,15 @@
 import { Vue, Component } from "vue-property-decorator";
 import MangaRow from "@/components/MangaRow.vue";
 import UploadForm from "@/components/UploadForm.vue";
-import Chapter, {DetailedChapterResponse} from "@/api/Chapter";
-import {MangaResponse} from "@/api/Manga";
+import Chapter, { DetailedChapterResponse } from "@/api/Chapter";
+import { MangaResponse } from "@/api/Manga";
 
 @Component({
   components: { MangaRow, UploadForm },
 })
 export default class About extends Vue {
-  manga: MangaResponse = null;
-  chapter: DetailedChapterResponse = null;
+  manga: MangaResponse | null = null;
+  chapter: DetailedChapterResponse | null = null;
   alert = "";
 
   get chapterId(): string {

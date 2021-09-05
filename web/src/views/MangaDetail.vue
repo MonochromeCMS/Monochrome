@@ -80,13 +80,13 @@ import { Vue, Component } from "vue-property-decorator";
 import type { AxiosRequestConfig } from "axios";
 import MangaRow from "@/components/MangaRow.vue";
 import MangaChapters from "@/components/MangaChapters.vue";
-import Manga, {MangaResponse} from "@/api/Manga";
+import Manga, { MangaResponse } from "@/api/Manga";
 
 @Component({
   components: { MangaChapters, MangaRow },
 })
 export default class MangaDetail extends Vue {
-  manga: MangaResponse = null;
+  manga: MangaResponse | null = null;
   loading = true;
   mangaAlert = "";
   chapterModel = ["", ""];
@@ -125,7 +125,7 @@ export default class MangaDetail extends Vue {
     if (response.data) {
       this.manga = response.data;
     } else {
-      this.alert = response.error ?? "";
+      this.mangaAlert = response.error ?? "";
     }
 
     this.loading = false;

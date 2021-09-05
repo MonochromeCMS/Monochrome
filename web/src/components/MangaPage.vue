@@ -75,7 +75,7 @@
 <script lang="ts">
 import { Vue, Component, Watch } from "vue-property-decorator";
 import SearchBar from "@/components/SearchBar.vue";
-import Manga, {MangaResponse} from "@/api/Manga";
+import Manga, { MangaResponse } from "@/api/Manga";
 
 @Component({
   components: { SearchBar },
@@ -96,7 +96,7 @@ export default class MangaPage extends Vue {
   search: any = "";
 
   get manga(): any[] {
-    return this.rawManga.map(el => ({
+    return this.rawManga.map((el) => ({
       cover: `/media/${el.id}/cover.jpg?version=${el.version}`,
       title: el.title,
       subtitle: el.author,
@@ -115,12 +115,12 @@ export default class MangaPage extends Vue {
   }
 
   async getManga(): Promise<void> {
-    let url = `/api/manga?limit=${this.limit}&offset=${this.offset}`;
-    if (this.search) {
-      url += `&title=${this.search}`;
-    }
-
-    const response = await Manga.search(this.search, this.limit, this.offset, this.loading);
+    const response = await Manga.search(
+      this.search,
+      this.limit,
+      this.offset,
+      this.loading
+    );
 
     if (response.data) {
       this.rawManga = response.data.results;

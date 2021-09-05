@@ -117,7 +117,7 @@ import {
 } from "vee-validate";
 import type { AxiosRequestConfig } from "axios";
 import MangaRow from "@/components/MangaRow.vue";
-import Manga, {MangaResponse, MangaSchema, Status} from "@/api/Manga";
+import Manga, { MangaResponse, MangaSchema, Status } from "@/api/Manga";
 
 setInteractionMode("eager");
 
@@ -144,10 +144,10 @@ export default class MangaForm extends Vue {
   description = "";
   author = "";
   artist = "";
-  year = null;
-  status: Status = null;
+  year?: number | null = null;
+  status: Status | null = null;
   alert = "";
-  cover = null;
+  cover: File | null = null;
   buffer = null;
   statusItems = [
     { value: "ongoing", text: "Ongoing" },
@@ -162,8 +162,8 @@ export default class MangaForm extends Vue {
       description: this.description,
       author: this.author,
       artist: this.artist,
-      year: this.year || null,
-      status: this.status,
+      year: this.year ?? undefined,
+      status: this.status ?? "ongoing",
     };
   }
 
@@ -233,7 +233,11 @@ export default class MangaForm extends Vue {
     }
   }
 
-  async setCover(mangaId: string, cover: File): Promise<void> {
+  async setCover(mangaId: string, cover: File | null): Promise<void> {
+    if (!cover) {
+      return;
+    }
+
     const response = await Manga.setCover(mangaId, cover, this.authConfig);
 
     if (response.data) {

@@ -1,6 +1,6 @@
-import Base, {ApiResponse, Pagination} from "./Base";
-import type {AxiosRequestConfig} from "axios";
-import type {MangaResponse} from "@/api/Manga";
+import Base, { ApiResponse, Pagination } from "./Base";
+import type { AxiosRequestConfig } from "axios";
+import type { MangaResponse } from "@/api/Manga";
 
 export interface ChapterSchema {
   name: string;
@@ -27,12 +27,14 @@ type LatestChaptersResponse = Pagination<DetailedChapterResponse>;
 export default class Chapter extends Base {
   public static readonly prefix: string = "/api/chapter";
 
-  public static async latest(limit: number = 10, offset: number = 0, delay: boolean = false) {
-    let url = `?limit=${limit}&offset=${offset}`
+  public static async latest(limit = 10, offset = 0, delay = false) {
+    const url = `?limit=${limit}&offset=${offset}`;
 
     const response = await this._get(url, {}, delay);
 
-    const result: ApiResponse<LatestChaptersResponse> = this._apiResponse(response.status);
+    const result: ApiResponse<LatestChaptersResponse> = this._apiResponse(
+      response.status
+    );
 
     switch (response.status) {
       case 200:
@@ -40,17 +42,19 @@ export default class Chapter extends Base {
         break;
       case 422:
         result.error = "The data provided is not valid";
-      break;
+        break;
       default:
         result.error = response.data.detail ?? response.statusText;
     }
     return result;
   }
 
-  public static async get(chapterId: string, delay: boolean = false) {
+  public static async get(chapterId: string, delay = false) {
     const response = await this._get(`/${chapterId}`, {}, delay);
 
-    const result: ApiResponse<DetailedChapterResponse> = this._apiResponse(response.status);
+    const result: ApiResponse<DetailedChapterResponse> = this._apiResponse(
+      response.status
+    );
 
     switch (response.status) {
       case 200:
@@ -68,10 +72,16 @@ export default class Chapter extends Base {
     return result;
   }
 
-  public static async edit(chapterId: string, data: ChapterSchema, auth: AxiosRequestConfig) {
+  public static async edit(
+    chapterId: string,
+    data: ChapterSchema,
+    auth: AxiosRequestConfig
+  ) {
     const response = await this._put(`/${chapterId}`, data, auth);
 
-    const result: ApiResponse<ChapterResponse> = this._apiResponse(response.status);
+    const result: ApiResponse<ChapterResponse> = this._apiResponse(
+      response.status
+    );
 
     switch (response.status) {
       case 200:

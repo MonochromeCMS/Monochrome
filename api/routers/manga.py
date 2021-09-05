@@ -33,7 +33,11 @@ post_responses = {
 
 
 @router.post(
-    "", status_code=status.HTTP_201_CREATED, response_model=MangaResponse, dependencies=[Depends(is_connected)], responses=post_responses
+    "",
+    status_code=status.HTTP_201_CREATED,
+    response_model=MangaResponse,
+    dependencies=[Depends(is_connected)],
+    responses=post_responses,
 )
 async def create_manga(payload: MangaSchema, db_session: AsyncSession = Depends(get_db)):
     manga = Manga(**payload.dict())
@@ -149,7 +153,7 @@ put_cover_responses = {
     400: {
         "description": "The cover isn't a valid image",
         **BadRequestHTTPException.open_api("image_name is not an image"),
-     },
+    },
     200: {
         "description": "The edited manga",
         "model": MangaResponse,

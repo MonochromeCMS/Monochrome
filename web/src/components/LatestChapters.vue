@@ -100,7 +100,7 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
-import Chapter, {DetailedChapterResponse} from "@/api/Chapter";
+import Chapter, { DetailedChapterResponse } from "@/api/Chapter";
 
 @Component
 export default class LatestChapters extends Vue {
@@ -124,7 +124,11 @@ export default class LatestChapters extends Vue {
   }
 
   async getChapters(): Promise<void> {
-    const response = await Chapter.latest(this.limit, this.offset, this.loading);
+    const response = await Chapter.latest(
+      this.limit,
+      this.offset,
+      this.loading
+    );
 
     if (response.data) {
       this.chapters = response.data.results;

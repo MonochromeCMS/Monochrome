@@ -78,8 +78,8 @@ import {
   ValidationObserver,
 } from "vee-validate";
 import { Vue, Component, Emit, Prop } from "vue-property-decorator";
-import type {AxiosRequestConfig} from "axios";
-import User, {UserSchema} from "@/api/User";
+import type { AxiosRequestConfig } from "axios";
+import User, { UserSchema } from "@/api/User";
 
 setInteractionMode("eager");
 

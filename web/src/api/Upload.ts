@@ -1,6 +1,6 @@
-import Base, {ApiResponse} from "./Base";
-import type {AxiosRequestConfig} from "axios";
-import type {ChapterResponse, ChapterSchema} from "@/api/Chapter";
+import Base, { ApiResponse } from "./Base";
+import type { AxiosRequestConfig } from "axios";
+import type { ChapterResponse, ChapterSchema } from "@/api/Chapter";
 
 export interface UploadSessionSchema {
   mangaId: string;
@@ -25,11 +25,17 @@ export interface CommitUploadSession {
 export default class Upload extends Base {
   public static readonly prefix: string = "/api/upload";
 
-  public static async begin(mangaId: string, chapterId: string | null, auth: AxiosRequestConfig) {
+  public static async begin(
+    mangaId: string,
+    chapterId: string | null,
+    auth: AxiosRequestConfig
+  ) {
     const data = { mangaId, chapterId };
     const response = await Upload._post("/begin", data, auth);
 
-    const result: ApiResponse<UploadSessionResponse> = Upload._apiResponse(response.status);
+    const result: ApiResponse<UploadSessionResponse> = Upload._apiResponse(
+      response.status
+    );
 
     switch (response.status) {
       case 201:
@@ -53,10 +59,16 @@ export default class Upload extends Base {
     return result;
   }
 
-  public static async get(sessionId: string, auth: AxiosRequestConfig, delay: boolean = false) {
+  public static async get(
+    sessionId: string,
+    auth: AxiosRequestConfig,
+    delay = false
+  ) {
     const response = await Upload._get(`/${sessionId}`, auth, delay);
 
-    const result: ApiResponse<UploadSessionResponse> = Upload._apiResponse(response.status);
+    const result: ApiResponse<UploadSessionResponse> = Upload._apiResponse(
+      response.status
+    );
 
     switch (response.status) {
       case 200:
@@ -77,13 +89,24 @@ export default class Upload extends Base {
     return result;
   }
 
-  public static async upload(sessionId: string, files: File[], auth: AxiosRequestConfig) {
+  public static async upload(
+    sessionId: string,
+    files: File[],
+    auth: AxiosRequestConfig
+  ) {
     const form = new FormData();
     files.forEach((file) => form.append("payload", file));
 
-    const response = await Upload._post(`/${sessionId}`, form, auth, "multipart/form-data");
+    const response = await Upload._post(
+      `/${sessionId}`,
+      form,
+      auth,
+      "multipart/form-data"
+    );
 
-    const result: ApiResponse<UploadedBlobResponse[]> = Upload._apiResponse(response.status);
+    const result: ApiResponse<UploadedBlobResponse[]> = Upload._apiResponse(
+      response.status
+    );
 
     switch (response.status) {
       case 201:
@@ -131,7 +154,12 @@ export default class Upload extends Base {
     return result;
   }
 
-  public static async commit(sessionId: string, chapterDraft: ChapterSchema, pageOrder: string[], auth: AxiosRequestConfig) {
+  public static async commit(
+    sessionId: string,
+    chapterDraft: ChapterSchema,
+    pageOrder: string[],
+    auth: AxiosRequestConfig
+  ) {
     const data: CommitUploadSession = {
       chapterDraft,
       pageOrder,
@@ -140,7 +168,9 @@ export default class Upload extends Base {
 
     const response = await Upload._post(url, data, auth);
 
-    const result: ApiResponse<ChapterResponse> = Upload._apiResponse(response.status);
+    const result: ApiResponse<ChapterResponse> = Upload._apiResponse(
+      response.status
+    );
 
     switch (response.status) {
       case 200:
@@ -163,7 +193,11 @@ export default class Upload extends Base {
     return result;
   }
 
-  public static async deleteBlob(sessionId: string, blobId: string, auth: AxiosRequestConfig) {
+  public static async deleteBlob(
+    sessionId: string,
+    blobId: string,
+    auth: AxiosRequestConfig
+  ) {
     const url = `/${sessionId}/${blobId}`;
     const response = await Upload._delete(url, auth);
 

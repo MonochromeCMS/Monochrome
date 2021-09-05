@@ -78,8 +78,8 @@ import {
 } from "vee-validate";
 import { Vue, Component, Watch } from "vue-property-decorator";
 import VueMarkdown from "vue-markdown";
-import Settings, {SettingsSchema} from "@/api/Settings";
-import type {AxiosRequestConfig} from "axios";
+import Settings, { SettingsSchema } from "@/api/Settings";
+import type { AxiosRequestConfig } from "axios";
 
 setInteractionMode("eager");
 
@@ -91,9 +91,9 @@ setInteractionMode("eager");
   },
 })
 export default class SettingsForm extends Vue {
-  title1 = null;
-  title2 = null;
-  about = null;
+  title1?: string | null = null;
+  title2?: string | null = null;
+  about?: string | null = null;
   success = false;
   alert = "";
 

@@ -1,4 +1,4 @@
-import Base, {ApiResponse} from "./Base";
+import Base, { ApiResponse } from "./Base";
 
 export interface TokenResponse {
   access_token: string;
@@ -7,7 +7,7 @@ export interface TokenResponse {
 
 export default class Auth extends Base {
   public static readonly prefix: string = "/api/auth";
-  
+
   public static async login(username: string, password: string) {
     const form = new FormData();
     form.append("grant_type", "password");
@@ -17,9 +17,16 @@ export default class Auth extends Base {
     form.append("client_id", "");
     form.append("client_secret", "");
 
-    const response = await Auth._post("/token", form, {}, "application/x-www-form-urlencoded");
+    const response = await Auth._post(
+      "/token",
+      form,
+      {},
+      "application/x-www-form-urlencoded"
+    );
 
-    const result: ApiResponse<TokenResponse> = Auth._apiResponse(response.status);
+    const result: ApiResponse<TokenResponse> = Auth._apiResponse(
+      response.status
+    );
 
     switch (response.status) {
       case 200:

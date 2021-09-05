@@ -1,10 +1,7 @@
 import type { ActionContext } from "vuex";
-import type { AxiosResponse } from "axios";
-import axios from "axios";
-import type {SettingsSchema} from "@/api/Settings";
-import {ApiResponse} from "@/api/Base";
+import type { SettingsSchema } from "@/api/Settings";
+import { ApiResponse } from "@/api/Base";
 import Settings from "@/api/Settings";
-
 
 const state = (): SettingsSchema => ({
   title1: undefined,

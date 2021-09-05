@@ -89,7 +89,7 @@
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from "vue-property-decorator";
 import ChapterDelete from "@/components/ChapterDelete.vue";
-import Chapter, {ChapterResponse} from "@/api/Chapter";
+import type { ChapterResponse } from "@/api/Chapter";
 import Manga from "@/api/Manga";
 
 @Component({

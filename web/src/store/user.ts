@@ -2,11 +2,10 @@ import type { ActionContext } from "vuex";
 import type { AxiosRequestConfig } from "axios";
 
 import Auth from "@/api/Auth";
-import type {TokenResponse} from "@/api/Auth";
+import type { TokenResponse } from "@/api/Auth";
 import User from "@/api/User";
-import type {UserResponse} from "@/api/User";
-import {ApiResponse} from "@/api/Base";
-
+import type { UserResponse } from "@/api/User";
+import { ApiResponse } from "@/api/Base";
 
 interface IUser {
   token: string;
@@ -64,7 +63,7 @@ const getters = {
 
 const actions = {
   async login(
-    { state, commit, dispatch }: ActionContext<UserState, any>,
+    { commit, dispatch }: ActionContext<UserState, any>,
     { username, password }: UserLogin
   ): Promise<ApiResponse<TokenResponse>> {
     const response = await Auth.login(username, password);
@@ -78,13 +77,12 @@ const actions = {
   async getUserData({
     getters,
     commit,
-    }: ActionContext<UserState, any>): Promise<ApiResponse<UserResponse>> {
+  }: ActionContext<UserState, any>): Promise<ApiResponse<UserResponse>> {
     const response = await User.me(getters.authConfig);
 
     if (response.data) {
       commit("updateUser", response.data);
-    }
-    else if (response.status === 401) {
+    } else if (response.status === 401) {
       commit("logout");
     }
     return response;

@@ -45,9 +45,7 @@
           label="Width"
           thumb-label
         >
-          <template v-slot:thumb-label="{ value }">
-            {{ value }}%
-          </template>
+          <template v-slot:thumb-label="{ value }"> {{ value }}% </template>
         </v-slider>
         <v-row v-else align="center" class="ma-1">
           <v-col class="text-body-1"> Image fit: </v-col>
@@ -106,7 +104,9 @@ export default class ReaderMenu extends Vue {
   }
 
   get modeItems(): string[] {
-    return this.chapter.webtoon ? ["Webtoon"] : ["Single", "Double", "Vertical"];
+    return this.chapter.webtoon
+      ? ["Webtoon"]
+      : ["Single", "Double", "Vertical"];
   }
 
   get doubleParity(): number {

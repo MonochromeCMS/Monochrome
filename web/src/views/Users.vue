@@ -54,7 +54,7 @@ import { Vue, Component, Watch } from "vue-property-decorator";
 import type { AxiosRequestConfig } from "axios";
 import UsersList from "@/components/UsersList.vue";
 import UserForm from "@/components/UserForm.vue";
-import User, {UserResponse} from "@/api/User";
+import User, { UserResponse } from "@/api/User";
 
 @Component({
   components: { UsersList, UserForm },
@@ -92,7 +92,12 @@ export default class About extends Vue {
   async getUsers(): Promise<void> {
     let config = this.authConfig;
 
-    const response = await User.get_all(config, this.limit, this.offset, this.loading);
+    const response = await User.get_all(
+      config,
+      this.limit,
+      this.offset,
+      this.loading
+    );
 
     if (response.data) {
       this.total = response.data.total;

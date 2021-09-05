@@ -26,13 +26,13 @@
 import { Vue, Component } from "vue-property-decorator";
 import MangaRow from "@/components/MangaRow.vue";
 import UploadForm from "@/components/UploadForm.vue";
-import Manga from "@/api/Manga";
+import Manga, { MangaResponse } from "@/api/Manga";
 
 @Component({
   components: { MangaRow, UploadForm },
 })
 export default class ChapterUpload extends Vue {
-  manga = null;
+  manga: MangaResponse | null = null;
   alert = "";
 
   get mangaId(): string {
