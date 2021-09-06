@@ -34,7 +34,7 @@ export default class Manga extends Base {
     let url = `?limit=${limit}&offset=${offset}`;
 
     if (title) {
-      url += `?&title=${title}`;
+      url += `&title=${title}`;
     }
 
     const response = await Manga._get(url, {}, delay);
