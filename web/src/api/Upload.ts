@@ -95,7 +95,9 @@ export default class Upload extends Base {
     auth: AxiosRequestConfig
   ) {
     if (files.length === 0) {
-      return { error: "No file was provided" };
+      const result = Upload._apiResponse(0);
+      result.error = "No file was provided";
+      return result;
     }
 
     const form = new FormData();
