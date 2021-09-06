@@ -94,6 +94,10 @@ export default class Upload extends Base {
     files: File[],
     auth: AxiosRequestConfig
   ) {
+    if (files.length === 0) {
+      return { error: "No file was provided" };
+    }
+
     const form = new FormData();
     files.forEach((file) => form.append("payload", file));
 
