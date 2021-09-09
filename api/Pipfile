@@ -23,7 +23,7 @@ passlib = {extras = ["bcrypt"], version = "*"}
 asyncpg = "*"
 sqlalchemy = "*"
 python-multipart = "*"
-pillow = "*"
+pillow = ">=8.3.2"
 alembic = "*"
 
 [dev-packages]
