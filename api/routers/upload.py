@@ -189,7 +189,7 @@ def commit_session_images(chapter: Chapter, pages: List[UUID], edit: bool):
     chapter_path = os.path.join(global_settings.media_path, str(chapter.manga_id), str(chapter.id))
 
     if edit:
-        shutil.rmtree(chapter_path)
+        shutil.rmtree(chapter_path, True)
     os.mkdir(chapter_path)
 
     page_number = 1
