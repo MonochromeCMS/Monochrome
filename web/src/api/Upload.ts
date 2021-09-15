@@ -92,7 +92,8 @@ export default class Upload extends Base {
   public static async upload(
     sessionId: string,
     files: File[],
-    auth: AxiosRequestConfig
+    auth: AxiosRequestConfig,
+    onUploadProgress: (progressEvent: any) => void,
   ) {
     if (files.length === 0) {
       const result = Upload._apiResponse(0);
@@ -103,10 +104,15 @@ export default class Upload extends Base {
     const form = new FormData();
     files.forEach((file) => form.append("payload", file));
 
+    const config: AxiosRequestConfig = {
+      ...auth,
+      onUploadProgress,
+    };
+
     const response = await Upload._post(
       `/${sessionId}`,
       form,
-      auth,
+      config,
       "multipart/form-data"
     );
 
