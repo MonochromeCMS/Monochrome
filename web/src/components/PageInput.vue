@@ -13,6 +13,7 @@
             >
               <v-btn
                 icon
+                :disabled="deleting"
                 class="background text--primary page-close"
                 @click="deletePage(index, item.id)"
               >
@@ -27,11 +28,12 @@
         <v-card
           color="background"
           @click="uploadClick"
-          :loading="loading ? 'primary' : false"
+          :disabled="loading"
         >
           <v-responsive :aspect-ratio="4 / 5">
             <div class="d-flex fill-height">
-              <v-icon x-large class="ma-auto d-block">mdi-plus</v-icon>
+              <v-progress-circular v-if="loading" :value="progress" class="ma-auto d-block" />
+              <v-icon v-else x-large class="ma-auto d-block">mdi-plus</v-icon>
             </div>
           </v-responsive>
         </v-card>
@@ -74,7 +76,9 @@ export default class PageInput extends Vue {
   @VModel() pageOrder!: any[];
 
   pages: UploadedBlobResponse[] = [];
-  loading = 0;
+  loading = false;
+  deleting = false;
+  progress = 0;
   pageUpload = null;
   alert = "";
 
@@ -95,6 +99,11 @@ export default class PageInput extends Vue {
     this.$refs.fileInput.click();
   }
 
+  handleProgress(progressEvent: any): void {
+    console.log(progressEvent);
+    this.progress = 100 * progressEvent.loaded/progressEvent.total;
+  }
+
   async updateFile(ev: any): Promise<void> {
     if (!ev.target) {
       return;
@@ -105,12 +114,14 @@ export default class PageInput extends Vue {
   }
 
   async uploadFiles(files: File[]): Promise<void> {
-    this.loading += 1;
+    this.loading = true;
+    this.progress = 0;
 
     const response = await Upload.upload(
       this.session.id,
       files,
-      this.authConfig
+      this.authConfig,
+      ev => this.handleProgress(ev),
     );
 
     if (response.data) {
@@ -122,10 +133,12 @@ export default class PageInput extends Vue {
       this.$store.commit("logout");
     }
 
-    this.loading -= 1;
+    this.loading = false;
   }
 
   async deletePage(index: number, id: string): Promise<void> {
+    this.deleting = true;
+
     const response = await Upload.deleteBlob(
       this.session.id,
       id,
@@ -142,6 +155,8 @@ export default class PageInput extends Vue {
     if (response.status === 401) {
       this.$store.commit("logout");
     }
+
+    this.deleting = false;
   }
 
   quickSort(): void {

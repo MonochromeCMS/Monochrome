@@ -264,7 +264,7 @@ export default class PagedReader extends Vue {
   }
 }
 .height {
-  max-height: calc(100vh - 10rem);
+  max-height: calc(100vh - 5rem);
   max-width: 100%;
   &.half-page {
     max-width: 50%;
@@ -272,7 +272,7 @@ export default class PagedReader extends Vue {
 }
 .reader-tabs {
   position: sticky;
-  top: 3.7rem;
+  top: .7rem;
   z-index: 1;
   border-radius: 0.3rem;
   margin-bottom: 0.8rem;

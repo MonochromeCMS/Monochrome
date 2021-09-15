@@ -100,7 +100,7 @@ delete_responses = {
 }
 
 
-@router.delete("/{id}", response_model=UserResponse, responses=delete_responses)
+@router.delete("/{id}", responses=delete_responses)
 async def delete_user(id: UUID, user: User = Depends(is_connected), db_session: AsyncSession = Depends(get_db)):
     if user.id == id:
         raise BadRequestHTTPException("You can't delete your own user")

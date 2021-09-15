@@ -71,7 +71,7 @@ delete_responses = {
 @router.delete("/{id}", dependencies=[Depends(is_connected)], responses=delete_responses)
 async def delete_chapter(id: UUID, db_session: AsyncSession = Depends(get_db)):
     chapter = await Chapter.find(db_session, id, NotFoundHTTPException("Chapter not found"))
-    shutil.rmtree(os.path.join(global_settings.media_path, str(chapter.manga_id), str(chapter.id)))
+    shutil.rmtree(os.path.join(global_settings.media_path, str(chapter.manga_id), str(chapter.id)), True)
     return await Chapter.delete(chapter, db_session)
 
 

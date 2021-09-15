@@ -18,7 +18,7 @@
                 <v-btn
                   v-if="isConnected"
                   :to="`/manga/${mangaId}/upload`"
-                  color="background"
+                  color="green darken-2"
                   class="ma-2"
                 >
                   Add chapter

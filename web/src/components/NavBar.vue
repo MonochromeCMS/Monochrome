@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar app flat color="backgroundAlt">
+  <v-app-bar app flat color="backgroundAlt" :hide-on-scroll="reader">
     <router-link
       v-if="!settings.title1 && !settings.title2"
       to="/"
@@ -85,6 +85,10 @@ export default class NavBar extends Vue {
     },
   ];
   drawer = false;
+
+  get reader(): boolean {
+    return this.$route.name === "ChapterReader";
+  }
 
   get isConnected(): boolean {
     return this.$store.getters.isConnected;

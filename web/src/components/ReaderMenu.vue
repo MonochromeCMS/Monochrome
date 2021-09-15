@@ -33,6 +33,7 @@
           v-model="readerMode"
           :items="modeItems"
         />
+        <!-- Width setting -->
         <v-slider
           class="ma-4 mb-1"
           v-if="readerMode === 'Webtoon'"
@@ -47,6 +48,7 @@
         >
           <template v-slot:thumb-label="{ value }"> {{ value }}% </template>
         </v-slider>
+        <!-- Fit setting -->
         <v-row v-else align="center" class="ma-1">
           <v-col class="text-body-1"> Image fit: </v-col>
           <v-col class="text-right pa-2">
@@ -61,6 +63,7 @@
             </v-btn-toggle>
           </v-col>
         </v-row>
+        <!-- Direction setting -->
         <v-row
           align="center"
           class="ma-1"
@@ -74,6 +77,7 @@
             </v-btn-toggle>
           </v-col>
         </v-row>
+        <!-- Double parity setting -->
         <v-row align="center" class="ma-1" v-if="readerMode === 'Double'">
           <v-col class="text-body-1"> Double page parity: </v-col>
           <v-col class="text-right pa-2">

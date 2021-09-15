@@ -1,5 +1,8 @@
 <template>
   <v-row class="ma-0">
+    <v-btn block text width="15rem" @click="previousChapter" class="mb-3">
+      Previous chapter
+    </v-btn>
     <v-col
       :class="webtoon ? 'webtoon' : ''"
       cols="12"
@@ -13,11 +16,14 @@
         :src="`/media/${manga}/${chapter}/${index}.jpg?version=${version}`"
       />
     </v-col>
+    <v-btn block text width="15rem" @click="nextChapter" class="mt-3">
+      Next chapter
+    </v-btn>
   </v-row>
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from "vue-property-decorator";
+import { Vue, Component, Prop, Emit } from "vue-property-decorator";
 
 @Component
 export default class VerticalReader extends Vue {
@@ -26,6 +32,16 @@ export default class VerticalReader extends Vue {
   @Prop(Number) readonly version!: number;
   @Prop(Number) readonly length!: number;
   @Prop(Boolean) readonly webtoon!: boolean;
+
+  @Emit("next")
+  nextChapter() {
+    return true;
+  }
+
+  @Emit("previous")
+  previousChapter() {
+    return true;
+  }
 
   get fit(): string {
     return this.webtoon ? "mx-auto" : this.$store.getters.getFit;
@@ -50,7 +66,7 @@ export default class VerticalReader extends Vue {
   width: 100%;
 }
 .height {
-  max-height: calc(100vh - 8rem);
+  height: calc(100vh - 5rem);
   margin: auto;
   max-width: 100%;
 }

@@ -49,7 +49,7 @@
             </v-col>
           </v-row>
         </router-link>
-        <v-menu v-if="isConnected" offset-y>
+        <v-menu v-if="isConnected" offset-y close-on-content-click>
           <template v-slot:activator="{ on, attrs }">
             <v-btn
               icon

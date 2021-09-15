@@ -9,6 +9,8 @@
           :version="chapter.version"
           :length="chapter.length"
           :webtoon="readerMode === 'Webtoon'"
+          @next="goToChapter(nextChapter)"
+          @previous="goToChapter(previousChapter)"
         />
       </v-col>
       <v-col cols="12" v-else>
