@@ -99,13 +99,13 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
+import { Vue, Component, Watch } from "vue-property-decorator";
 import Chapter, { DetailedChapterResponse } from "@/api/Chapter";
 
 @Component
 export default class LatestChapters extends Vue {
   page = 1;
-  limit = 10;
+  limit = 8;
   total = 0;
   loading = true;
   alert = "";
@@ -122,6 +122,12 @@ export default class LatestChapters extends Vue {
   get isConnected(): boolean {
     return this.$store.getters.isConnected;
   }
+
+  @Watch("page")
+  async onPageChange(): Promise<void> {
+    await this.getChapters();
+  }
+
 
   async getChapters(): Promise<void> {
     const response = await Chapter.latest(
