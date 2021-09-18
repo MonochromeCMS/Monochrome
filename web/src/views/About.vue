@@ -9,7 +9,7 @@
           class="text-center"
         >
           <template v-if="settings.about">
-            <vue-markdown class="pt-3 px-3" :source="settings.about" />
+            <div class="pt-3 px-3" v-html="markdownHTML" />
             <v-card-actions>
               <div class="caption ml-auto text--secondary">
                 This website was created with
@@ -76,13 +76,16 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
-import VueMarkdown from "vue-markdown";
+import marked from "marked";
+import { SettingsSchema } from "@/api/Settings";
 
-@Component({
-  components: { VueMarkdown },
-})
+@Component
 export default class About extends Vue {
-  get settings(): any {
+  get markdownHTML() {
+    return this.settings.about ? marked(this.settings.about) : "";
+  }
+
+  get settings(): SettingsSchema {
     return this.$store.getters.settings;
   }
 }

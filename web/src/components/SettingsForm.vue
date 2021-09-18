@@ -57,7 +57,7 @@
         <v-expansion-panel>
           <v-expansion-panel-header> Preview </v-expansion-panel-header>
           <v-expansion-panel-content class="text-center">
-            <vue-markdown :source="about" />
+            <div v-html="markdownHTML" />
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
@@ -77,7 +77,7 @@ import {
   ValidationObserver,
 } from "vee-validate";
 import { Vue, Component, Watch } from "vue-property-decorator";
-import VueMarkdown from "vue-markdown";
+import marked from "marked";
 import Settings, { SettingsSchema } from "@/api/Settings";
 import type { AxiosRequestConfig } from "axios";
 
@@ -85,7 +85,6 @@ setInteractionMode("eager");
 
 @Component({
   components: {
-    VueMarkdown,
     ValidationProvider,
     ValidationObserver,
   },
@@ -103,6 +102,10 @@ export default class SettingsForm extends Vue {
       title2: this.title2 || null,
       about: this.about || null,
     };
+  }
+
+  get markdownHTML() {
+    return this.about ? marked(this.about) : "";
   }
 
   get authConfig(): AxiosRequestConfig {
