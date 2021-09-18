@@ -29,6 +29,10 @@ module.exports = {
   pwa: {
     name: title,
     themeColor: "#212121",
+    workboxOptions: {
+      cleanupOutdatedCaches: true,
+      skipWaiting: true,
+    },
   },
   chainWebpack: (config) => {
     config.plugin("html").tap((args) => {
