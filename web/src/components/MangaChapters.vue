@@ -32,14 +32,14 @@
           class="text-decoration-none chapter-link pa-3"
         >
           <v-row class="justify-space-around">
-            <v-col cols="7" sm="4" md="3">
+            <v-col cols="6" sm="3" md="2">
               {{ item.volume ? `Vol ${item.volume} ` : "" }}Chapter
               {{ item.number }}
             </v-col>
             <v-col cols="3" md="4" class="hidden-sm-and-down ellipsis">
               {{ item.name }}
             </v-col>
-            <v-col cols="5" sm="3" md="2" class="ellipsis">
+            <v-col cols="6" sm="4" md="3" class="ellipsis">
               {{ item.scanGroup }}
             </v-col>
             <v-col cols="3" lg="2" class="pa-0 text-right hidden-xs-only">
