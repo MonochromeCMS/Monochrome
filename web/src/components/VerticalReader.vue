@@ -14,7 +14,17 @@
         :class="fit"
         :width="width"
         :src="`/media/${manga}/${chapter}/${index}.jpg?version=${version}`"
-      />
+      >
+        <template v-slot:placeholder>
+          <v-row
+            class="fill-height ma-0"
+            align="center"
+            justify="center"
+          >
+            <v-progress-circular indeterminate />
+          </v-row>
+        </template>
+      </v-img>
     </v-col>
     <v-btn block text width="15rem" @click="nextChapter" class="mt-3">
       Next chapter

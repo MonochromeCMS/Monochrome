@@ -60,13 +60,33 @@
             contain
             :src="urls[2 * index - 2]"
             :alt="`Page ${2 * index - 1}`"
-          />
+          >
+            <template v-slot:placeholder>
+              <v-row
+                class="fill-height ma-0"
+                align="center"
+                justify="center"
+              >
+                <v-progress-circular indeterminate />
+              </v-row>
+            </template>
+          </v-img>
           <v-img
             :class="`${fit} half-page right`"
             contain
             :src="urls[2 * index - 1]"
             :alt="`Page ${2 * index}`"
-          />
+          >
+            <template v-slot:placeholder>
+              <v-row
+                class="fill-height ma-0"
+                align="center"
+                justify="center"
+              >
+                <v-progress-circular indeterminate />
+              </v-row>
+            </template>
+          </v-img>
         </div>
         <v-img
           v-else
@@ -74,7 +94,17 @@
           contain
           :src="urls[index - 1]"
           :alt="`Page ${index}`"
-        />
+        >
+          <template v-slot:placeholder>
+            <v-row
+              class="fill-height ma-0"
+              align="center"
+              justify="center"
+            >
+              <v-progress-circular indeterminate />
+            </v-row>
+          </template>
+        </v-img>
       </v-carousel-item>
       <v-carousel-item :key="amountTabs + 1">
         <v-row>
