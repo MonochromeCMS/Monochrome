@@ -16,11 +16,7 @@
         :src="`/media/${manga}/${chapter}/${index}.jpg?version=${version}`"
       >
         <template v-slot:placeholder>
-          <v-row
-            class="fill-height ma-0"
-            align="center"
-            justify="center"
-          >
+          <v-row class="fill-height ma-0" align="center" justify="center">
             <v-progress-circular indeterminate />
           </v-row>
         </template>

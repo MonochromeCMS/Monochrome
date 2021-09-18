@@ -93,7 +93,7 @@ export default class Upload extends Base {
     sessionId: string,
     files: File[],
     auth: AxiosRequestConfig,
-    onUploadProgress: (progressEvent: any) => void,
+    onUploadProgress: (progressEvent: any) => void
   ) {
     if (files.length === 0) {
       const result = Upload._apiResponse(0);

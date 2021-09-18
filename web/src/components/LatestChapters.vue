@@ -128,7 +128,6 @@ export default class LatestChapters extends Vue {
     await this.getChapters();
   }
 
-
   async getChapters(): Promise<void> {
     const response = await Chapter.latest(
       this.limit,

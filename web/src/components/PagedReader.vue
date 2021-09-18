@@ -62,11 +62,7 @@
             :alt="`Page ${2 * index - 1}`"
           >
             <template v-slot:placeholder>
-              <v-row
-                class="fill-height ma-0"
-                align="center"
-                justify="center"
-              >
+              <v-row class="fill-height ma-0" align="center" justify="center">
                 <v-progress-circular indeterminate />
               </v-row>
             </template>
@@ -78,11 +74,7 @@
             :alt="`Page ${2 * index}`"
           >
             <template v-slot:placeholder>
-              <v-row
-                class="fill-height ma-0"
-                align="center"
-                justify="center"
-              >
+              <v-row class="fill-height ma-0" align="center" justify="center">
                 <v-progress-circular indeterminate />
               </v-row>
             </template>
@@ -96,11 +88,7 @@
           :alt="`Page ${index}`"
         >
           <template v-slot:placeholder>
-            <v-row
-              class="fill-height ma-0"
-              align="center"
-              justify="center"
-            >
+            <v-row class="fill-height ma-0" align="center" justify="center">
               <v-progress-circular indeterminate />
             </v-row>
           </template>
@@ -302,7 +290,7 @@ export default class PagedReader extends Vue {
 }
 .reader-tabs {
   position: sticky;
-  top: .7rem;
+  top: 0.7rem;
   z-index: 1;
   border-radius: 0.3rem;
   margin-bottom: 0.8rem;

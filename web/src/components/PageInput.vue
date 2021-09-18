@@ -25,14 +25,14 @@
         </v-col>
       </template>
       <v-col cols="6" sm="4" md="3" xl="2">
-        <v-card
-          color="background"
-          @click="uploadClick"
-          :disabled="loading"
-        >
+        <v-card color="background" @click="uploadClick" :disabled="loading">
           <v-responsive :aspect-ratio="4 / 5">
             <div class="d-flex fill-height">
-              <v-progress-circular v-if="loading" :value="progress" class="ma-auto d-block" />
+              <v-progress-circular
+                v-if="loading"
+                :value="progress"
+                class="ma-auto d-block"
+              />
               <v-icon v-else x-large class="ma-auto d-block">mdi-plus</v-icon>
             </div>
           </v-responsive>
@@ -101,7 +101,7 @@ export default class PageInput extends Vue {
 
   handleProgress(progressEvent: any): void {
     console.log(progressEvent);
-    this.progress = 100 * progressEvent.loaded/progressEvent.total;
+    this.progress = (100 * progressEvent.loaded) / progressEvent.total;
   }
 
   async updateFile(ev: any): Promise<void> {
@@ -121,7 +121,7 @@ export default class PageInput extends Vue {
       this.session.id,
       files,
       this.authConfig,
-      ev => this.handleProgress(ev),
+      (ev) => this.handleProgress(ev)
     );
 
     if (response.data) {
