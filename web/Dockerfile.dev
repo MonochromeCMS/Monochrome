@@ -2,7 +2,7 @@
 FROM node:lts-slim as build-stage
 WORKDIR /app
 COPY package*.json ./
-RUN npm install
+RUN yarn
 
 ARG VUE_APP_DOMAIN_NAME=localhost
 ARG VUE_APP_PROTOCOL=http
@@ -17,4 +17,4 @@ ENV VUE_APP_DESCRIPTION=$VUE_APP_DESCRIPTION
 # production stage
 FROM build-stage
 COPY . .
-CMD ["npm", "run", "serve"]
+CMD ["yarn", "serve"]
