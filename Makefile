@@ -43,8 +43,10 @@ sh-%: ## Open a shell in a container running container
 	$(DC) exec $* sh
 
 .PHONY: lock
+.ONESHELL: lock
 lock:	## Refresh pipfile.lock
-	@$(DC) run --rm -w /api api pipenv lock --pre
+	cd api
+	pipenv lock --pre
 
 .PHONY: lint
 lint:  ## Lint project code

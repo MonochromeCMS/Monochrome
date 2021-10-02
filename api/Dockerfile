@@ -12,7 +12,7 @@ RUN set -ex && pip install pipenv --upgrade
 
 # INSTALL DEPENDENCIES
 COPY Pipfile* ./
-RUN set -ex && pipenv lock -r > req.txt && pip install --no-cache-dir -r req.txt
+RUN set -ex && pipenv install --system
 
 FROM builder as final
 ENV PYTHONUNBUFFERED=1
