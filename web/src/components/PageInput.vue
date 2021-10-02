@@ -100,7 +100,6 @@ export default class PageInput extends Vue {
   }
 
   handleProgress(progressEvent: any): void {
-    console.log(progressEvent);
     this.progress = (100 * progressEvent.loaded) / progressEvent.total;
   }
 

@@ -1,5 +1,13 @@
-import axios, { AxiosResponse } from "axios";
-import type { AxiosRequestConfig } from "axios";
+import axios from "axios";
+import type { AxiosRequestConfig, AxiosResponse } from "axios";
+
+const errorResponse: AxiosResponse = {
+  data: null,
+  status: 0,
+  statusText: "UnknownError",
+  headers: null,
+  config: {},
+};
 
 export interface Pagination<T> {
   offset: number;
@@ -34,8 +42,12 @@ export default class Base {
         await Base._delay();
       }
       return response;
-    } catch (error) {
-      return error?.response;
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error) && error.response) {
+        return error.response;
+      } else {
+        return errorResponse;
+      }
     }
   }
 
@@ -45,8 +57,12 @@ export default class Base {
   ): Promise<AxiosResponse> {
     try {
       return await axios.delete(this.prefix + url, config);
-    } catch (error) {
-      return error?.response;
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error) && error.response) {
+        return error.response;
+      } else {
+        return errorResponse;
+      }
     }
   }
 
@@ -61,8 +77,12 @@ export default class Base {
 
     try {
       return await axios.post(this.prefix + url, data, settings);
-    } catch (error) {
-      return error?.response;
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error) && error.response) {
+        return error.response;
+      } else {
+        return errorResponse;
+      }
     }
   }
 
@@ -77,8 +97,12 @@ export default class Base {
 
     try {
       return await axios.put(this.prefix + url, data, settings);
-    } catch (error) {
-      return error?.response;
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error) && error.response) {
+        return error.response;
+      } else {
+        return errorResponse;
+      }
     }
   }
 
