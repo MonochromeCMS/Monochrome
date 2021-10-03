@@ -1,7 +1,8 @@
 # build stage
 FROM node:lts-slim as build-stage
 WORKDIR /app
-COPY package*.json ./
+COPY package.json ./
+COPY yarn.lock ./
 RUN yarn
 
 ARG VUE_APP_DOMAIN_NAME=localhost

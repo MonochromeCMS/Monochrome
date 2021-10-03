@@ -39,12 +39,7 @@ module.exports = {
       args[0] = { ...args[0], ...metaArgs };
       return args;
     });
-    config.plugin("fork-ts-checker").tap((args) => {
-      let totalmem = Math.floor(os.totalmem() / 1024 / 1024); //get OS mem size
-      let allowUseMem = totalmem > 2500 ? 2048 : 1000;
-      args[0].memoryLimit = allowUseMem;
-      return args;
-    });
+    config.plugins.delete('fork-ts-checker');
   },
   configureWebpack: {
     plugins: [
