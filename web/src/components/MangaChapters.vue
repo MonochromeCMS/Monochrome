@@ -21,19 +21,11 @@
     </v-row>
     <v-row v-else class="flex-column align-center">
       <v-col cols="12" class="text-h3 text-center" tag="h2"> Chapters </v-col>
-      <v-col
-        cols="12"
-        v-for="(item, index) in chaptersPage"
-        :key="index"
-        class="chapter-row pa-1"
-      >
-        <router-link
-          :to="`/chapters/${item.id}`"
-          class="text-decoration-none chapter-link pa-3"
-        >
+      <v-col cols="12" v-for="(item, index) in chaptersPage" :key="index" class="chapter-row pa-1">
+        <router-link :to="`/chapters/${item.id}`" class="text-decoration-none chapter-link pa-3">
           <v-row class="justify-space-around">
             <v-col cols="6" sm="3" md="2">
-              {{ item.volume ? `Vol ${item.volume} ` : "" }}Chapter
+              {{ item.volume ? `Vol ${item.volume} ` : '' }}Chapter
               {{ item.number }}
             </v-col>
             <v-col cols="3" md="4" class="hidden-sm-and-down ellipsis">
@@ -51,27 +43,15 @@
         </router-link>
         <v-menu v-if="isConnected" offset-y close-on-content-click>
           <template v-slot:activator="{ on, attrs }">
-            <v-btn
-              icon
-              v-on="on"
-              v-bind="attrs"
-              class="mr-1"
-              aria-label="More options"
-            >
+            <v-btn icon v-on="on" v-bind="attrs" class="mr-1" aria-label="More options">
               <v-icon>mdi-dots-vertical</v-icon>
             </v-btn>
           </template>
-          <v-btn block color="background" :to="`/chapters/${item.id}/edit`">
-            Edit chapter
-          </v-btn>
+          <v-btn block color="background" :to="`/chapters/${item.id}/edit`"> Edit chapter </v-btn>
           <chapter-delete :id="item.id" @input="popChapter(index)" />
         </v-menu>
       </v-col>
-      <v-col
-        cols="12"
-        class="text-body-1 text-center"
-        v-if="chapters.length === 0"
-      >
+      <v-col cols="12" class="text-body-1 text-center" v-if="chapters.length === 0">
         No chapters have been uploaded yet.
       </v-col>
       <v-col cols="12" v-if="pageAmount > 1">
@@ -87,31 +67,38 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Watch } from "vue-property-decorator";
-import ChapterDelete from "@/components/ChapterDelete.vue";
-import type { ChapterResponse } from "@/api/Chapter";
-import Manga from "@/api/Manga";
+import { Vue, Component, Prop, Watch } from 'vue-property-decorator';
+import ChapterDelete from '@/components/ChapterDelete.vue';
+import type { ChapterResponse } from '@/api/Chapter';
+import Manga from '@/api/Manga';
 
 @Component({
   components: { ChapterDelete },
 })
 export default class MangaChapters extends Vue {
   @Prop() readonly value!: string;
+
   @Prop() readonly mangaId!: string;
 
   chapters: ChapterResponse[] = [];
+
   loading = true;
+
   limit = 10;
+
   page = 1;
-  innerValue = ["", ""];
+
+  innerValue = ['', ''];
 
   get pageAmount(): number {
     return Math.ceil(this.chapters.length / this.limit);
   }
+
   get chaptersPage(): any[] {
     const start = this.limit * (this.page - 1);
     return this.chapters.slice(start, start + this.limit);
   }
+
   get isConnected(): boolean {
     return this.$store.getters.isConnected;
   }
@@ -120,14 +107,11 @@ export default class MangaChapters extends Vue {
     this.chapters.splice(index, 1);
   }
 
-  dispatchValue(
-    error: string | null = null,
-    chapter: string | null = null
-  ): void {
+  dispatchValue(error: string | null = null, chapter: string | null = null): void {
     const value = [error || this.innerValue[0], chapter || this.innerValue[1]];
     this.innerValue = value;
-    this.$emit("input", value);
-    this.$emit("update:value", value);
+    this.$emit('input', value);
+    this.$emit('update:value', value);
   }
 
   async getChapters(): Promise<void> {
@@ -136,7 +120,7 @@ export default class MangaChapters extends Vue {
     if (response.data) {
       this.chapters = response.data;
     } else {
-      this.dispatchValue(response.error ?? "");
+      this.dispatchValue(response.error ?? '');
     }
 
     this.loading = false;
@@ -156,13 +140,12 @@ export default class MangaChapters extends Vue {
 
     for (const unit of Object.keys(length)) {
       const result = val % length[unit];
-      if (!(val = 0 | (val / length[unit])))
-        return result + " " + (result - 1 ? unit + "s" : unit);
+      if (!(val = 0 | (val / length[unit]))) return result + ' ' + (result - 1 ? unit + 's' : unit);
     }
-    return "ERROR";
+    return 'ERROR';
   }
 
-  @Watch("chapters")
+  @Watch('chapters')
   onChaptersUpdate(): void {
     if (this.chapters.length > 0) {
       this.dispatchValue(null, this.chapters[this.chapters.length - 1]?.id);

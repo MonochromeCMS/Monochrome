@@ -23,10 +23,10 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
-import AdminActions from "@/components/AdminActions.vue";
-import LatestChapters from "@/components/LatestChapters.vue";
-import LatestManga from "@/components/LatestManga.vue";
+import { Vue, Component } from 'vue-property-decorator';
+import AdminActions from '@/components/AdminActions.vue';
+import LatestChapters from '@/components/LatestChapters.vue';
+import LatestManga from '@/components/LatestManga.vue';
 
 @Component({
   components: { AdminActions, LatestChapters, LatestManga },

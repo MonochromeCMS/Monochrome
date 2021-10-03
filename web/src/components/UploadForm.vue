@@ -7,11 +7,7 @@
       <v-row class="mb-3">
         <!-- VOLUME FIELD -->
         <v-col cols="12" sm="6" md="4" class="pa-3 pb-0">
-          <validation-provider
-            v-slot="{ errors }"
-            name="Volume Number"
-            rules="numeric"
-          >
+          <validation-provider v-slot="{ errors }" name="Volume Number" rules="numeric">
             <v-text-field
               v-model="volume"
               :error-messages="errors"
@@ -41,11 +37,7 @@
         </v-col>
         <!-- GROUP FIELD -->
         <v-col cols="12" md="4" class="pa-3 pb-0">
-          <validation-provider
-            v-slot="{ errors }"
-            name="Scan Group"
-            rules="required"
-          >
+          <validation-provider v-slot="{ errors }" name="Scan Group" rules="required">
             <v-combobox
               v-model="scanGroup"
               :items="groupAutocomplete"
@@ -80,11 +72,7 @@
 
       <v-divider class="my-3" />
 
-      <v-btn
-        v-if="chapter && !session"
-        color="info"
-        @click="createSession(mangaId, chapter.id)"
-      >
+      <v-btn v-if="chapter && !session" color="info" @click="createSession(mangaId, chapter.id)">
         Edit Pages
       </v-btn>
 
@@ -92,7 +80,7 @@
 
       <div class="text-center mt-4">
         <v-btn type="submit" block color="background" class="text--primary">
-          {{ chapter ? "Edit chapter" : "Upload chapter" }}
+          {{ chapter ? 'Edit chapter' : 'Upload chapter' }}
         </v-btn>
       </div>
     </v-form>
@@ -100,35 +88,32 @@
 </template>
 
 <script lang="ts">
-import { required, numeric, regex } from "vee-validate/dist/rules";
-import {
-  extend,
-  ValidationProvider,
-  setInteractionMode,
-  ValidationObserver,
-} from "vee-validate";
-import { Vue, Component, Prop } from "vue-property-decorator";
-import type { AxiosRequestConfig } from "axios";
-import PageInput from "@/components/PageInput.vue";
-import Upload, { UploadSessionResponse } from "@/api/Upload";
-import Chapter, { ChapterSchema } from "@/api/Chapter";
-import Autocomplete from "@/api/Autocomplete";
+import { required, numeric, regex } from 'vee-validate/dist/rules';
+import { extend, ValidationProvider, setInteractionMode, ValidationObserver } from 'vee-validate';
+import { Vue, Component, Prop } from 'vue-property-decorator';
+import type { AxiosRequestConfig } from 'axios';
+import PageInput from '@/components/PageInput.vue';
+import type { UploadSessionResponse } from '@/api/Upload';
+import Upload from '@/api/Upload';
+import type { ChapterSchema } from '@/api/Chapter';
+import Chapter from '@/api/Chapter';
+import Autocomplete from '@/api/Autocomplete';
 
-setInteractionMode("eager");
+setInteractionMode('eager');
 
-extend("required", {
+extend('required', {
   ...required,
-  message: "{_field_} can not be empty",
+  message: '{_field_} can not be empty',
 });
 
-extend("numeric", {
+extend('numeric', {
   ...numeric,
-  message: "{_field_} must be a number",
+  message: '{_field_} must be a number',
 });
 
-extend("regex", {
+extend('regex', {
   ...regex,
-  message: "{_field_} is not valid",
+  message: '{_field_} is not valid',
 });
 
 @Component({
@@ -136,17 +121,26 @@ extend("regex", {
 })
 export default class UploadForm extends Vue {
   @Prop(String) readonly mangaId!: string;
+
   @Prop() readonly chapter!: any;
 
   groupAutocomplete: string[] = [];
-  alert = "";
-  name = "";
+
+  alert = '';
+
+  name = '';
+
   volume = null;
+
   number = null;
+
   webtoon = false;
+
   session: UploadSessionResponse | null = null;
+
   pageOrder: string[] = [];
-  scanGroup = "no group";
+
+  scanGroup = 'no group';
 
   get authConfig(): AxiosRequestConfig {
     return this.$store.getters.authConfig;
@@ -163,7 +157,7 @@ export default class UploadForm extends Vue {
   }
 
   async submit(): Promise<void> {
-    //@ts-ignore I can't define this $ref, so let's assume it works
+    //@ts-expect-error I can't define this $ref, so let's assume it works
     const valid = await this.$refs.observer.validate();
     if (valid) {
       switch (true) {
@@ -183,53 +177,41 @@ export default class UploadForm extends Vue {
     if (response.data) {
       this.session = response.data;
     } else {
-      this.alert = response.error ?? "";
+      this.alert = response.error ?? '';
     }
     if (response.status === 401) {
-      this.$store.commit("logout");
+      this.$store.commit('logout');
     }
   }
 
-  async commitSession(
-    chapterDraft: ChapterSchema,
-    pageOrder: string[]
-  ): Promise<void> {
+  async commitSession(chapterDraft: ChapterSchema, pageOrder: string[]): Promise<void> {
     if (!this.session?.id) {
       return;
     }
 
     const config = this.authConfig;
-    const response = await Upload.commit(
-      this.session.id,
-      chapterDraft,
-      pageOrder,
-      config
-    );
+    const response = await Upload.commit(this.session.id, chapterDraft, pageOrder, config);
 
     if (response.data) {
       await this.$router.push(`/chapters/${response.data.id}`);
     } else {
-      this.alert = response.error ?? "";
+      this.alert = response.error ?? '';
     }
     if (response.status === 401) {
-      this.$store.commit("logout");
+      this.$store.commit('logout');
     }
   }
 
   async editChapter(chapterDraft: ChapterSchema): Promise<void> {
-    const response = await Chapter.edit(
-      this.chapter.id,
-      chapterDraft,
-      this.authConfig
-    );
+    const response = await Chapter.edit(this.chapter.id, chapterDraft, this.authConfig);
 
     if (response.data) {
       await this.$router.push(`/manga/${this.mangaId}/${response.data.id}`);
     } else {
-      this.alert = response.error ?? "";
+      this.alert = response.error ?? '';
     }
     if (response.status === 401) {
-      this.$store.commit("logout");
+      this.$store.commit('logout');
     }
   }
 
@@ -239,7 +221,7 @@ export default class UploadForm extends Vue {
     if (response.data) {
       this.groupAutocomplete = response.data;
     } else {
-      this.alert = response.error ?? "";
+      this.alert = response.error ?? '';
     }
   }
 

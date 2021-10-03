@@ -1,7 +1,7 @@
-import type { ActionContext } from "vuex";
-import type { SettingsSchema } from "@/api/Settings";
-import { ApiResponse } from "@/api/Base";
-import Settings from "@/api/Settings";
+import type { ActionContext } from 'vuex';
+import type { SettingsSchema } from '@/api/Settings';
+import type { ApiResponse } from '@/api/Base';
+import Settings from '@/api/Settings';
 
 const state = (): SettingsSchema => ({
   title1: undefined,
@@ -30,7 +30,7 @@ const actions = {
     const response = await Settings.get();
 
     if (response.data) {
-      commit("setSettings", response.data);
+      commit('setSettings', response.data);
     }
 
     return response;

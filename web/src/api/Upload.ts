@@ -1,6 +1,7 @@
-import Base, { ApiResponse } from "./Base";
-import type { AxiosRequestConfig } from "axios";
-import type { ChapterResponse, ChapterSchema } from "@/api/Chapter";
+import type { ApiResponse } from './Base';
+import Base from './Base';
+import type { AxiosRequestConfig } from 'axios';
+import type { ChapterResponse, ChapterSchema } from '@/api/Chapter';
 
 export interface UploadSessionSchema {
   mangaId: string;
@@ -23,19 +24,13 @@ export interface CommitUploadSession {
 }
 
 export default class Upload extends Base {
-  public static readonly prefix: string = "/api/upload";
+  public static readonly prefix: string = '/api/upload';
 
-  public static async begin(
-    mangaId: string,
-    chapterId: string | null,
-    auth: AxiosRequestConfig
-  ) {
+  public static async begin(mangaId: string, chapterId: string | null, auth: AxiosRequestConfig) {
     const data = { mangaId, chapterId };
-    const response = await Upload._post("/begin", data, auth);
+    const response = await Upload._post('/begin', data, auth);
 
-    const result: ApiResponse<UploadSessionResponse> = Upload._apiResponse(
-      response.status
-    );
+    const result: ApiResponse<UploadSessionResponse> = Upload._apiResponse(response.status);
 
     switch (response.status) {
       case 201:
@@ -45,13 +40,13 @@ export default class Upload extends Base {
         result.error = "Can't edit Upload chapter";
         break;
       case 401:
-        result.error = "Please log in again";
+        result.error = 'Please log in again';
         break;
       case 404:
         result.error = response.data?.detail;
         break;
       case 422:
-        result.error = "The data provided is not valid";
+        result.error = 'The data provided is not valid';
         break;
       default:
         result.error = response.data.detail ?? response.statusText;
@@ -59,29 +54,23 @@ export default class Upload extends Base {
     return result;
   }
 
-  public static async get(
-    sessionId: string,
-    auth: AxiosRequestConfig,
-    delay = false
-  ) {
+  public static async get(sessionId: string, auth: AxiosRequestConfig, delay = false) {
     const response = await Upload._get(`/${sessionId}`, auth, delay);
 
-    const result: ApiResponse<UploadSessionResponse> = Upload._apiResponse(
-      response.status
-    );
+    const result: ApiResponse<UploadSessionResponse> = Upload._apiResponse(response.status);
 
     switch (response.status) {
       case 200:
         result.data = response.data;
         break;
       case 401:
-        result.error = "Please log in again";
+        result.error = 'Please log in again';
         break;
       case 404:
-        result.error = "Upload session not found";
+        result.error = 'Upload session not found';
         break;
       case 422:
-        result.error = "The data provided is not valid";
+        result.error = 'The data provided is not valid';
         break;
       default:
         result.error = response.data.detail ?? response.statusText;
@@ -93,32 +82,25 @@ export default class Upload extends Base {
     sessionId: string,
     files: File[],
     auth: AxiosRequestConfig,
-    onUploadProgress: (progressEvent: any) => void
+    onUploadProgress: (progressEvent: any) => void,
   ) {
     if (files.length === 0) {
       const result = Upload._apiResponse(0);
-      result.error = "No file was provided";
+      result.error = 'No file was provided';
       return result;
     }
 
     const form = new FormData();
-    files.forEach((file) => form.append("payload", file));
+    files.forEach((file) => form.append('payload', file));
 
     const config: AxiosRequestConfig = {
       ...auth,
       onUploadProgress,
     };
 
-    const response = await Upload._post(
-      `/${sessionId}`,
-      form,
-      config,
-      "multipart/form-data"
-    );
+    const response = await Upload._post(`/${sessionId}`, form, config, 'multipart/form-data');
 
-    const result: ApiResponse<UploadedBlobResponse[]> = Upload._apiResponse(
-      response.status
-    );
+    const result: ApiResponse<UploadedBlobResponse[]> = Upload._apiResponse(response.status);
 
     switch (response.status) {
       case 201:
@@ -128,13 +110,13 @@ export default class Upload extends Base {
         result.error = "One of the images provided isn't valid";
         break;
       case 401:
-        result.error = "Please log in again";
+        result.error = 'Please log in again';
         break;
       case 404:
-        result.error = "Upload session not found";
+        result.error = 'Upload session not found';
         break;
       case 422:
-        result.error = "The data provided is not valid";
+        result.error = 'The data provided is not valid';
         break;
       default:
         result.error = response.data.detail ?? response.statusText;
@@ -152,13 +134,13 @@ export default class Upload extends Base {
         result.data = response.data;
         break;
       case 401:
-        result.error = "Please log in again";
+        result.error = 'Please log in again';
         break;
       case 404:
-        result.error = "Upload session not found";
+        result.error = 'Upload session not found';
         break;
       case 422:
-        result.error = "The data provided is not valid";
+        result.error = 'The data provided is not valid';
         break;
       default:
         result.error = response.data.detail ?? response.statusText;
@@ -170,7 +152,7 @@ export default class Upload extends Base {
     sessionId: string,
     chapterDraft: ChapterSchema,
     pageOrder: string[],
-    auth: AxiosRequestConfig
+    auth: AxiosRequestConfig,
   ) {
     const data: CommitUploadSession = {
       chapterDraft,
@@ -180,9 +162,7 @@ export default class Upload extends Base {
 
     const response = await Upload._post(url, data, auth);
 
-    const result: ApiResponse<ChapterResponse> = Upload._apiResponse(
-      response.status
-    );
+    const result: ApiResponse<ChapterResponse> = Upload._apiResponse(response.status);
 
     switch (response.status) {
       case 200:
@@ -194,10 +174,10 @@ export default class Upload extends Base {
         result.error = response.data?.detail;
         break;
       case 401:
-        result.error = "Please log in again";
+        result.error = 'Please log in again';
         break;
       case 422:
-        result.error = "The data provided is not valid";
+        result.error = 'The data provided is not valid';
         break;
       default:
         result.error = response.data.detail ?? response.statusText;
@@ -205,11 +185,7 @@ export default class Upload extends Base {
     return result;
   }
 
-  public static async deleteBlob(
-    sessionId: string,
-    blobId: string,
-    auth: AxiosRequestConfig
-  ) {
+  public static async deleteBlob(sessionId: string, blobId: string, auth: AxiosRequestConfig) {
     const url = `/${sessionId}/${blobId}`;
     const response = await Upload._delete(url, auth);
 
@@ -217,19 +193,19 @@ export default class Upload extends Base {
 
     switch (response.status) {
       case 200:
-        result.data = "OK";
+        result.data = 'OK';
         break;
       case 400:
         result.error = "That file doesn't exist in the current session";
         break;
       case 401:
-        result.error = "Please log in again";
+        result.error = 'Please log in again';
         break;
       case 404:
-        result.error = "Upload session not found";
+        result.error = 'Upload session not found';
         break;
       case 422:
-        result.error = "The data provided is not valid";
+        result.error = 'The data provided is not valid';
         break;
       default:
         result.error = response.data.detail ?? response.statusText;

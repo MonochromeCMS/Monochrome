@@ -7,10 +7,7 @@
     </template>
     <v-card rounded="lg" color="backgroundAlt">
       <v-card-title>
-        <router-link
-          :to="`/manga/${chapter.manga.id}`"
-          class="text-decoration-none"
-        >
+        <router-link :to="`/manga/${chapter.manga.id}`" class="text-decoration-none">
           {{ chapter.manga.title }}
         </router-link>
         <v-btn icon class="ml-auto" @click="menu = false">
@@ -27,12 +24,7 @@
         />
         <v-divider class="mt-3" />
         <v-subheader> Reader settings </v-subheader>
-        <v-select
-          label="Reader Mode"
-          hide-details
-          v-model="readerMode"
-          :items="modeItems"
-        />
+        <v-select label="Reader Mode" hide-details v-model="readerMode" :items="modeItems" />
         <!-- Width setting -->
         <v-slider
           class="ma-4 mb-1"
@@ -64,11 +56,7 @@
           </v-col>
         </v-row>
         <!-- Direction setting -->
-        <v-row
-          align="center"
-          class="ma-1"
-          v-if="['Single', 'Double'].includes(readerMode)"
-        >
+        <v-row align="center" class="ma-1" v-if="['Single', 'Double'].includes(readerMode)">
           <v-col class="text-body-1"> Page direction: </v-col>
           <v-col class="text-right pa-2">
             <v-btn-toggle v-model="direction" mandatory>
@@ -93,11 +81,12 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Emit } from "vue-property-decorator";
+import { Vue, Component, Prop, Emit } from 'vue-property-decorator';
 
 @Component
 export default class ReaderMenu extends Vue {
   @Prop() readonly chapter!: any;
+
   @Prop() readonly chapterItems!: any;
 
   menu = false;
@@ -108,39 +97,39 @@ export default class ReaderMenu extends Vue {
   }
 
   get modeItems(): string[] {
-    return this.chapter.webtoon
-      ? ["Webtoon"]
-      : ["Single", "Double", "Vertical"];
+    return this.chapter.webtoon ? ['Webtoon'] : ['Single', 'Double', 'Vertical'];
   }
 
   get doubleParity(): number {
     return this.$store.getters.getParity;
   }
+
   set doubleParity(value: number) {
-    this.$store.commit("setParity", value);
+    this.$store.commit('setParity', value);
   }
 
   get fit(): number {
     const value = this.$store.getters.getFit;
     switch (value) {
-      case "width":
+      case 'width':
         return 0;
-      case "height":
+      case 'height':
         return 2;
       default:
         return 1;
     }
   }
+
   set fit(value: number) {
     switch (value) {
       case 0:
-        this.$store.commit("setFit", "width");
+        this.$store.commit('setFit', 'width');
         break;
       case 2:
-        this.$store.commit("setFit", "height");
+        this.$store.commit('setFit', 'height');
         break;
       default:
-        this.$store.commit("setFit", "default");
+        this.$store.commit('setFit', 'default');
         break;
     }
   }
@@ -148,23 +137,26 @@ export default class ReaderMenu extends Vue {
   get width(): number {
     return Number(this.$store.getters.getWidth.slice(0, -1));
   }
+
   set width(value: number) {
-    this.$store.commit("setWidth", `${value}%`);
+    this.$store.commit('setWidth', `${value}%`);
   }
 
   get direction(): number {
     return this.$store.getters.getDirection;
   }
+
   set direction(value: number) {
-    this.$store.commit("setDirection", value);
+    this.$store.commit('setDirection', value);
   }
 
   get readerMode(): string {
-    return this.chapter.webtoon ? "Webtoon" : this.$store.getters.getReaderMode;
+    return this.chapter.webtoon ? 'Webtoon' : this.$store.getters.getReaderMode;
   }
+
   set readerMode(value: string) {
     if (!this.chapter.webtoon) {
-      this.$store.commit("setReaderMode", value);
+      this.$store.commit('setReaderMode', value);
     }
   }
 }

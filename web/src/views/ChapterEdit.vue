@@ -4,21 +4,15 @@
       <v-col cols="12" lg="10" class="mx-auto">
         <v-card rounded="lg" color="backgroundAlt" elevation="0" class="pa-4">
           <v-alert v-if="alert !== ''" type="error">{{ alert }}</v-alert>
-          <v-card-title class="justify-center lemon-milk"
-            >EDIT CHAPTER</v-card-title
-          >
+          <v-card-title class="justify-center lemon-milk">EDIT CHAPTER</v-card-title>
           <manga-row
             :loading="!manga"
             :manga="manga"
-            :cover="`/media/${manga.id}/cover.jpg`"
+            :cover="manga ? `/media/${manga.id}/cover.jpg` : ''"
             class="background rounded"
           />
           <v-card-text>
-            <upload-form
-              v-if="chapter && manga"
-              :mangaId="manga.id"
-              :chapter="chapter"
-            />
+            <upload-form v-if="chapter && manga" :mangaId="manga.id" :chapter="chapter" />
           </v-card-text>
         </v-card>
       </v-col>
@@ -27,19 +21,22 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
-import MangaRow from "@/components/MangaRow.vue";
-import UploadForm from "@/components/UploadForm.vue";
-import Chapter, { DetailedChapterResponse } from "@/api/Chapter";
-import { MangaResponse } from "@/api/Manga";
+import { Vue, Component } from 'vue-property-decorator';
+import MangaRow from '@/components/MangaRow.vue';
+import UploadForm from '@/components/UploadForm.vue';
+import type { DetailedChapterResponse } from '@/api/Chapter';
+import Chapter from '@/api/Chapter';
+import type { MangaResponse } from '@/api/Manga';
 
 @Component({
   components: { MangaRow, UploadForm },
 })
 export default class About extends Vue {
   manga: MangaResponse | null = null;
+
   chapter: DetailedChapterResponse | null = null;
-  alert = "";
+
+  alert = '';
 
   get chapterId(): string {
     return this.$route.params.chapter;
@@ -56,13 +53,13 @@ export default class About extends Vue {
       this.chapter = response.data;
       this.manga = response.data.manga;
     } else {
-      this.alert = response.error ?? "";
+      this.alert = response.error ?? '';
     }
   }
 
   mounted(): void {
     if (!this.isConnected) {
-      this.$router.replace("/");
+      this.$router.replace('/');
     } else {
       this.getChapter();
     }

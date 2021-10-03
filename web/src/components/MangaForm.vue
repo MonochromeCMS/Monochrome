@@ -15,11 +15,7 @@
         ></v-text-field>
       </validation-provider>
       <!-- DESC FIELD -->
-      <validation-provider
-        v-slot="{ errors }"
-        name="Description"
-        rules="required"
-      >
+      <validation-provider v-slot="{ errors }" name="Description" rules="required">
         <v-textarea
           v-model="description"
           :error-messages="errors"
@@ -75,17 +71,8 @@
         ></v-select>
       </validation-provider>
       <!-- COVER FIELD -->
-      <validation-provider
-        v-slot="{ errors }"
-        name="Cover"
-        :rules="this.manga ? '' : 'required'"
-      >
-        <v-file-input
-          v-model="cover"
-          :error-messages="errors"
-          accept="image/*"
-          label="Cover"
-        >
+      <validation-provider v-slot="{ errors }" name="Cover" :rules="manga ? '' : 'required'">
+        <v-file-input v-model="cover" :error-messages="errors" accept="image/*" label="Cover">
         </v-file-input>
       </validation-provider>
       <!-- PREVIEW -->
@@ -93,17 +80,13 @@
         <v-expansion-panel>
           <v-expansion-panel-header> Preview </v-expansion-panel-header>
           <v-expansion-panel-content>
-            <manga-row
-              :loading="false"
-              :manga="params"
-              :cover="url(cover) || ''"
-            />
+            <manga-row :loading="false" :manga="params" :cover="url(cover) || ''" />
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
       <div class="text-center">
         <v-btn type="submit" block color="background" class="text--primary">
-          {{ this.manga ? "Edit Manga" : "Create Manga" }}
+          {{ manga ? 'Edit Manga' : 'Create Manga' }}
         </v-btn>
       </div>
     </v-form>
@@ -111,27 +94,23 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from "vue-property-decorator";
-import { required, digits } from "vee-validate/dist/rules";
-import {
-  extend,
-  ValidationProvider,
-  setInteractionMode,
-  ValidationObserver,
-} from "vee-validate";
-import type { AxiosRequestConfig } from "axios";
-import MangaRow from "@/components/MangaRow.vue";
-import Manga, { MangaResponse, MangaSchema, Status } from "@/api/Manga";
+import { Vue, Component, Prop } from 'vue-property-decorator';
+import { required, digits } from 'vee-validate/dist/rules';
+import { extend, ValidationProvider, setInteractionMode, ValidationObserver } from 'vee-validate';
+import type { AxiosRequestConfig } from 'axios';
+import MangaRow from '@/components/MangaRow.vue';
+import type { MangaResponse, MangaSchema, Status } from '@/api/Manga';
+import Manga from '@/api/Manga';
 
-setInteractionMode("eager");
+setInteractionMode('eager');
 
-extend("required", {
+extend('required', {
   ...required,
-  message: "{_field_} can not be empty",
+  message: '{_field_} can not be empty',
 });
-extend("digits", {
+extend('digits', {
   ...digits,
-  message: "{_field_} requires {length} digits ",
+  message: '{_field_} requires {length} digits ',
 });
 
 @Component({
@@ -144,20 +123,29 @@ extend("digits", {
 export default class MangaForm extends Vue {
   @Prop() readonly manga!: MangaResponse | null;
 
-  title = "";
-  description = "";
-  author = "";
-  artist = "";
+  title = '';
+
+  description = '';
+
+  author = '';
+
+  artist = '';
+
   year?: number | null = null;
+
   status: Status | null = null;
-  alert = "";
+
+  alert = '';
+
   cover: File | null = null;
+
   buffer = null;
+
   statusItems = [
-    { value: "ongoing", text: "Ongoing" },
-    { value: "hiatus", text: "Hiatus" },
-    { value: "completed", text: "Completed" },
-    { value: "cancelled", text: "Cancelled" },
+    { value: 'ongoing', text: 'Ongoing' },
+    { value: 'hiatus', text: 'Hiatus' },
+    { value: 'completed', text: 'Completed' },
+    { value: 'cancelled', text: 'Cancelled' },
   ];
 
   get params(): MangaSchema {
@@ -167,7 +155,7 @@ export default class MangaForm extends Vue {
       author: this.author,
       artist: this.artist,
       year: this.year ?? undefined,
-      status: this.status ?? "ongoing",
+      status: this.status ?? 'ongoing',
     };
   }
 
@@ -179,14 +167,12 @@ export default class MangaForm extends Vue {
     if (blob) {
       return blob ? URL.createObjectURL(blob) : null;
     } else {
-      return this.manga
-        ? `/media/${this.manga.id}/cover.jpg?version=${this.manga.version}`
-        : null;
+      return this.manga ? `/media/${this.manga.id}/cover.jpg?version=${this.manga.version}` : null;
     }
   }
 
   async submit(): Promise<void> {
-    //@ts-ignore I can't define this $ref, so let's assume it works
+    //@ts-expect-error I can't define this $ref, so let's assume it works
     const valid = await this.$refs.observer.validate();
     if (valid) {
       if (this.manga) {
@@ -198,11 +184,11 @@ export default class MangaForm extends Vue {
   }
 
   clear(): void {
-    this.alert = "";
-    this.title = "";
-    this.description = "";
-    this.author = "";
-    this.artist = "";
+    this.alert = '';
+    this.title = '';
+    this.description = '';
+    this.author = '';
+    this.artist = '';
     this.year = null;
     this.status = null;
   }
@@ -213,10 +199,10 @@ export default class MangaForm extends Vue {
     if (response.data) {
       await this.setCover(response.data.id, this.cover);
     } else {
-      this.alert = response.error ?? "";
+      this.alert = response.error ?? '';
     }
     if (response.status === 401) {
-      this.$store.commit("logout");
+      this.$store.commit('logout');
     }
   }
 
@@ -230,10 +216,10 @@ export default class MangaForm extends Vue {
         await this.$router.push(`/manga/${id}`);
       }
     } else {
-      this.alert = response.error ?? "";
+      this.alert = response.error ?? '';
     }
     if (response.status === 401) {
-      this.$store.commit("logout");
+      this.$store.commit('logout');
     }
   }
 
@@ -247,10 +233,10 @@ export default class MangaForm extends Vue {
     if (response.data) {
       await this.$router.push(`/manga/${mangaId}`);
     } else {
-      this.alert = response.error ?? "";
+      this.alert = response.error ?? '';
     }
     if (response.status === 401) {
-      this.$store.commit("logout");
+      this.$store.commit('logout');
     }
   }
 

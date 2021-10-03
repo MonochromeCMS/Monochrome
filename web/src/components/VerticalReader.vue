@@ -1,14 +1,7 @@
 <template>
   <v-row class="ma-0">
-    <v-btn block text width="15rem" @click="previousChapter" class="mb-3">
-      Previous chapter
-    </v-btn>
-    <v-col
-      :class="webtoon ? 'webtoon' : ''"
-      cols="12"
-      v-for="index in length"
-      :key="index"
-    >
+    <v-btn block text width="15rem" @click="previousChapter" class="mb-3"> Previous chapter </v-btn>
+    <v-col :class="webtoon ? 'webtoon' : ''" cols="12" v-for="index in length" :key="index">
       <v-img
         contain
         :class="fit"
@@ -22,35 +15,37 @@
         </template>
       </v-img>
     </v-col>
-    <v-btn block text width="15rem" @click="nextChapter" class="mt-3">
-      Next chapter
-    </v-btn>
+    <v-btn block text width="15rem" @click="nextChapter" class="mt-3"> Next chapter </v-btn>
   </v-row>
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Emit } from "vue-property-decorator";
+import { Vue, Component, Prop, Emit } from 'vue-property-decorator';
 
 @Component
 export default class VerticalReader extends Vue {
   @Prop(String) readonly manga!: string;
+
   @Prop(String) readonly chapter!: string;
+
   @Prop(Number) readonly version!: number;
+
   @Prop(Number) readonly length!: number;
+
   @Prop(Boolean) readonly webtoon!: boolean;
 
-  @Emit("next")
+  @Emit('next')
   nextChapter() {
     return true;
   }
 
-  @Emit("previous")
+  @Emit('previous')
   previousChapter() {
     return true;
   }
 
   get fit(): string {
-    return this.webtoon ? "mx-auto" : this.$store.getters.getFit;
+    return this.webtoon ? 'mx-auto' : this.$store.getters.getFit;
   }
 
   get width(): string {

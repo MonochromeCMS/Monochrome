@@ -1,8 +1,6 @@
 <template>
   <validation-observer ref="observer">
-    <v-alert type="success" v-if="success" dense>
-      The settings have been updated.
-    </v-alert>
+    <v-alert type="success" v-if="success" dense> The settings have been updated. </v-alert>
     <v-alert type="error" v-else-if="alert !== ''" dense>
       {{ alert }}
     </v-alert>
@@ -42,12 +40,8 @@
       </validation-provider>
 
       <div class="caption ma-3">
-        Markdown (or HTML) can be used to customize the About page. More
-        information in the
-        <a
-          href="https://www.markdownguide.org/basic-syntax"
-          class="text-decoration-none"
-        >
+        Markdown (or HTML) can be used to customize the About page. More information in the
+        <a href="https://www.markdownguide.org/basic-syntax" class="text-decoration-none">
           Markdown documentation </a
         >.
       </div>
@@ -62,26 +56,21 @@
         </v-expansion-panel>
       </v-expansion-panels>
       <div class="text-center">
-        <v-btn type="submit" block color="background" class="text--primary">
-          Customize
-        </v-btn>
+        <v-btn type="submit" block color="background" class="text--primary"> Customize </v-btn>
       </div>
     </v-form>
   </validation-observer>
 </template>
 
 <script lang="ts">
-import {
-  ValidationProvider,
-  setInteractionMode,
-  ValidationObserver,
-} from "vee-validate";
-import { Vue, Component, Watch } from "vue-property-decorator";
-import marked from "marked";
-import Settings, { SettingsSchema } from "@/api/Settings";
-import type { AxiosRequestConfig } from "axios";
+import { ValidationProvider, setInteractionMode, ValidationObserver } from 'vee-validate';
+import { Vue, Component, Watch } from 'vue-property-decorator';
+import marked from 'marked';
+import type { SettingsSchema } from '@/api/Settings';
+import Settings from '@/api/Settings';
+import type { AxiosRequestConfig } from 'axios';
 
-setInteractionMode("eager");
+setInteractionMode('eager');
 
 @Component({
   components: {
@@ -91,10 +80,14 @@ setInteractionMode("eager");
 })
 export default class SettingsForm extends Vue {
   title1?: string | null = null;
+
   title2?: string | null = null;
+
   about?: string | null = null;
+
   success = false;
-  alert = "";
+
+  alert = '';
 
   get params(): any {
     return {
@@ -105,7 +98,7 @@ export default class SettingsForm extends Vue {
   }
 
   get markdownHTML() {
-    return this.about ? marked(this.about) : "";
+    return this.about ? marked(this.about) : '';
   }
 
   get authConfig(): AxiosRequestConfig {
@@ -117,29 +110,30 @@ export default class SettingsForm extends Vue {
   }
 
   async submit(): Promise<void> {
-    //@ts-ignore I can't define this $ref, so let's assume it works
+    //@ts-expect-error I can't define this $ref, so let's assume it works
     const valid = await this.$refs.observer.validate();
     if (valid) {
       await this.editSettings(this.params);
     }
   }
+
   async editSettings(params: SettingsSchema): Promise<void> {
     this.success = false;
 
     const response = await Settings.edit(params, this.authConfig);
 
     if (response.data) {
-      this.$store.commit("setSettings", response.data);
+      this.$store.commit('setSettings', response.data);
       this.success = true;
     } else {
-      this.alert = response.error ?? "";
+      this.alert = response.error ?? '';
     }
     if (response.status === 401) {
-      this.$store.commit("logout");
+      this.$store.commit('logout');
     }
   }
 
-  @Watch("settings")
+  @Watch('settings')
   onSettingsUpdate(value: any): void {
     this.title1 = value.title1;
     this.title2 = value.title2;

@@ -35,20 +35,23 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
-import PagedReader from "@/components/PagedReader.vue";
-import VerticalReader from "@/components/VerticalReader.vue";
-import ReaderMenu from "@/components/ReaderMenu.vue";
-import Chapter, { DetailedChapterResponse } from "@/api/Chapter";
-import Manga from "@/api/Manga";
+import { Vue, Component } from 'vue-property-decorator';
+import PagedReader from '@/components/PagedReader.vue';
+import VerticalReader from '@/components/VerticalReader.vue';
+import ReaderMenu from '@/components/ReaderMenu.vue';
+import type { DetailedChapterResponse } from '@/api/Chapter';
+import Chapter from '@/api/Chapter';
+import Manga from '@/api/Manga';
 
 @Component({
   components: { ReaderMenu, VerticalReader, PagedReader },
 })
 export default class ChapterReader extends Vue {
   chapter: DetailedChapterResponse | null = null;
+
   chapters: any[] = [];
-  alert = "";
+
+  alert = '';
 
   get chapterId(): string {
     return this.$route.params.chapter;
@@ -59,10 +62,7 @@ export default class ChapterReader extends Vue {
   }
 
   get previousChapter(): string | null {
-    if (
-      this.currentChapterIndex !== -1 &&
-      this.currentChapterIndex < this.chapters.length - 1
-    ) {
+    if (this.currentChapterIndex !== -1 && this.currentChapterIndex < this.chapters.length - 1) {
       return this.chapters[this.currentChapterIndex + 1].id;
     } else {
       return null;
@@ -85,9 +85,7 @@ export default class ChapterReader extends Vue {
   }
 
   get readerMode(): string {
-    return this.chapter?.webtoon
-      ? "Webtoon"
-      : this.$store.getters.getReaderMode;
+    return this.chapter?.webtoon ? 'Webtoon' : this.$store.getters.getReaderMode;
   }
 
   async goToChapter(id: string | null): Promise<void> {
@@ -98,8 +96,8 @@ export default class ChapterReader extends Vue {
   }
 
   chapterName(chapter: any): string {
-    const volume = chapter.volume ? `Vol ${chapter.volume} ` : "";
-    const name = chapter.name ? ` - ${chapter.name}` : "";
+    const volume = chapter.volume ? `Vol ${chapter.volume} ` : '';
+    const name = chapter.name ? ` - ${chapter.name}` : '';
     return volume + `Ch ${chapter.number}` + name;
   }
 
@@ -108,12 +106,10 @@ export default class ChapterReader extends Vue {
 
     if (response.data) {
       this.chapter = response.data;
-      this.chapters = [
-        { value: this.chapterId, text: this.chapterName(response.data) },
-      ];
+      this.chapters = [{ value: this.chapterId, text: this.chapterName(response.data) }];
       await this.getChapters(response.data.mangaId);
     } else {
-      this.alert = response.error ?? "";
+      this.alert = response.error ?? '';
     }
   }
 
@@ -123,7 +119,7 @@ export default class ChapterReader extends Vue {
     if (response.data) {
       this.chapters = response.data;
     } else {
-      this.alert = response.error ?? "";
+      this.alert = response.error ?? '';
     }
   }
 

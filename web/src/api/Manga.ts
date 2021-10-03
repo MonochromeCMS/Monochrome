@@ -1,9 +1,9 @@
-import Base from "./Base";
-import type { ApiResponse, Pagination } from "./Base";
-import type { ChapterResponse } from "./Chapter";
-import type { AxiosRequestConfig } from "axios";
+import Base from './Base';
+import type { ApiResponse, Pagination } from './Base';
+import type { ChapterResponse } from './Chapter';
+import type { AxiosRequestConfig } from 'axios';
 
-export type Status = "ongoing" | "completed" | "hiatus" | "cancelled";
+export type Status = 'ongoing' | 'completed' | 'hiatus' | 'cancelled';
 
 export interface MangaSchema {
   title: string;
@@ -23,14 +23,9 @@ export interface MangaResponse extends MangaSchema {
 type MangaSearchResponse = Pagination<MangaResponse>;
 
 export default class Manga extends Base {
-  public static readonly prefix: string = "/api/manga";
+  public static readonly prefix: string = '/api/manga';
 
-  public static async search(
-    title: string | null = null,
-    limit = 10,
-    offset = 0,
-    delay = false
-  ) {
+  public static async search(title: string | null = null, limit = 10, offset = 0, delay = false) {
     let url = `?limit=${limit}&offset=${offset}`;
 
     if (title) {
@@ -39,16 +34,14 @@ export default class Manga extends Base {
 
     const response = await Manga._get(url, {}, delay);
 
-    const result: ApiResponse<MangaSearchResponse> = Manga._apiResponse(
-      response.status
-    );
+    const result: ApiResponse<MangaSearchResponse> = Manga._apiResponse(response.status);
 
     switch (response.status) {
       case 200:
         result.data = response.data;
         break;
       case 422:
-        result.error = "The data provided is not valid";
+        result.error = 'The data provided is not valid';
         break;
       default:
         result.error = response.data.detail ?? response.statusText;
@@ -57,21 +50,19 @@ export default class Manga extends Base {
   }
 
   public static async create(data: MangaSchema, auth: AxiosRequestConfig) {
-    const response = await Manga._post("", data, auth);
+    const response = await Manga._post('', data, auth);
 
-    const result: ApiResponse<MangaResponse> = Manga._apiResponse(
-      response.status
-    );
+    const result: ApiResponse<MangaResponse> = Manga._apiResponse(response.status);
 
     switch (response.status) {
       case 201:
         result.data = response.data;
         break;
       case 401:
-        result.error = "Please log in again";
+        result.error = 'Please log in again';
         break;
       case 422:
-        result.error = "The data provided is not valid";
+        result.error = 'The data provided is not valid';
         break;
       default:
         result.error = response.data.detail ?? response.statusText;
@@ -82,19 +73,17 @@ export default class Manga extends Base {
   public static async get(mangaId: string, delay = false) {
     const response = await Manga._get(`/${mangaId}`, {}, delay);
 
-    const result: ApiResponse<MangaResponse> = Manga._apiResponse(
-      response.status
-    );
+    const result: ApiResponse<MangaResponse> = Manga._apiResponse(response.status);
 
     switch (response.status) {
       case 200:
         result.data = response.data;
         break;
       case 404:
-        result.error = "Manga not found";
+        result.error = 'Manga not found';
         break;
       case 422:
-        result.error = "The data provided is not valid";
+        result.error = 'The data provided is not valid';
         break;
       default:
         result.error = response.data.detail ?? response.statusText;
@@ -102,29 +91,23 @@ export default class Manga extends Base {
     return result;
   }
 
-  public static async edit(
-    mangaId: string,
-    data: MangaSchema,
-    auth: AxiosRequestConfig
-  ) {
+  public static async edit(mangaId: string, data: MangaSchema, auth: AxiosRequestConfig) {
     const response = await Manga._put(`/${mangaId}`, data, auth);
 
-    const result: ApiResponse<MangaResponse> = Manga._apiResponse(
-      response.status
-    );
+    const result: ApiResponse<MangaResponse> = Manga._apiResponse(response.status);
 
     switch (response.status) {
       case 200:
         result.data = response.data;
         break;
       case 401:
-        result.error = "Please log in again";
+        result.error = 'Please log in again';
         break;
       case 404:
-        result.error = "Manga not found";
+        result.error = 'Manga not found';
         break;
       case 422:
-        result.error = "The data provided is not valid";
+        result.error = 'The data provided is not valid';
         break;
       default:
         result.error = response.data.detail ?? response.statusText;
@@ -139,16 +122,16 @@ export default class Manga extends Base {
 
     switch (response.status) {
       case 200:
-        result.data = "OK";
+        result.data = 'OK';
         break;
       case 401:
-        result.error = "Please log in again";
+        result.error = 'Please log in again';
         break;
       case 404:
-        result.error = "Manga not found";
+        result.error = 'Manga not found';
         break;
       case 422:
-        result.error = "The data provided is not valid";
+        result.error = 'The data provided is not valid';
         break;
       default:
         result.error = response.data.detail ?? response.statusText;
@@ -160,19 +143,17 @@ export default class Manga extends Base {
     const url = `/${mangaId}/chapters`;
     const response = await Manga._get(url, {}, delay);
 
-    const result: ApiResponse<ChapterResponse[]> = Manga._apiResponse(
-      response.status
-    );
+    const result: ApiResponse<ChapterResponse[]> = Manga._apiResponse(response.status);
 
     switch (response.status) {
       case 200:
         result.data = response.data;
         break;
       case 404:
-        result.error = "Manga not found";
+        result.error = 'Manga not found';
         break;
       case 422:
-        result.error = "The data provided is not valid";
+        result.error = 'The data provided is not valid';
         break;
       default:
         result.error = response.data.detail ?? response.statusText;
@@ -180,16 +161,12 @@ export default class Manga extends Base {
     return result;
   }
 
-  public static async setCover(
-    mangaId: string,
-    cover: File,
-    auth: AxiosRequestConfig
-  ) {
+  public static async setCover(mangaId: string, cover: File, auth: AxiosRequestConfig) {
     const url = `/${mangaId}/cover`;
     const form = new FormData();
-    form.append("payload", cover);
+    form.append('payload', cover);
 
-    const response = await Manga._put(url, form, auth, "multipart/form-data");
+    const response = await Manga._put(url, form, auth, 'multipart/form-data');
 
     const result = Manga._apiResponse(response.status);
 
@@ -198,16 +175,16 @@ export default class Manga extends Base {
         result.data = response.data;
         break;
       case 400:
-        result.error = "The cover provided is not an image";
+        result.error = 'The cover provided is not an image';
         break;
       case 401:
-        result.error = "Please log in again";
+        result.error = 'Please log in again';
         break;
       case 404:
-        result.error = "Manga not found";
+        result.error = 'Manga not found';
         break;
       case 422:
-        result.error = "The data provided is not valid";
+        result.error = 'The data provided is not valid';
         break;
       default:
         result.error = response.data.detail ?? response.statusText;

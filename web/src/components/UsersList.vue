@@ -12,11 +12,7 @@
       <v-col>
         <v-skeleton-loader type="heading" class="d-flex justify-center" />
       </v-col>
-      <v-skeleton-loader
-        width="33%"
-        type="button,button"
-        class="d-flex justify-space-around"
-      />
+      <v-skeleton-loader width="33%" type="button,button" class="d-flex justify-space-around" />
     </v-row>
     <v-row
       v-else
@@ -32,16 +28,8 @@
         {{ item.email }}
       </v-col>
       <v-col class="text-center text-body-1 d-flex justify-center">
-        <user-edit-button
-          :user="item"
-          :ownUser="userId === item.id"
-          @update="update"
-        />
-        <user-delete-button
-          :user="item"
-          :disabled="userId === item.id"
-          @update="update"
-        />
+        <user-edit-button :user="item" :ownUser="userId === item.id" @update="update" />
+        <user-delete-button :user="item" :disabled="userId === item.id" @update="update" />
       </v-col>
     </v-row>
     <slot />
@@ -49,22 +37,23 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Emit } from "vue-property-decorator";
-import UserEditButton from "@/components/UserEditButton.vue";
-import UserDeleteButton from "@/components/UserDeleteButton.vue";
+import { Vue, Component, Prop, Emit } from 'vue-property-decorator';
+import UserEditButton from '@/components/UserEditButton.vue';
+import UserDeleteButton from '@/components/UserDeleteButton.vue';
 
 @Component({
   components: { UserDeleteButton, UserEditButton },
 })
 export default class UsersList extends Vue {
   @Prop() readonly users!: any[];
+
   @Prop(Boolean) readonly loading!: boolean;
 
   get userId(): string {
     return this.$store.getters.userId;
   }
 
-  @Emit("update")
+  @Emit('update')
   update(): boolean {
     return true;
   }

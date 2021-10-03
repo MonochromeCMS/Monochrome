@@ -1,9 +1,7 @@
 <template>
   <v-dialog v-model="dialog" max-width="30rem">
     <template v-slot:activator="{ on, attrs }">
-      <v-btn color="error" block v-bind="attrs" v-on="on">
-        Delete Chapter
-      </v-btn>
+      <v-btn color="error" block v-bind="attrs" v-on="on"> Delete Chapter </v-btn>
     </template>
 
     <v-card>
@@ -27,14 +25,15 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from "vue-property-decorator";
-import type { AxiosRequestConfig } from "axios";
-import Chapter from "@/api/Chapter";
+import { Vue, Component, Prop } from 'vue-property-decorator';
+import type { AxiosRequestConfig } from 'axios';
+import Chapter from '@/api/Chapter';
 
 @Component
 export default class ChapterDelete extends Vue {
   dialog = false;
-  alert = "";
+
+  alert = '';
 
   @Prop() readonly id!: string;
 
@@ -46,14 +45,14 @@ export default class ChapterDelete extends Vue {
     const response = await Chapter.delete(this.id, this.authConfig);
 
     if (response.data) {
-      this.$emit("input", true);
+      this.$emit('input', true);
       this.dialog = false;
     } else {
-      this.alert = response.error ?? "";
+      this.alert = response.error ?? '';
     }
 
     if (response.status === 401) {
-      this.$store.commit("logout");
+      this.$store.commit('logout');
     }
   }
 }

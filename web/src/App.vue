@@ -9,9 +9,9 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Watch } from "vue-property-decorator";
-import NavBar from "./components/NavBar.vue";
-import ThemeToggler from "@/components/ThemeToggler.vue";
+import { Vue, Component, Watch } from 'vue-property-decorator';
+import NavBar from './components/NavBar.vue';
+import ThemeToggler from '@/components/ThemeToggler.vue';
 
 @Component({
   components: {
@@ -23,14 +23,15 @@ export default class App extends Vue {
   get isConnected() {
     return this.$store.getters.isConnected;
   }
-  @Watch("isConnected")
+
+  @Watch('isConnected')
   onLoginChange() {
-    this.$router.replace("/");
+    this.$router.replace('/');
   }
 
   mounted() {
-    if (this.isConnected) this.$store.dispatch("getUserData");
-    this.$store.dispatch("getSettings");
+    if (this.isConnected) this.$store.dispatch('getUserData');
+    this.$store.dispatch('getSettings');
   }
 }
 </script>

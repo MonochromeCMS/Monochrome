@@ -11,9 +11,9 @@ interface ReaderState {
 const state = (): ReaderState => ({
   direction: 0,
   parity: 0,
-  width: "75%",
-  readerMode: "Single",
-  fit: "default",
+  width: '75%',
+  readerMode: 'Single',
+  fit: 'default',
 });
 
 const getters = {

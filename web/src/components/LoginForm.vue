@@ -4,11 +4,7 @@
       {{ alert }}
     </v-alert>
     <v-form @submit.prevent="submit">
-      <validation-provider
-        v-slot="{ errors }"
-        name="Username/email"
-        rules="required"
-      >
+      <validation-provider v-slot="{ errors }" name="Username/email" rules="required">
         <v-text-field
           v-model="username"
           :error-messages="errors"
@@ -30,29 +26,22 @@
         />
       </validation-provider>
       <div class="text-center">
-        <v-btn type="submit" block color="background" class="text--primary">
-          Sign In
-        </v-btn>
+        <v-btn type="submit" block color="background" class="text--primary"> Sign In </v-btn>
       </div>
     </v-form>
   </validation-observer>
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
-import { required } from "vee-validate/dist/rules";
-import {
-  extend,
-  ValidationProvider,
-  setInteractionMode,
-  ValidationObserver,
-} from "vee-validate";
+import { Vue, Component } from 'vue-property-decorator';
+import { required } from 'vee-validate/dist/rules';
+import { extend, ValidationProvider, setInteractionMode, ValidationObserver } from 'vee-validate';
 
-setInteractionMode("eager");
+setInteractionMode('eager');
 
-extend("required", {
+extend('required', {
   ...required,
-  message: "{_field_} can not be empty",
+  message: '{_field_} can not be empty',
 });
 
 @Component({
@@ -62,10 +51,13 @@ extend("required", {
   },
 })
 export default class LoginForm extends Vue {
-  username = "";
-  password = "";
+  username = '';
+
+  password = '';
+
   showPass = false;
-  alert = "";
+
+  alert = '';
 
   get params(): any {
     return {
@@ -75,7 +67,7 @@ export default class LoginForm extends Vue {
   }
 
   async submit(): Promise<void> {
-    //@ts-ignore I can't define this $ref, so let's assume it works
+    //@ts-expect-error I can't define this $ref, so let's assume it works
     const valid = await this.$refs.observer.validate();
     if (valid) {
       await this.login(this.params); // action to login
@@ -83,18 +75,18 @@ export default class LoginForm extends Vue {
   }
 
   clear(): void {
-    this.alert = "";
-    this.username = "";
-    this.password = "";
+    this.alert = '';
+    this.username = '';
+    this.password = '';
   }
 
   async login(params: any): Promise<void> {
-    const response = await this.$store.dispatch("login", params);
+    const response = await this.$store.dispatch('login', params);
 
     if (response.data) {
       this.clear();
     } else {
-      this.alert = response.error ?? "";
+      this.alert = response.error ?? '';
     }
   }
 }

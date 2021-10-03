@@ -9,22 +9,17 @@
       class="reader-tabs"
     >
       <v-tab :key="0">
-        {{ reverse ? "Next chapter" : "Previous chapter" }}
+        {{ reverse ? 'Next chapter' : 'Previous chapter' }}
       </v-tab>
       <v-tab v-for="index in amountTabs" :key="index">
         {{ reverse ? amountTabs - index + 1 : index }}
       </v-tab>
       <v-tab :key="amountTabs + 1">
-        {{ reverse ? "Previous chapter" : "Next chapter" }}
+        {{ reverse ? 'Previous chapter' : 'Next chapter' }}
       </v-tab>
     </v-tabs>
 
-    <v-carousel
-      height="auto"
-      hide-delimiters
-      v-model="currentPage"
-      :continuous="false"
-    >
+    <v-carousel height="auto" hide-delimiters v-model="currentPage" :continuous="false">
       <v-carousel-item :key="0">
         <v-row>
           <v-col
@@ -36,16 +31,12 @@
             style="height: calc(100vh - 8rem)"
           >
             <v-sheet rounded="lg">
-              <v-row
-                class="fill-height text-center ma-0 pa-10"
-                align="center"
-                justify="center"
-              >
+              <v-row class="fill-height text-center ma-0 pa-10" align="center" justify="center">
                 <div class="text-h2">
                   {{
                     reverse
-                      ? "This is the latest chapter available, thanks for reading!"
-                      : "This is the first chapter"
+                      ? 'This is the latest chapter available, thanks for reading!'
+                      : 'This is the first chapter'
                   }}
                 </div>
               </v-row>
@@ -80,13 +71,7 @@
             </template>
           </v-img>
         </div>
-        <v-img
-          v-else
-          :class="fit"
-          contain
-          :src="urls[index - 1]"
-          :alt="`Page ${index}`"
-        >
+        <v-img v-else :class="fit" contain :src="urls[index - 1]" :alt="`Page ${index}`">
           <template v-slot:placeholder>
             <v-row class="fill-height ma-0" align="center" justify="center">
               <v-progress-circular indeterminate />
@@ -105,16 +90,12 @@
             style="height: calc(100vh - 8rem)"
           >
             <v-sheet rounded="lg">
-              <v-row
-                class="fill-height text-center ma-0 pa-10"
-                align="center"
-                justify="center"
-              >
+              <v-row class="fill-height text-center ma-0 pa-10" align="center" justify="center">
                 <div class="text-h2">
                   {{
                     reverse
-                      ? "This is the first chapter"
-                      : "This is the latest chapter available, thanks for reading!"
+                      ? 'This is the first chapter'
+                      : 'This is the latest chapter available, thanks for reading!'
                   }}
                 </div>
               </v-row>
@@ -127,14 +108,18 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Watch } from "vue-property-decorator";
+import { Vue, Component, Prop, Watch } from 'vue-property-decorator';
 
 @Component
 export default class PagedReader extends Vue {
   @Prop(String) readonly manga!: string;
+
   @Prop(String) readonly chapter!: string;
+
   @Prop(Number) readonly version!: number;
+
   @Prop(Number) readonly length!: number;
+
   @Prop(Boolean) readonly double!: boolean;
 
   currentPage: number | null = null;
@@ -145,12 +130,12 @@ export default class PagedReader extends Vue {
     }
 
     switch (ev.code) {
-      case "KeyA":
-      case "ArrowLeft":
+      case 'KeyA':
+      case 'ArrowLeft':
         this.currentPage -= 1;
         break;
-      case "KeyD":
-      case "ArrowRight":
+      case 'KeyD':
+      case 'ArrowRight':
         this.currentPage += 1;
     }
   }
@@ -168,18 +153,13 @@ export default class PagedReader extends Vue {
   }
 
   get amountTabs(): number {
-    return this.double
-      ? Math.ceil((this.length + this.parity) / 2)
-      : this.length;
+    return this.double ? Math.ceil((this.length + this.parity) / 2) : this.length;
   }
 
   get urls(): (string | null)[] {
     let result: (string | null)[] = Array.from(
       { length: this.length },
-      (_, i) =>
-        `/media/${this.manga}/${this.chapter}/${i + 1}.jpg?version=${
-          this.version
-        }`
+      (_, i) => `/media/${this.manga}/${this.chapter}/${i + 1}.jpg?version=${this.version}`,
     );
 
     if (this.double) {
@@ -195,12 +175,12 @@ export default class PagedReader extends Vue {
     return this.reverse ? result.reverse() : result;
   }
 
-  @Watch("chapter")
+  @Watch('chapter')
   onChapterChange(): void {
     this.currentPage = this.reverse ? this.amountTabs : 1;
   }
 
-  @Watch("reverse")
+  @Watch('reverse')
   onDirectionChange(): void {
     if (this.currentPage == null) {
       return;
@@ -209,7 +189,7 @@ export default class PagedReader extends Vue {
     this.currentPage = this.amountTabs - this.currentPage + 1;
   }
 
-  @Watch("parity")
+  @Watch('parity')
   onParityChange(value: boolean): void {
     if (this.currentPage == null) {
       return;
@@ -224,29 +204,27 @@ export default class PagedReader extends Vue {
     }
   }
 
-  @Watch("currentPage")
+  @Watch('currentPage')
   onPageChange(value: number): void {
     switch (true) {
       case value === this.amountTabs + 1 && !this.reverse:
       case value === 0 && this.reverse:
-        this.$emit("next", 1);
+        this.$emit('next', 1);
         break;
       case value === this.amountTabs + 1 && this.reverse:
       case value === 0 && !this.reverse:
-        this.$emit("previous", 1);
+        this.$emit('previous', 1);
     }
   }
 
-  @Watch("double")
+  @Watch('double')
   onDoubleChange(value: boolean): void {
     if (this.currentPage == null) {
       return;
     }
 
     if (value) {
-      this.currentPage = Math.ceil(
-        (this.currentPage + Number(this.reverse)) / 2
-      );
+      this.currentPage = Math.ceil((this.currentPage + Number(this.reverse)) / 2);
     } else {
       this.currentPage = this.currentPage * 2 - 1;
     }
@@ -254,7 +232,7 @@ export default class PagedReader extends Vue {
 
   mounted(): void {
     this.currentPage = this.reverse ? this.amountTabs : 1;
-    document.addEventListener("keyup", this.handleArrows);
+    document.addEventListener('keyup', this.handleArrows);
   }
 }
 </script>

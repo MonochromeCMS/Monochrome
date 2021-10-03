@@ -23,34 +23,35 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from "vue-property-decorator";
+import { Vue, Component, Prop } from 'vue-property-decorator';
 
 @Component
 export default class AdminActions extends Vue {
   @Prop(Boolean) readonly left!: boolean;
 
   selectedItem = null;
+
   items = [
     {
-      text: "Create manga",
-      to: "/manga/new",
+      text: 'Create manga',
+      to: '/manga/new',
     },
     {
-      text: "Handle users",
-      to: "/users",
+      text: 'Handle users',
+      to: '/users',
     },
     {
-      text: "Customize website",
-      to: "/settings",
+      text: 'Customize website',
+      to: '/settings',
     },
     {
-      text: "Logout",
-      to: "/logout",
+      text: 'Logout',
+      to: '/logout',
     },
     {
-      text: "API Documentation",
-      href: "/api/docs",
-      target: "_blank",
+      text: 'API Documentation',
+      href: '/api/docs',
+      target: '_blank',
     },
   ];
 }

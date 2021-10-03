@@ -6,10 +6,7 @@
       </v-col>
       <v-col cols="12" md="9" class="d-flex flex-column justify-center">
         <v-skeleton-loader type="heading" class="mb" />
-        <v-skeleton-loader
-          type="chip, chip, chip"
-          class="d-flex flex-wrap skeleton-tag"
-        />
+        <v-skeleton-loader type="chip, chip, chip" class="d-flex flex-wrap skeleton-tag" />
         <v-skeleton-loader type="text@3" class="mr-5" />
         <v-skeleton-loader type="button" />
       </v-col>
@@ -51,24 +48,26 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from "vue-property-decorator";
-import type { MangaResponse } from "@/api/Manga";
+import { Vue, Component, Prop } from 'vue-property-decorator';
+import type { MangaResponse } from '@/api/Manga';
 
 @Component
 export default class MangaRow extends Vue {
   @Prop() readonly manga!: MangaResponse;
+
   @Prop(String) readonly cover!: string;
+
   @Prop(Boolean) readonly loading!: boolean;
 
   statusColor = {
-    ongoing: "green",
-    completed: "green darken-2",
-    hiatus: "orange",
-    cancelled: "red",
+    ongoing: 'green',
+    completed: 'green darken-2',
+    hiatus: 'orange',
+    cancelled: 'red',
   };
 
   upper(status: string): string {
-    return status ? status.charAt(0).toUpperCase() + status.slice(1) : "";
+    return status ? status.charAt(0).toUpperCase() + status.slice(1) : '';
   }
 }
 </script>

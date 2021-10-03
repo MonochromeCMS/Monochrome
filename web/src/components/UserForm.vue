@@ -2,7 +2,7 @@
   <validation-observer ref="observer">
     <v-form @submit.prevent="submit">
       <v-card color="background">
-        <v-card-title> {{ user ? "Edit" : "Add" }} user </v-card-title>
+        <v-card-title> {{ user ? 'Edit' : 'Add' }} user </v-card-title>
         <v-alert type="warning" v-if="ownUser" dense class="ma-3">
           You'll be logged out after editing your own user !
         </v-alert>
@@ -10,11 +10,7 @@
           {{ alert }}
         </v-alert>
         <v-card-text>
-          <validation-provider
-            v-slot="{ errors }"
-            name="Username"
-            rules="required|max:15"
-          >
+          <validation-provider v-slot="{ errors }" name="Username" rules="required|max:15">
             <v-text-field
               v-model="username"
               :error-messages="errors"
@@ -31,11 +27,7 @@
               outlined
             ></v-text-field>
           </validation-provider>
-          <validation-provider
-            v-slot="{ errors }"
-            name="Password"
-            rules="required"
-          >
+          <validation-provider v-slot="{ errors }" name="Password" rules="required">
             <v-text-field
               v-model="password"
               :error-messages="errors"
@@ -55,13 +47,8 @@
           <v-spacer></v-spacer>
           <slot />
           <v-btn color="gray" text @click="close"> Cancel </v-btn>
-          <v-btn
-            :disabled="loading"
-            type="submit"
-            color="green"
-            class="text--white"
-          >
-            {{ user ? "EDIT" : "ADD" }}
+          <v-btn :disabled="loading" type="submit" color="green" class="text--white">
+            {{ user ? 'EDIT' : 'ADD' }}
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -70,32 +57,28 @@
 </template>
 
 <script lang="ts">
-import { required, email, max } from "vee-validate/dist/rules";
-import {
-  extend,
-  ValidationProvider,
-  setInteractionMode,
-  ValidationObserver,
-} from "vee-validate";
-import { Vue, Component, Emit, Prop } from "vue-property-decorator";
-import type { AxiosRequestConfig } from "axios";
-import User, { UserSchema } from "@/api/User";
+import { required, email, max } from 'vee-validate/dist/rules';
+import { extend, ValidationProvider, setInteractionMode, ValidationObserver } from 'vee-validate';
+import { Vue, Component, Emit, Prop } from 'vue-property-decorator';
+import type { AxiosRequestConfig } from 'axios';
+import type { UserSchema } from '@/api/User';
+import User from '@/api/User';
 
-setInteractionMode("eager");
+setInteractionMode('eager');
 
-extend("max", {
+extend('max', {
   ...max,
   message: "{_field_} can't be that long",
 });
 
-extend("email", {
+extend('email', {
   ...email,
-  message: "{_field_} must be a valid email",
+  message: '{_field_} must be a valid email',
 });
 
-extend("required", {
+extend('required', {
   ...required,
-  message: "{_field_} can not be empty",
+  message: '{_field_} can not be empty',
 });
 
 @Component({
@@ -106,13 +89,19 @@ extend("required", {
 })
 export default class UserForm extends Vue {
   @Prop() readonly user!: any;
+
   @Prop(Boolean) readonly ownUser!: boolean;
 
-  username = "";
-  password = "";
+  username = '';
+
+  password = '';
+
   email = null;
+
   showPass = false;
-  alert = "";
+
+  alert = '';
+
   loading = false;
 
   mounted(): void {
@@ -135,13 +124,13 @@ export default class UserForm extends Vue {
     return this.$store.getters.authConfig;
   }
 
-  @Emit("close")
+  @Emit('close')
   close(): boolean {
     return true;
   }
 
   async submit(): Promise<void> {
-    //@ts-ignore I can't define this $ref, so let's assume it works
+    //@ts-expect-error I can't define this $ref, so let's assume it works
     const valid = await this.$refs.observer.validate();
     if (valid) {
       if (this.user) {
@@ -153,10 +142,10 @@ export default class UserForm extends Vue {
   }
 
   clear(): void {
-    this.alert = "";
-    this.username = "";
+    this.alert = '';
+    this.username = '';
     this.email = null;
-    this.password = "";
+    this.password = '';
   }
 
   async editUser(userId: string, params: UserSchema): Promise<void> {
@@ -164,13 +153,13 @@ export default class UserForm extends Vue {
     const response = await User.edit(userId, params, this.authConfig);
 
     if (response.data) {
-      this.$emit("update", true);
+      this.$emit('update', true);
       this.close();
     } else {
-      this.alert = response.error ?? "";
+      this.alert = response.error ?? '';
     }
     if (response.status === 401) {
-      this.$store.commit("logout");
+      this.$store.commit('logout');
     }
 
     this.loading = false;
@@ -181,14 +170,14 @@ export default class UserForm extends Vue {
     const response = await User.create(params, this.authConfig);
 
     if (response.data) {
-      this.$emit("update", true);
+      this.$emit('update', true);
       this.clear();
       this.close();
     } else {
-      this.alert = response.error ?? "";
+      this.alert = response.error ?? '';
     }
     if (response.status === 401) {
-      this.$store.commit("logout");
+      this.$store.commit('logout');
     }
 
     this.loading = false;

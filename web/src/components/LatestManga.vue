@@ -8,11 +8,7 @@
       <v-col class="pt-0">
         <v-list three-line color="backgroundAlt">
           <template v-for="(item, index) in manga">
-            <v-divider
-              v-if="item.divider"
-              :key="index"
-              :inset="item.inset"
-            ></v-divider>
+            <v-divider v-if="item.divider" :key="index" :inset="item.inset"></v-divider>
 
             <v-list-item v-else :key="item.title" :to="item.to">
               <v-list-item-avatar size="3rem">
@@ -21,9 +17,7 @@
 
               <v-list-item-content>
                 <v-list-item-title v-html="item.title"></v-list-item-title>
-                <v-list-item-subtitle
-                  v-html="item.subtitle"
-                ></v-list-item-subtitle>
+                <v-list-item-subtitle v-html="item.subtitle"></v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
           </template>
@@ -48,16 +42,22 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
-import Manga, { MangaResponse } from "@/api/Manga";
+import { Vue, Component } from 'vue-property-decorator';
+import type { MangaResponse } from '@/api/Manga';
+import Manga from '@/api/Manga';
 
 @Component
 export default class LatestManga extends Vue {
   loading = true;
+
   rawManga: MangaResponse[] = [];
+
   offset = 0;
+
   limit = 5;
-  alert = "";
+
+  alert = '';
+
   total = 0;
 
   get manga(): any[] {
@@ -78,18 +78,13 @@ export default class LatestManga extends Vue {
   }
 
   async getManga(): Promise<void> {
-    const response = await Manga.search(
-      null,
-      this.limit,
-      this.offset,
-      this.loading
-    );
+    const response = await Manga.search(null, this.limit, this.offset, this.loading);
 
     if (response.data) {
       this.rawManga = response.data.results;
       this.total = response.data.total;
     } else {
-      this.alert = response.error ?? "";
+      this.alert = response.error ?? '';
     }
 
     this.loading = false;

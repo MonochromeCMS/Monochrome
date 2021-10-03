@@ -1,11 +1,11 @@
-import type { ActionContext } from "vuex";
-import type { AxiosRequestConfig } from "axios";
+import type { ActionContext } from 'vuex';
+import type { AxiosRequestConfig } from 'axios';
 
-import Auth from "@/api/Auth";
-import type { TokenResponse } from "@/api/Auth";
-import User from "@/api/User";
-import type { UserResponse } from "@/api/User";
-import { ApiResponse } from "@/api/Base";
+import Auth from '@/api/Auth';
+import type { TokenResponse } from '@/api/Auth';
+import User from '@/api/User';
+import type { UserResponse } from '@/api/User';
+import type { ApiResponse } from '@/api/Base';
 
 interface IUser {
   token: string;
@@ -25,7 +25,7 @@ export interface UserLogin {
 
 const state = (): UserState => ({
   user: {
-    token: "",
+    token: '',
   },
 });
 
@@ -35,7 +35,7 @@ const mutations = {
   },
   logout(state: UserState): void {
     state.user = {
-      token: "",
+      token: '',
     };
   },
   updateUser(state: UserState, payload: UserResponse): void {
@@ -53,8 +53,8 @@ const getters = {
   authConfig(state: UserState): AxiosRequestConfig {
     return {
       headers: {
-        Accept: "*/*",
-        Authorization: "Bearer ".concat(state.user.token),
+        Accept: '*/*',
+        Authorization: 'Bearer '.concat(state.user.token),
       },
       withCredentials: true,
     };
@@ -64,13 +64,13 @@ const getters = {
 const actions = {
   async login(
     { commit, dispatch }: ActionContext<UserState, any>,
-    { username, password }: UserLogin
+    { username, password }: UserLogin,
   ): Promise<ApiResponse<TokenResponse>> {
     const response = await Auth.login(username, password);
 
     if (response.data) {
-      commit("setToken", response.data);
-      dispatch("getUserData").then();
+      commit('setToken', response.data);
+      dispatch('getUserData').then();
     }
     return response;
   },
@@ -81,9 +81,9 @@ const actions = {
     const response = await User.me(getters.authConfig);
 
     if (response.data) {
-      commit("updateUser", response.data);
+      commit('updateUser', response.data);
     } else if (response.status === 401) {
-      commit("logout");
+      commit('logout');
     }
     return response;
   },

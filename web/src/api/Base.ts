@@ -1,10 +1,10 @@
-import axios from "axios";
-import type { AxiosRequestConfig, AxiosResponse } from "axios";
+import axios from 'axios';
+import type { AxiosRequestConfig, AxiosResponse } from 'axios';
 
 const errorResponse: AxiosResponse = {
   data: null,
   status: 0,
-  statusText: "UnknownError",
+  statusText: 'UnknownError',
   headers: null,
   config: {},
 };
@@ -23,18 +23,18 @@ export interface ApiResponse<T> {
 }
 
 export default class Base {
-  public static readonly prefix: string = "/api";
+  public static readonly prefix: string = '/api';
 
   public static _delay() {
     return new Promise((resolve) => {
-      setTimeout(() => resolve("done!"), 450);
+      setTimeout(() => resolve('done!'), 450);
     });
   }
 
   public static async _get(
     url: string,
     config: AxiosRequestConfig,
-    delay = false
+    delay = false,
   ): Promise<AxiosResponse> {
     try {
       const response = await axios.get(this.prefix + url, config);
@@ -51,10 +51,7 @@ export default class Base {
     }
   }
 
-  public static async _delete(
-    url: string,
-    config: AxiosRequestConfig
-  ): Promise<AxiosResponse> {
+  public static async _delete(url: string, config: AxiosRequestConfig): Promise<AxiosResponse> {
     try {
       return await axios.delete(this.prefix + url, config);
     } catch (error: unknown) {
@@ -70,10 +67,10 @@ export default class Base {
     url: string,
     data: any,
     config: AxiosRequestConfig,
-    contentType = ""
+    contentType = '',
   ): Promise<AxiosResponse> {
     const settings = { headers: {}, ...config };
-    settings.headers["Content-Type"] = contentType || "application/json";
+    settings.headers['Content-Type'] = contentType || 'application/json';
 
     try {
       return await axios.post(this.prefix + url, data, settings);
@@ -90,10 +87,10 @@ export default class Base {
     url: string,
     data: any,
     config: AxiosRequestConfig,
-    contentType = ""
+    contentType = '',
   ): Promise<AxiosResponse> {
     const settings = { ...config };
-    settings.headers["Content-Type"] = contentType || "application/json";
+    settings.headers['Content-Type'] = contentType || 'application/json';
 
     try {
       return await axios.put(this.prefix + url, data, settings);

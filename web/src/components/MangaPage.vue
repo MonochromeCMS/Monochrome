@@ -9,10 +9,7 @@
       <v-col cols="12" sm="6" md="4" lg="3" v-for="i in limit" :key="i">
         <v-card color="background" height="100%" class="d-flex flex-column">
           <v-responsive aspect-ratio="1">
-            <v-skeleton-loader
-              type="image"
-              class="skeleton-image fill-height"
-            />
+            <v-skeleton-loader type="image" class="skeleton-image fill-height" />
           </v-responsive>
           <v-skeleton-loader type="article, divider" />
           <v-skeleton-loader type="chip" class="skeleton-chip" />
@@ -26,32 +23,14 @@
         </v-alert>
       </v-col>
       <v-col v-else-if="manga.length === 0" class="text-center text-body-1">
-        {{
-          search ? "No manga could be found." : "No manga has been added yet."
-        }}
+        {{ search ? 'No manga could be found.' : 'No manga has been added yet.' }}
       </v-col>
-      <v-col
-        v-else
-        cols="12"
-        sm="6"
-        md="4"
-        lg="3"
-        v-for="(item, index) in manga"
-        :key="index"
-      >
-        <v-card
-          color="background"
-          :to="to(item)"
-          height="100%"
-          class="d-flex flex-column"
-        >
+      <v-col v-else cols="12" sm="6" md="4" lg="3" v-for="(item, index) in manga" :key="index">
+        <v-card color="background" :to="to(item)" height="100%" class="d-flex flex-column">
           <v-img aspect-ratio="1" :src="cover(item)"></v-img>
           <v-card-title v-text="item.title" />
           <v-card-subtitle v-text="item.author" />
-          <v-card-text
-            v-text="item.description"
-            class="card-description"
-          ></v-card-text>
+          <v-card-text v-text="item.description" class="card-description"></v-card-text>
           <v-divider></v-divider>
           <v-chip
             class="status-chip"
@@ -73,27 +52,35 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Watch } from "vue-property-decorator";
-import SearchBar from "@/components/SearchBar.vue";
-import Manga, { MangaResponse } from "@/api/Manga";
+import { Vue, Component, Watch } from 'vue-property-decorator';
+import SearchBar from '@/components/SearchBar.vue';
+import type { MangaResponse } from '@/api/Manga';
+import Manga from '@/api/Manga';
 
 @Component({
   components: { SearchBar },
 })
 export default class MangaPage extends Vue {
   loading = true;
+
   manga: MangaResponse[] = [];
+
   limit = 12;
+
   page = 1;
-  alert = "";
+
+  alert = '';
+
   total = 0;
+
   statusColor = {
-    ongoing: "green",
-    completed: "green darken-2",
-    hiatus: "orange",
-    cancelled: "red",
+    ongoing: 'green',
+    completed: 'green darken-2',
+    hiatus: 'orange',
+    cancelled: 'red',
   };
-  search: any = "";
+
+  search: any = '';
 
   get offset(): number {
     return (this.page - 1) * this.limit;
@@ -112,33 +99,28 @@ export default class MangaPage extends Vue {
   }
 
   async getManga(): Promise<void> {
-    const response = await Manga.search(
-      this.search,
-      this.limit,
-      this.offset,
-      this.loading
-    );
+    const response = await Manga.search(this.search, this.limit, this.offset, this.loading);
 
     if (response.data) {
       this.manga = response.data.results;
       this.total = response.data.total;
     } else {
-      this.alert = response.error ?? "";
+      this.alert = response.error ?? '';
     }
 
     this.loading = false;
   }
 
   upper(status: string): string {
-    return status ? status.charAt(0).toUpperCase() + status.slice(1) : "";
+    return status ? status.charAt(0).toUpperCase() + status.slice(1) : '';
   }
 
-  @Watch("page")
+  @Watch('page')
   onPageUpdate(): void {
     this.getManga();
   }
 
-  @Watch("search")
+  @Watch('search')
   onSearch(): void {
     if (this.page === 1) {
       this.getManga();
@@ -149,9 +131,7 @@ export default class MangaPage extends Vue {
 
   mounted(): void {
     if (this.$route.query.q) {
-      this.search = this.$route.query.q.length
-        ? this.$route.query.q[0]
-        : this.$route.query.q;
+      this.search = this.$route.query.q.length ? this.$route.query.q[0] : this.$route.query.q;
     } else {
       this.getManga();
     }

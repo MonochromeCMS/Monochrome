@@ -1,8 +1,6 @@
 <template>
   <v-container>
-    <v-card-title class="justify-center lemon-milk">
-      Latest chapters
-    </v-card-title>
+    <v-card-title class="justify-center lemon-milk"> Latest chapters </v-card-title>
     <v-row v-if="loading" class="mx-0 mb-0">
       <v-col
         cols="12"
@@ -40,11 +38,7 @@
       <v-col cols="12" v-if="alert !== ''">
         <v-alert type="error">{{ alert }}</v-alert>
       </v-col>
-      <v-col
-        cols="12"
-        class="text-center text-body-1"
-        v-else-if="chapters.length === 0"
-      >
+      <v-col cols="12" class="text-center text-body-1" v-else-if="chapters.length === 0">
         No chapters have been uploaded yet.
       </v-col>
       <v-col
@@ -69,11 +63,7 @@
                 {{ chapter.manga.title }}
               </h2>
               <h3 class="text-subtitle-2 ellipsis">
-                {{
-                  `Chapter ${chapter.number}${
-                    chapter.name ? " - " + chapter.name : ""
-                  }`
-                }}
+                {{ `Chapter ${chapter.number}${chapter.name ? ' - ' + chapter.name : ''}` }}
               </h3>
               <h4 class="text-caption">{{ chapter.scanGroup }}</h4>
               <v-chip color="backgroundAlt" class="chip-tag">
@@ -99,16 +89,22 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Watch } from "vue-property-decorator";
-import Chapter, { DetailedChapterResponse } from "@/api/Chapter";
+import { Vue, Component, Watch } from 'vue-property-decorator';
+import type { DetailedChapterResponse } from '@/api/Chapter';
+import Chapter from '@/api/Chapter';
 
 @Component
 export default class LatestChapters extends Vue {
   page = 1;
+
   limit = 8;
+
   total = 0;
+
   loading = true;
-  alert = "";
+
+  alert = '';
+
   chapters: DetailedChapterResponse[] = [];
 
   get pageAmount(): number {
@@ -123,23 +119,19 @@ export default class LatestChapters extends Vue {
     return this.$store.getters.isConnected;
   }
 
-  @Watch("page")
+  @Watch('page')
   async onPageChange(): Promise<void> {
     await this.getChapters();
   }
 
   async getChapters(): Promise<void> {
-    const response = await Chapter.latest(
-      this.limit,
-      this.offset,
-      this.loading
-    );
+    const response = await Chapter.latest(this.limit, this.offset, this.loading);
 
     if (response.data) {
       this.chapters = response.data.results;
       this.total = response.data.total;
     } else {
-      this.alert = response.error ?? "";
+      this.alert = response.error ?? '';
     }
 
     this.loading = false;
@@ -159,10 +151,9 @@ export default class LatestChapters extends Vue {
 
     for (const unit of Object.keys(length)) {
       const result = val % length[unit];
-      if (!(val = 0 | (val / length[unit])))
-        return result + " " + (result - 1 ? unit + "s" : unit);
+      if (!(val = 0 | (val / length[unit]))) return result + ' ' + (result - 1 ? unit + 's' : unit);
     }
-    return "ERROR";
+    return 'ERROR';
   }
 
   mounted(): void {

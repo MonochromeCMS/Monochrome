@@ -28,29 +28,30 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="gray" text @click="dialog = false"> Cancel </v-btn>
-        <v-btn color="error" @click="deleteUser(user.id)" :loading="loading">
-          Delete
-        </v-btn>
+        <v-btn color="error" @click="deleteUser(user.id)" :loading="loading"> Delete </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Emit } from "vue-property-decorator";
-import User from "@/api/User";
-import type { AxiosRequestConfig } from "axios";
+import { Vue, Component, Prop, Emit } from 'vue-property-decorator';
+import User from '@/api/User';
+import type { AxiosRequestConfig } from 'axios';
 
 @Component
 export default class UserDeleteButton extends Vue {
   @Prop() readonly user!: any;
+
   @Prop(Boolean) readonly disabled!: boolean;
 
   loading = false;
-  dialog = false;
-  alert = "";
 
-  @Emit("update")
+  dialog = false;
+
+  alert = '';
+
+  @Emit('update')
   update(): boolean {
     return true;
   }
@@ -64,13 +65,13 @@ export default class UserDeleteButton extends Vue {
     const response = await User.delete(userId, this.authConfig);
 
     if (response.data) {
-      this.$emit("update", true);
+      this.$emit('update', true);
       this.dialog = false;
     } else {
-      this.alert = response.error ?? "";
+      this.alert = response.error ?? '';
     }
     if (response.status === 401) {
-      this.$store.commit("logout");
+      this.$store.commit('logout');
     }
     this.loading = false;
   }

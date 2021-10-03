@@ -14,8 +14,8 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
-import LoginForm from "@/components/LoginForm.vue";
+import { Vue, Component } from 'vue-property-decorator';
+import LoginForm from '@/components/LoginForm.vue';
 
 @Component({
   components: { LoginForm },
@@ -26,7 +26,7 @@ export default class Login extends Vue {
   }
 
   mounted(): void {
-    if (this.isConnected) this.$router.replace("/");
+    if (this.isConnected) this.$router.replace('/');
   }
 }
 </script>

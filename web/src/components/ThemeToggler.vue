@@ -13,19 +13,18 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
+import { Vue, Component } from 'vue-property-decorator';
 
 @Component
 export default class ThemeToggler extends Vue {
   toggleTheme(): void {
     const dark = !this.$vuetify.theme.dark;
-    window.localStorage.setItem("monochrome-dark", dark ? "1" : "0");
+    window.localStorage.setItem('monochrome-dark', dark ? '1' : '0');
     this.$vuetify.theme.dark = dark;
   }
 
   mounted(): void {
-    this.$vuetify.theme.dark =
-      window.localStorage.getItem("monochrome-dark") === "1";
+    this.$vuetify.theme.dark = window.localStorage.getItem('monochrome-dark') === '1';
   }
 }
 </script>

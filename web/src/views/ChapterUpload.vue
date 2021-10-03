@@ -4,9 +4,7 @@
       <v-col cols="12" lg="10" class="mx-auto">
         <v-card rounded="lg" color="backgroundAlt" elevation="0" class="pa-4">
           <v-alert v-if="alert !== ''" type="error">{{ alert }}</v-alert>
-          <v-card-title class="justify-center lemon-milk">
-            UPLOAD CHAPTER
-          </v-card-title>
+          <v-card-title class="justify-center lemon-milk"> UPLOAD CHAPTER </v-card-title>
           <manga-row
             :loading="!manga"
             :manga="manga"
@@ -23,17 +21,19 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
-import MangaRow from "@/components/MangaRow.vue";
-import UploadForm from "@/components/UploadForm.vue";
-import Manga, { MangaResponse } from "@/api/Manga";
+import { Vue, Component } from 'vue-property-decorator';
+import MangaRow from '@/components/MangaRow.vue';
+import UploadForm from '@/components/UploadForm.vue';
+import type { MangaResponse } from '@/api/Manga';
+import Manga from '@/api/Manga';
 
 @Component({
   components: { MangaRow, UploadForm },
 })
 export default class ChapterUpload extends Vue {
   manga: MangaResponse | null = null;
-  alert = "";
+
+  alert = '';
 
   get mangaId(): string {
     return this.$route.params.manga;
@@ -49,13 +49,13 @@ export default class ChapterUpload extends Vue {
     if (response.data) {
       this.manga = response.data;
     } else {
-      this.alert = response.error ?? "";
+      this.alert = response.error ?? '';
     }
   }
 
   mounted(): void {
     if (!this.isConnected) {
-      this.$router.replace("/");
+      this.$router.replace('/');
     } else {
       this.getManga();
     }
