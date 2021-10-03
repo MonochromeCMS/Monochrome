@@ -8,14 +8,14 @@
             >EDIT CHAPTER</v-card-title
           >
           <manga-row
-            v-if="manga"
+            :loading="!manga"
             :manga="manga"
             :cover="`/media/${manga.id}/cover.jpg`"
             class="background rounded"
           />
           <v-card-text>
             <upload-form
-              v-if="chapter"
+              v-if="chapter && manga"
               :mangaId="manga.id"
               :chapter="chapter"
             />

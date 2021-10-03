@@ -5,7 +5,7 @@
         <v-sheet rounded="lg" color="backgroundAlt">
           <v-container>
             <v-alert type="error" v-if="alert !== ''">{{ alert }}</v-alert>
-            <manga-row :loading="loading" :manga="manga" :cover="cover">
+            <manga-row :loading="loading" :manga="manga" :cover="cover || ''">
               <div v-if="isConnected || firstChapter" class="d-flex flex-wrap">
                 <v-btn
                   v-if="firstChapter"

@@ -23,12 +23,12 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
+import { Vue, Component, Prop } from "vue-property-decorator";
 
-@Component({
-  props: ["left"],
-})
+@Component
 export default class AdminActions extends Vue {
+  @Prop(Boolean) readonly left!: boolean;
+
   selectedItem = null;
   items = [
     {

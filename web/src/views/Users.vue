@@ -26,6 +26,7 @@
                       </v-btn>
                     </template>
                     <user-form
+                      :own-user="false"
                       :user="null"
                       @close="addDialog = false"
                       @update="getUsers"

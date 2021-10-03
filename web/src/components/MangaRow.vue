@@ -52,10 +52,11 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from "vue-property-decorator";
+import type { MangaResponse } from "@/api/Manga";
 
 @Component
 export default class MangaRow extends Vue {
-  @Prop() readonly manga!: Record<string, any>;
+  @Prop() readonly manga!: MangaResponse;
   @Prop(String) readonly cover!: string;
   @Prop(Boolean) readonly loading!: boolean;
 

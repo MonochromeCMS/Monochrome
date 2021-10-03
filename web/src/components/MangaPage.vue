@@ -41,13 +41,13 @@
       >
         <v-card
           color="background"
-          :to="item.to"
+          :to="to(item)"
           height="100%"
           class="d-flex flex-column"
         >
-          <v-img aspect-ratio="1" :src="item.cover"></v-img>
+          <v-img aspect-ratio="1" :src="cover(item)"></v-img>
           <v-card-title v-text="item.title" />
-          <v-card-subtitle v-text="item.subtitle" />
+          <v-card-subtitle v-text="item.author" />
           <v-card-text
             v-text="item.description"
             class="card-description"
@@ -82,7 +82,7 @@ import Manga, { MangaResponse } from "@/api/Manga";
 })
 export default class MangaPage extends Vue {
   loading = true;
-  rawManga: MangaResponse[] = [];
+  manga: MangaResponse[] = [];
   limit = 12;
   page = 1;
   alert = "";
@@ -95,23 +95,20 @@ export default class MangaPage extends Vue {
   };
   search: any = "";
 
-  get manga(): any[] {
-    return this.rawManga.map((el) => ({
-      cover: `/media/${el.id}/cover.jpg?version=${el.version}`,
-      title: el.title,
-      subtitle: el.author,
-      description: el.description,
-      to: `/manga/${el.id}`,
-      status: el.status,
-    }));
-  }
-
   get offset(): number {
     return (this.page - 1) * this.limit;
   }
 
   get pageAmount(): number {
     return Math.ceil(this.total / this.limit);
+  }
+
+  cover(manga: MangaResponse): string {
+    return `/media/${manga.id}/cover.jpg?version=${manga.version}`;
+  }
+
+  to(manga: MangaResponse): string {
+    return `/manga/${manga.id}`;
   }
 
   async getManga(): Promise<void> {
@@ -123,7 +120,7 @@ export default class MangaPage extends Vue {
     );
 
     if (response.data) {
-      this.rawManga = response.data.results;
+      this.manga = response.data.results;
       this.total = response.data.total;
     } else {
       this.alert = response.error ?? "";

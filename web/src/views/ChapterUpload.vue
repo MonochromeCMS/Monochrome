@@ -8,13 +8,13 @@
             UPLOAD CHAPTER
           </v-card-title>
           <manga-row
-            v-if="manga"
+            :loading="!manga"
             :manga="manga"
             :cover="`/media/${mangaId}/cover.jpg`"
             class="background rounded"
           />
           <v-card-text>
-            <upload-form :mangaId="mangaId" />
+            <upload-form :chapter="null" :mangaId="mangaId" />
           </v-card-text>
         </v-card>
       </v-col>

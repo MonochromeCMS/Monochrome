@@ -93,7 +93,11 @@
         <v-expansion-panel>
           <v-expansion-panel-header> Preview </v-expansion-panel-header>
           <v-expansion-panel-content>
-            <manga-row :loading="false" :manga="params" :cover="url(cover)" />
+            <manga-row
+              :loading="false"
+              :manga="params"
+              :cover="url(cover) || ''"
+            />
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
@@ -138,7 +142,7 @@ extend("digits", {
   },
 })
 export default class MangaForm extends Vue {
-  @Prop() readonly manga!: MangaResponse;
+  @Prop() readonly manga!: MangaResponse | null;
 
   title = "";
   description = "";

@@ -7,7 +7,7 @@
             CREATE MANGA
           </v-card-title>
           <v-card-text>
-            <manga-form />
+            <manga-form :manga="null" />
           </v-card-text>
         </v-card>
       </v-col>
