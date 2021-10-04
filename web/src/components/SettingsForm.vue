@@ -1,6 +1,5 @@
 <template>
   <validation-observer ref="observer">
-    <v-alert type="success" v-if="success" dense> . </v-alert>
     <v-form @submit.prevent="submit">
       <!-- TITLE FIELD -->
       <v-row>
