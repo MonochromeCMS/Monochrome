@@ -67,7 +67,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Watch } from 'vue-property-decorator';
+import { Vue, Component, Prop, Watch, VModel } from 'vue-property-decorator';
 import ChapterDelete from '@/components/ChapterDelete.vue';
 import type { ChapterResponse } from '@/api/Chapter';
 import Manga from '@/api/Manga';
@@ -76,9 +76,9 @@ import Manga from '@/api/Manga';
   components: { ChapterDelete },
 })
 export default class MangaChapters extends Vue {
-  @Prop() readonly value!: string;
-
   @Prop() readonly mangaId!: string;
+
+  @VModel({ type: String }) firstChapter!: string;
 
   chapters: ChapterResponse[] = [];
 
@@ -120,7 +120,12 @@ export default class MangaChapters extends Vue {
     if (response.data) {
       this.chapters = response.data;
     } else {
-      this.dispatchValue(response.error ?? '');
+      const notification = {
+        context: 'Get manga chapters',
+        message: response.error ?? '',
+        color: 'error',
+      };
+      this.$store.commit('addNotification', notification);
     }
 
     this.loading = false;
@@ -148,7 +153,7 @@ export default class MangaChapters extends Vue {
   @Watch('chapters')
   onChaptersUpdate(): void {
     if (this.chapters.length > 0) {
-      this.dispatchValue(null, this.chapters[this.chapters.length - 1]?.id);
+      this.firstChapter = this.chapters[this.chapters.length - 1].id;
     }
   }
 

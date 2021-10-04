@@ -1,8 +1,5 @@
 <template>
   <validation-observer ref="observer">
-    <v-alert type="error" v-if="alert !== ''" dense class="mb-7">
-      {{ alert }}
-    </v-alert>
     <v-form @submit.prevent="submit">
       <validation-provider v-slot="{ errors }" name="Username/email" rules="required">
         <v-text-field
@@ -57,8 +54,6 @@ export default class LoginForm extends Vue {
 
   showPass = false;
 
-  alert = '';
-
   get params(): any {
     return {
       username: this.username,
@@ -75,7 +70,6 @@ export default class LoginForm extends Vue {
   }
 
   clear(): void {
-    this.alert = '';
     this.username = '';
     this.password = '';
   }
@@ -86,7 +80,12 @@ export default class LoginForm extends Vue {
     if (response.data) {
       this.clear();
     } else {
-      this.alert = response.error ?? '';
+      const notification = {
+        context: 'Login',
+        message: response.error ?? '',
+        color: 'error',
+      };
+      this.$store.commit('addNotification', notification);
     }
   }
 }

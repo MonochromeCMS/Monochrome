@@ -1,6 +1,5 @@
 <template>
   <v-container fluid class="reader">
-    <v-alert v-if="alert !== ''" type="error">{{ alert }}</v-alert>
     <v-row v-if="chapter">
       <v-col cols="12" v-if="['Vertical', 'Webtoon'].includes(readerMode)">
         <vertical-reader
@@ -50,8 +49,6 @@ export default class ChapterReader extends Vue {
   chapter: DetailedChapterResponse | null = null;
 
   chapters: any[] = [];
-
-  alert = '';
 
   get chapterId(): string {
     return this.$route.params.chapter;
@@ -109,7 +106,12 @@ export default class ChapterReader extends Vue {
       this.chapters = [{ value: this.chapterId, text: this.chapterName(response.data) }];
       await this.getChapters(response.data.mangaId);
     } else {
-      this.alert = response.error ?? '';
+      const notification = {
+        context: 'Get chapter',
+        message: response.error ?? '',
+        color: 'error',
+      };
+      this.$store.commit('addNotification', notification);
     }
   }
 
@@ -119,7 +121,12 @@ export default class ChapterReader extends Vue {
     if (response.data) {
       this.chapters = response.data;
     } else {
-      this.alert = response.error ?? '';
+      const notification = {
+        context: 'Get manga chapters',
+        message: response.error ?? '',
+        color: 'error',
+      };
+      this.$store.commit('addNotification', notification);
     }
   }
 

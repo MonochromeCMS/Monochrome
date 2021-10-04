@@ -17,12 +17,7 @@
       </v-col>
     </v-row>
     <v-row v-else>
-      <v-col v-if="alert !== ''">
-        <v-alert type="error" v-if="alert !== ''">
-          {{ alert }}
-        </v-alert>
-      </v-col>
-      <v-col v-else-if="manga.length === 0" class="text-center text-body-1">
+      <v-col v-if="manga.length === 0" class="text-center text-body-1">
         {{ search ? 'No manga could be found.' : 'No manga has been added yet.' }}
       </v-col>
       <v-col v-else cols="12" sm="6" md="4" lg="3" v-for="(item, index) in manga" :key="index">
@@ -69,8 +64,6 @@ export default class MangaPage extends Vue {
 
   page = 1;
 
-  alert = '';
-
   total = 0;
 
   statusColor = {
@@ -105,7 +98,12 @@ export default class MangaPage extends Vue {
       this.manga = response.data.results;
       this.total = response.data.total;
     } else {
-      this.alert = response.error ?? '';
+      const notification = {
+        context: 'Manga pagination',
+        message: response.error ?? '',
+        color: 'error',
+      };
+      this.$store.commit('addNotification', notification);
     }
 
     this.loading = false;

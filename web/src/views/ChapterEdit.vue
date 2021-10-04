@@ -3,7 +3,6 @@
     <v-row>
       <v-col cols="12" lg="10" class="mx-auto">
         <v-card rounded="lg" color="backgroundAlt" elevation="0" class="pa-4">
-          <v-alert v-if="alert !== ''" type="error">{{ alert }}</v-alert>
           <v-card-title class="justify-center lemon-milk">EDIT CHAPTER</v-card-title>
           <manga-row
             :loading="!manga"
@@ -36,8 +35,6 @@ export default class About extends Vue {
 
   chapter: DetailedChapterResponse | null = null;
 
-  alert = '';
-
   get chapterId(): string {
     return this.$route.params.chapter;
   }
@@ -53,7 +50,12 @@ export default class About extends Vue {
       this.chapter = response.data;
       this.manga = response.data.manga;
     } else {
-      this.alert = response.error ?? '';
+      const notification = {
+        context: 'Get chapter',
+        message: response.error ?? '',
+        color: 'error',
+      };
+      this.$store.commit('addNotification', notification);
     }
   }
 

@@ -16,7 +16,7 @@ export interface ChapterResponse extends ChapterSchema {
   version: number;
   mangaId: string;
   length: number;
-  uploadTime: Date;
+  uploadTime: string;
 }
 
 export interface DetailedChapterResponse extends ChapterResponse {

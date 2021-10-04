@@ -15,9 +15,6 @@
     </template>
     <v-card>
       <v-card-title class="text-h5 background mb-2"> Warning </v-card-title>
-      <v-alert type="error" v-if="alert !== ''" dense class="ma-3">
-        {{ alert }}
-      </v-alert>
       <v-card-text class="body-1">
         <span class="font-weight-bold">This action can't be undone!</span>
         Are you sure you want to delete this user?
@@ -49,8 +46,6 @@ export default class UserDeleteButton extends Vue {
 
   dialog = false;
 
-  alert = '';
-
   @Emit('update')
   update(): boolean {
     return true;
@@ -68,7 +63,12 @@ export default class UserDeleteButton extends Vue {
       this.$emit('update', true);
       this.dialog = false;
     } else {
-      this.alert = response.error ?? '';
+      const notification = {
+        context: 'Delete user',
+        message: response.error ?? '',
+        color: 'error',
+      };
+      this.$store.commit('addNotification', notification);
     }
     if (response.status === 401) {
       this.$store.commit('logout');

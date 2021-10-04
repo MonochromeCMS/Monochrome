@@ -3,7 +3,6 @@
     <v-row>
       <v-col cols="12" lg="10" class="mx-auto">
         <v-card rounded="lg" color="backgroundAlt" elevation="0" class="pa-4">
-          <v-alert v-if="alert !== ''" type="error">{{ alert }}</v-alert>
           <v-card-title class="justify-center lemon-milk"> UPLOAD CHAPTER </v-card-title>
           <manga-row
             :loading="!manga"
@@ -12,7 +11,7 @@
             class="background rounded"
           />
           <v-card-text>
-            <upload-form :chapter="null" :mangaId="mangaId" />
+            <upload-form v-if="manga" :chapter="null" :mangaId="mangaId" />
           </v-card-text>
         </v-card>
       </v-col>
@@ -33,8 +32,6 @@ import Manga from '@/api/Manga';
 export default class ChapterUpload extends Vue {
   manga: MangaResponse | null = null;
 
-  alert = '';
-
   get mangaId(): string {
     return this.$route.params.manga;
   }
@@ -49,7 +46,12 @@ export default class ChapterUpload extends Vue {
     if (response.data) {
       this.manga = response.data;
     } else {
-      this.alert = response.error ?? '';
+      const notification = {
+        context: 'Get manga',
+        message: response.error ?? '',
+        color: 'error',
+      };
+      this.$store.commit('addNotification', notification);
     }
   }
 

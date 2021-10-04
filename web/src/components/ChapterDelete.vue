@@ -5,7 +5,6 @@
     </template>
 
     <v-card>
-      <v-alert type="error" v-if="alert !== ''">{{ alert }}</v-alert>
       <v-card-title class="text-h5 background mb-2"> Warning </v-card-title>
 
       <v-card-text class="body-1">
@@ -33,8 +32,6 @@ import Chapter from '@/api/Chapter';
 export default class ChapterDelete extends Vue {
   dialog = false;
 
-  alert = '';
-
   @Prop() readonly id!: string;
 
   get authConfig(): AxiosRequestConfig {
@@ -48,7 +45,12 @@ export default class ChapterDelete extends Vue {
       this.$emit('input', true);
       this.dialog = false;
     } else {
-      this.alert = response.error ?? '';
+      const notification = {
+        context: 'Delete chapter',
+        message: response.error ?? '',
+        color: 'error',
+      };
+      this.$store.commit('addNotification', notification);
     }
 
     if (response.status === 401) {

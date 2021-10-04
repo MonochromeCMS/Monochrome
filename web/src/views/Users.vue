@@ -59,8 +59,6 @@ import User from '@/api/User';
   components: { UsersList, UserForm },
 })
 export default class About extends Vue {
-  alert = '';
-
   page = 1;
 
   total = 0;
@@ -103,7 +101,12 @@ export default class About extends Vue {
       this.total = response.data.total;
       this.users = response.data.results;
     } else {
-      this.alert = response.error ?? '';
+      const notification = {
+        context: 'Get users',
+        message: response.error ?? '',
+        color: 'error',
+      };
+      this.$store.commit('addNotification', notification);
     }
     if (response.status === 401) {
       this.$store.commit('logout');

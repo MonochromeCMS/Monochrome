@@ -4,7 +4,6 @@
       <v-col>
         <v-sheet rounded="lg" color="backgroundAlt">
           <v-container>
-            <v-alert type="error" v-if="alert !== ''">{{ alert }}</v-alert>
             <manga-row :loading="loading" :manga="manga" :cover="cover || ''">
               <div v-if="isConnected || firstChapter" class="d-flex flex-wrap">
                 <v-btn
@@ -52,7 +51,7 @@
                 </v-dialog>
               </div>
             </manga-row>
-            <manga-chapters :manga-id="mangaId" v-model="chapterModel" />
+            <manga-chapters :manga-id="mangaId" v-model="firstChapter" />
           </v-container>
         </v-sheet>
       </v-col>
@@ -76,9 +75,7 @@ export default class MangaDetail extends Vue {
 
   loading = true;
 
-  mangaAlert = '';
-
-  chapterModel = ['', ''];
+  firstChapter = '';
 
   deleteDialog = false;
 
@@ -91,14 +88,6 @@ export default class MangaDetail extends Vue {
       return `/media/${this.manga?.id}/cover.jpg?version=${this.manga?.version}`;
     }
     return null;
-  }
-
-  get alert(): string {
-    return this.mangaAlert || this.chapterModel[0];
-  }
-
-  get firstChapter(): any {
-    return this.chapterModel[1];
   }
 
   get isConnected(): boolean {
@@ -115,7 +104,12 @@ export default class MangaDetail extends Vue {
     if (response.data) {
       this.manga = response.data;
     } else {
-      this.mangaAlert = response.error ?? '';
+      const notification = {
+        context: 'Get manga',
+        message: response.error ?? '',
+        color: 'error',
+      };
+      this.$store.commit('addNotification', notification);
     }
 
     this.loading = false;
@@ -128,7 +122,12 @@ export default class MangaDetail extends Vue {
     if (response.data || response.status === 404) {
       await this.$router.push('/manga');
     } else {
-      this.mangaAlert = response.error ?? '';
+      const notification = {
+        context: 'Delete manga',
+        message: response.error ?? '',
+        color: 'error',
+      };
+      this.$store.commit('addNotification', notification);
     }
     if (response.status === 401) {
       this.$store.commit('logout');

@@ -1,8 +1,5 @@
 <template>
   <validation-observer ref="observer">
-    <v-alert type="error" v-if="alert !== ''" dense class="mb-7">
-      {{ alert }}
-    </v-alert>
     <v-form @submit.prevent="submit">
       <v-row class="mb-3">
         <!-- VOLUME FIELD -->
@@ -126,8 +123,6 @@ export default class UploadForm extends Vue {
 
   groupAutocomplete: string[] = [];
 
-  alert = '';
-
   name = '';
 
   volume = null;
@@ -177,7 +172,12 @@ export default class UploadForm extends Vue {
     if (response.data) {
       this.session = response.data;
     } else {
-      this.alert = response.error ?? '';
+      const notification = {
+        context: 'Create upload session',
+        message: response.error ?? '',
+        color: 'error',
+      };
+      this.$store.commit('addNotification', notification);
     }
     if (response.status === 401) {
       this.$store.commit('logout');
@@ -195,7 +195,12 @@ export default class UploadForm extends Vue {
     if (response.data) {
       await this.$router.push(`/chapters/${response.data.id}`);
     } else {
-      this.alert = response.error ?? '';
+      const notification = {
+        context: 'Commit upload session',
+        message: response.error ?? '',
+        color: 'error',
+      };
+      this.$store.commit('addNotification', notification);
     }
     if (response.status === 401) {
       this.$store.commit('logout');
@@ -208,7 +213,12 @@ export default class UploadForm extends Vue {
     if (response.data) {
       await this.$router.push(`/manga/${this.mangaId}/${response.data.id}`);
     } else {
-      this.alert = response.error ?? '';
+      const notification = {
+        context: 'Edit settings',
+        message: response.error ?? '',
+        color: 'error',
+      };
+      this.$store.commit('addNotification', notification);
     }
     if (response.status === 401) {
       this.$store.commit('logout');
@@ -221,7 +231,12 @@ export default class UploadForm extends Vue {
     if (response.data) {
       this.groupAutocomplete = response.data;
     } else {
-      this.alert = response.error ?? '';
+      const notification = {
+        context: 'Group autocomplete',
+        message: response.error ?? '',
+        color: 'error',
+      };
+      this.$store.commit('addNotification', notification);
     }
   }
 

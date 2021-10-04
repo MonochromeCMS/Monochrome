@@ -6,9 +6,6 @@
         <v-alert type="warning" v-if="ownUser" dense class="ma-3">
           You'll be logged out after editing your own user !
         </v-alert>
-        <v-alert type="error" v-if="alert !== ''" dense class="ma-3">
-          {{ alert }}
-        </v-alert>
         <v-card-text>
           <validation-provider v-slot="{ errors }" name="Username" rules="required|max:15">
             <v-text-field
@@ -100,8 +97,6 @@ export default class UserForm extends Vue {
 
   showPass = false;
 
-  alert = '';
-
   loading = false;
 
   mounted(): void {
@@ -142,7 +137,6 @@ export default class UserForm extends Vue {
   }
 
   clear(): void {
-    this.alert = '';
     this.username = '';
     this.email = null;
     this.password = '';
@@ -156,7 +150,12 @@ export default class UserForm extends Vue {
       this.$emit('update', true);
       this.close();
     } else {
-      this.alert = response.error ?? '';
+      const notification = {
+        context: 'Edit user',
+        message: response.error ?? '',
+        color: 'error',
+      };
+      this.$store.commit('addNotification', notification);
     }
     if (response.status === 401) {
       this.$store.commit('logout');
@@ -174,7 +173,12 @@ export default class UserForm extends Vue {
       this.clear();
       this.close();
     } else {
-      this.alert = response.error ?? '';
+      const notification = {
+        context: 'Create user',
+        message: response.error ?? '',
+        color: 'error',
+      };
+      this.$store.commit('addNotification', notification);
     }
     if (response.status === 401) {
       this.$store.commit('logout');

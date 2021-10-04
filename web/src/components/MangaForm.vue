@@ -1,8 +1,5 @@
 <template>
   <validation-observer ref="observer">
-    <v-alert type="error" v-if="alert !== ''" dense class="mb-7">
-      {{ alert }}
-    </v-alert>
     <v-form @submit.prevent="submit">
       <!-- TITLE FIELD -->
       <validation-provider v-slot="{ errors }" name="Title" rules="required">
@@ -135,8 +132,6 @@ export default class MangaForm extends Vue {
 
   status: Status | null = null;
 
-  alert = '';
-
   cover: File | null = null;
 
   buffer = null;
@@ -184,7 +179,6 @@ export default class MangaForm extends Vue {
   }
 
   clear(): void {
-    this.alert = '';
     this.title = '';
     this.description = '';
     this.author = '';
@@ -199,7 +193,12 @@ export default class MangaForm extends Vue {
     if (response.data) {
       await this.setCover(response.data.id, this.cover);
     } else {
-      this.alert = response.error ?? '';
+      const notification = {
+        context: 'Create manga',
+        message: response.error ?? '',
+        color: 'error',
+      };
+      this.$store.commit('addNotification', notification);
     }
     if (response.status === 401) {
       this.$store.commit('logout');
@@ -216,7 +215,12 @@ export default class MangaForm extends Vue {
         await this.$router.push(`/manga/${id}`);
       }
     } else {
-      this.alert = response.error ?? '';
+      const notification = {
+        context: 'Edit manga',
+        message: response.error ?? '',
+        color: 'error',
+      };
+      this.$store.commit('addNotification', notification);
     }
     if (response.status === 401) {
       this.$store.commit('logout');
@@ -233,7 +237,12 @@ export default class MangaForm extends Vue {
     if (response.data) {
       await this.$router.push(`/manga/${mangaId}`);
     } else {
-      this.alert = response.error ?? '';
+      const notification = {
+        context: 'Set cover',
+        message: response.error ?? '',
+        color: 'error',
+      };
+      this.$store.commit('addNotification', notification);
     }
     if (response.status === 401) {
       this.$store.commit('logout');

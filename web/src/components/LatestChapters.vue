@@ -35,10 +35,7 @@
       </v-col>
     </v-row>
     <v-row v-else class="mx-0 mb-0">
-      <v-col cols="12" v-if="alert !== ''">
-        <v-alert type="error">{{ alert }}</v-alert>
-      </v-col>
-      <v-col cols="12" class="text-center text-body-1" v-else-if="chapters.length === 0">
+      <v-col cols="12" class="text-center text-body-1" v-if="chapters.length === 0">
         No chapters have been uploaded yet.
       </v-col>
       <v-col
@@ -103,8 +100,6 @@ export default class LatestChapters extends Vue {
 
   loading = true;
 
-  alert = '';
-
   chapters: DetailedChapterResponse[] = [];
 
   get pageAmount(): number {
@@ -131,7 +126,12 @@ export default class LatestChapters extends Vue {
       this.chapters = response.data.results;
       this.total = response.data.total;
     } else {
-      this.alert = response.error ?? '';
+      const notification = {
+        context: 'Latest chapters',
+        message: response.error ?? '',
+        color: 'error',
+      };
+      this.$store.commit('addNotification', notification);
     }
 
     this.loading = false;

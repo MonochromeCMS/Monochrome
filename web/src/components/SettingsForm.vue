@@ -1,9 +1,6 @@
 <template>
   <validation-observer ref="observer">
-    <v-alert type="success" v-if="success" dense> The settings have been updated. </v-alert>
-    <v-alert type="error" v-else-if="alert !== ''" dense>
-      {{ alert }}
-    </v-alert>
+    <v-alert type="success" v-if="success" dense> . </v-alert>
     <v-form @submit.prevent="submit">
       <!-- TITLE FIELD -->
       <v-row>
@@ -85,10 +82,6 @@ export default class SettingsForm extends Vue {
 
   about?: string | null = null;
 
-  success = false;
-
-  alert = '';
-
   get params(): any {
     return {
       title1: this.title1 || null,
@@ -118,15 +111,23 @@ export default class SettingsForm extends Vue {
   }
 
   async editSettings(params: SettingsSchema): Promise<void> {
-    this.success = false;
-
     const response = await Settings.edit(params, this.authConfig);
 
     if (response.data) {
       this.$store.commit('setSettings', response.data);
-      this.success = true;
+      const notification = {
+        context: 'Edit settings',
+        message: 'The settings have been updated',
+        color: 'success',
+      };
+      this.$store.commit('addNotification', notification);
     } else {
-      this.alert = response.error ?? '';
+      const notification = {
+        context: 'Edit settings',
+        message: response.error ?? '',
+        color: 'error',
+      };
+      this.$store.commit('addNotification', notification);
     }
     if (response.status === 401) {
       this.$store.commit('logout');

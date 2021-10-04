@@ -22,12 +22,7 @@
             </v-list-item>
           </template>
         </v-list>
-        <div v-if="manga.length === 0 && alert === ''" class="text-center mb-2">
-          No manga has been added yet.
-        </div>
-        <v-alert type="error" v-if="alert !== ''">
-          {{ alert }}
-        </v-alert>
+        <div v-if="manga.length === 0" class="text-center mb-2">No manga has been added yet.</div>
       </v-col>
     </v-row>
     <v-row v-else>
@@ -56,8 +51,6 @@ export default class LatestManga extends Vue {
 
   limit = 5;
 
-  alert = '';
-
   total = 0;
 
   get manga(): any[] {
@@ -84,7 +77,12 @@ export default class LatestManga extends Vue {
       this.rawManga = response.data.results;
       this.total = response.data.total;
     } else {
-      this.alert = response.error ?? '';
+      const notification = {
+        context: 'Latest manga',
+        message: response.error ?? '',
+        color: 'error',
+      };
+      this.$store.commit('addNotification', notification);
     }
 
     this.loading = false;

@@ -1,7 +1,6 @@
 <template>
   <v-container>
     <h2 class="text-h4 mt-0 mb-3">Pages</h2>
-    <v-alert v-if="alert !== ''" type="error">{{ alert }}</v-alert>
     <draggable class="drag-pages" v-model="pages">
       <template v-for="(item, index) in pages">
         <v-col cols="6" sm="4" md="3" xl="2" :key="index">
@@ -72,8 +71,6 @@ export default class PageInput extends Vue {
 
   pageUpload = null;
 
-  alert = '';
-
   get authConfig(): AxiosRequestConfig {
     return this.$store.getters.authConfig;
   }
@@ -115,7 +112,12 @@ export default class PageInput extends Vue {
     if (response.data) {
       this.pages.push(...response.data);
     } else {
-      this.alert = response.error ?? '';
+      const notification = {
+        context: 'File upload',
+        message: response.error ?? '',
+        color: 'error',
+      };
+      this.$store.commit('addNotification', notification);
     }
     if (response.status === 401) {
       this.$store.commit('logout');
@@ -132,7 +134,12 @@ export default class PageInput extends Vue {
     if (response.data || response.status === 404) {
       this.pages = this.pages.slice(0, index).concat(this.pages.slice(index + 1));
     } else {
-      this.alert = response.error ?? '';
+      const notification = {
+        context: 'Delete page',
+        message: response.error ?? '',
+        color: 'error',
+      };
+      this.$store.commit('addNotification', notification);
     }
     if (response.status === 401) {
       this.$store.commit('logout');

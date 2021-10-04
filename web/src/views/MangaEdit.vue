@@ -5,7 +5,6 @@
         <v-card rounded="lg" color="backgroundAlt" elevation="0" class="pa-4">
           <v-card-title class="justify-center lemon-milk"> EDIT MANGA </v-card-title>
           <v-card-text>
-            <v-alert type="error" v-if="alert !== ''">{{ alert }}</v-alert>
             <manga-form v-if="manga" :manga="manga" />
           </v-card-text>
         </v-card>
@@ -26,8 +25,6 @@ import Manga from '@/api/Manga';
 export default class MangaEdit extends Vue {
   manga: MangaResponse | null = null;
 
-  alert = '';
-
   get id(): string {
     return this.$route.params.manga;
   }
@@ -42,7 +39,12 @@ export default class MangaEdit extends Vue {
     if (response.data) {
       this.manga = response.data;
     } else {
-      this.alert = response.error ?? '';
+      const notification = {
+        context: 'Get manga',
+        message: response.error ?? '',
+        color: 'error',
+      };
+      this.$store.commit('addNotification', notification);
     }
   }
 

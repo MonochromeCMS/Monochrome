@@ -91,7 +91,9 @@ export default class Upload extends Base {
     }
 
     const form = new FormData();
-    files.forEach((file) => form.append('payload', file));
+    for (const file of files) {
+      form.append('payload', file);
+    }
 
     const config: AxiosRequestConfig = {
       ...auth,
