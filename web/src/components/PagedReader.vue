@@ -47,6 +47,7 @@
       <v-carousel-item v-for="index in amountTabs" :key="index">
         <div v-if="double" class="d-flex justify-center">
           <v-img
+            v-if="urls[2 * index - 2]"
             :class="`${fit} half-page left`"
             contain
             :src="urls[2 * index - 2]"
@@ -59,6 +60,7 @@
             </template>
           </v-img>
           <v-img
+            v-if="urls[2 * index - 1]"
             :class="`${fit} half-page right`"
             contain
             :src="urls[2 * index - 1]"
