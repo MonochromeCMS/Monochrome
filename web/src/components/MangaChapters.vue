@@ -57,7 +57,7 @@
       <v-col cols="12" v-if="pageAmount > 1">
         <v-pagination
           class="mx-auto"
-          color="background"
+          color="background text--primary"
           v-model="page"
           :length="pageAmount"
         ></v-pagination>

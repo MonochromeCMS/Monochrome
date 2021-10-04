@@ -43,7 +43,7 @@
     <v-row v-if="pageAmount > 1">
       <v-pagination
         class="mx-auto pb-4"
-        color="background"
+        color="background text--primary"
         v-model="page"
         :length="pageAmount"
       ></v-pagination>

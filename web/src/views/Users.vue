@@ -3,7 +3,6 @@
     <v-row>
       <v-col cols="12" md="10" lg="8" class="mx-auto">
         <v-card rounded="lg" color="backgroundAlt" elevation="0" class="pa-4">
-          <v-alert v-if="alert !== ''" type="error">{{ alert }}</v-alert>
           <v-card-title class="justify-center lemon-milk"> HANDLE USERS </v-card-title>
           <v-card-text>
             <users-list :loading="loading" :users="users" @update="getUsers">
@@ -35,7 +34,7 @@
               <v-row class="user-row" v-if="pageAmount > 1">
                 <v-pagination
                   class="mx-auto pb-4"
-                  color="backgroundAlt"
+                  color="backgroundAlt text--primary"
                   v-model="page"
                   :length="pageAmount"
                 ></v-pagination>

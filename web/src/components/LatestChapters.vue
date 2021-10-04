@@ -79,7 +79,7 @@
       <v-pagination
         v-if="pageAmount > 1"
         class="mx-auto pb-4"
-        color="background"
+        color="background text--primary"
         v-model="page"
         :length="pageAmount"
       >
