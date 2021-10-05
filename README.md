@@ -30,6 +30,7 @@ unique username and password is very recommended.*
 * `DB_USER` User to connect the database with.
 * `DB_PASSWORD` Password of that user.
 * `SECRET_KEY` Secret used to encrypt the connections, change it asap.
+* `SESSION_SECRET_KEY` Secret used to encrypt the session of the client, change it as well.
 
 *Note: Those can and are recommended to be completely random, to generate them you can use* `make secret`
 

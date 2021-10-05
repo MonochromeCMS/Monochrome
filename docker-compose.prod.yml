@@ -30,6 +30,7 @@ services:
         - VUE_APP_TITLE=${TITLE}
         - VUE_APP_DESCRIPTION=${DESCRIPTION}
         - VUE_APP_PROTOCOL=https
+        - VUE_APP_SECRET=${SESSION_SECRET_KEY}
     volumes:
     - ./media:/srv/media
     - caddy_data:/data
