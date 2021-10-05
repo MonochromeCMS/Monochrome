@@ -1,10 +1,8 @@
 <template>
-  <v-snackbar
-    :value="notification"
-    :color="notification ? notification.color : 'error'"
-    timeout="-1"
-  >
-    {{ notification ? `${notification.context}: ${notification.message}` : 'ERROR' }}
+  <v-snackbar :value="notificationsAmount" :color="notification ? notification.color : 'info'">
+    {{
+      notification ? `${notification.context}: ${notification.message}` : 'No notifications left'
+    }}
 
     <template v-slot:action="{ attrs }">
       <v-badge

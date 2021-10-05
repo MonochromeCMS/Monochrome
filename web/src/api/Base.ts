@@ -27,7 +27,7 @@ export default class Base {
 
   public static _delay() {
     return new Promise((resolve) => {
-      setTimeout(() => resolve('done!'), 450);
+      setTimeout(() => resolve('done!'), 300);
     });
   }
 

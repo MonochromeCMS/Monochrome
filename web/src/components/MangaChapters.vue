@@ -125,7 +125,7 @@ export default class MangaChapters extends Vue {
         message: response.error ?? '',
         color: 'error',
       };
-      this.$store.commit('addNotification', notification);
+      await this.$store.dispatch('pushNotification', notification);
     }
 
     this.loading = false;

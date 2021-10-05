@@ -85,7 +85,7 @@ export default class LoginForm extends Vue {
         message: response.error ?? '',
         color: 'error',
       };
-      this.$store.commit('addNotification', notification);
+      await this.$store.dispatch('pushNotification', notification);
     }
   }
 }

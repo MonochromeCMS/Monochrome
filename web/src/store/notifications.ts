@@ -1,3 +1,5 @@
+import type { ActionContext } from 'vuex';
+
 export interface NotificationInput {
   color: 'success' | 'error' | 'warning';
   message: string;
@@ -12,6 +14,7 @@ export interface Notification {
 
 interface NotificationsState {
   notifications: Notification[];
+  notificationsAmount: number;
 }
 
 const colors = {
@@ -22,6 +25,7 @@ const colors = {
 
 const state = (): NotificationsState => ({
   notifications: [],
+  notificationsAmount: 0,
 });
 
 const getters = {
@@ -30,7 +34,7 @@ const getters = {
     return length > 0 ? state.notifications[length - 1] : null;
   },
   notificationsAmount(state: NotificationsState): number {
-    return state.notifications.length;
+    return state.notificationsAmount;
   },
 };
 
@@ -38,11 +42,34 @@ const mutations = {
   closeNotification(state: NotificationsState): void {
     if (state.notifications.length > 0) {
       state.notifications = state.notifications.slice(0, -1);
+      state.notificationsAmount = state.notifications.length;
     }
   },
   addNotification(state: NotificationsState, payload: NotificationInput): void {
     const notification = { ...payload, color: colors[payload.color] };
     state.notifications = state.notifications.concat([notification]);
+  },
+  updateAmount(state: NotificationsState, payload: number) {
+    state.notificationsAmount = payload;
+  },
+};
+
+const actions = {
+  async pushNotification(
+    { commit, state, dispatch }: ActionContext<NotificationsState, any>,
+    payload: NotificationInput,
+  ): Promise<void> {
+    commit('addNotification', payload);
+    await dispatch('deferAmount');
+  },
+  async deferAmount({ commit, state }: ActionContext<NotificationsState, any>): Promise<void> {
+    const delay = new Promise((resolve) => {
+      setTimeout(() => resolve('done!'), 300);
+    });
+
+    commit('updateAmount', 0);
+    await delay;
+    commit('updateAmount', state.notifications.length);
   },
 };
 
@@ -50,4 +77,5 @@ export default {
   state,
   getters,
   mutations,
+  actions,
 };

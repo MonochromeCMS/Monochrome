@@ -198,7 +198,7 @@ export default class MangaForm extends Vue {
         message: response.error ?? '',
         color: 'error',
       };
-      this.$store.commit('addNotification', notification);
+      await this.$store.dispatch('pushNotification', notification);
     }
     if (response.status === 401) {
       this.$store.commit('logout');
@@ -220,7 +220,7 @@ export default class MangaForm extends Vue {
         message: response.error ?? '',
         color: 'error',
       };
-      this.$store.commit('addNotification', notification);
+      await this.$store.dispatch('pushNotification', notification);
     }
     if (response.status === 401) {
       this.$store.commit('logout');
@@ -242,7 +242,7 @@ export default class MangaForm extends Vue {
         message: response.error ?? '',
         color: 'error',
       };
-      this.$store.commit('addNotification', notification);
+      await this.$store.dispatch('pushNotification', notification);
     }
     if (response.status === 401) {
       this.$store.commit('logout');

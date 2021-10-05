@@ -119,14 +119,14 @@ export default class SettingsForm extends Vue {
         message: 'The settings have been updated',
         color: 'success',
       };
-      this.$store.commit('addNotification', notification);
+      await this.$store.dispatch('pushNotification', notification);
     } else {
       const notification = {
         context: 'Edit settings',
         message: response.error ?? '',
         color: 'error',
       };
-      this.$store.commit('addNotification', notification);
+      await this.$store.dispatch('pushNotification', notification);
     }
     if (response.status === 401) {
       this.$store.commit('logout');

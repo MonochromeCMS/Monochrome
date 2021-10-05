@@ -3,10 +3,11 @@ import Vuex from 'vuex';
 import createPersistedState from 'vuex-persistedstate';
 import SecureLS from 'secure-ls';
 
-const ls = new SecureLS( {
+const ls = new SecureLS({
   encodingType: 'rabbit',
   isCompression: false,
-  encryptionSecret: process.env.VUE_APP_SECRET });
+  encryptionSecret: process.env.VUE_APP_SECRET,
+});
 
 import notifications from './notifications';
 import user from './user';
@@ -22,7 +23,7 @@ const persistedStateConf = {
     setItem: (key: string, value: any) => ls.set(key, value),
     removeItem: (key: string) => ls.remove(key),
   },
-}
+};
 
 export default new Vuex.Store({
   modules: { notifications, user, reader, settings },
