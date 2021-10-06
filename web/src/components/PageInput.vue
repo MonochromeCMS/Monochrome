@@ -31,10 +31,11 @@
       </v-col>
     </draggable>
     <v-btn text @click="quickSort"> Quick sort </v-btn>
+    <v-btn text color="error" @click="deletePages"> Delete all </v-btn>
     <input ref="fileInput" type="file" @input="updateFile" multiple style="display: none" />
     <div>
       <ul>
-        <li>Supported image formats are JPEG, PNG, GIF, BMP and WebP.</li>
+        <li>Supported image formats are JPEG, PNG, BMP and WebP.</li>
         <li>You can upload multiple images at the same time.</li>
       </ul>
     </div>
@@ -136,6 +137,28 @@ export default class PageInput extends Vue {
     } else {
       const notification = {
         context: 'Delete page',
+        message: response.error ?? '',
+        color: 'error',
+      };
+      await this.$store.dispatch('pushNotification', notification);
+    }
+    if (response.status === 401) {
+      this.$store.commit('logout');
+    }
+
+    this.deleting = false;
+  }
+
+  async deletePages(): Promise<void> {
+    this.deleting = true;
+
+    const response = await Upload.deleteAllBlob(this.session.id, this.authConfig);
+
+    if (response.data) {
+      this.pages = [];
+    } else {
+      const notification = {
+        context: 'Delete all pages',
         message: response.error ?? '',
         color: 'error',
       };

@@ -214,4 +214,26 @@ export default class Upload extends Base {
     }
     return result;
   }
+
+  public static async deleteAllBlob(sessionId: string, auth: AxiosRequestConfig) {
+    const url = `/${sessionId}/files`;
+    const response = await Upload._delete(url, auth);
+
+    const result: ApiResponse<string> = Upload._apiResponse(response.status);
+
+    switch (response.status) {
+      case 200:
+        result.data = 'OK';
+        break;
+      case 401:
+        result.error = 'Please log in again';
+        break;
+      case 404:
+        result.error = 'Upload session not found';
+        break;
+      default:
+        result.error = response.data.detail ?? response.statusText;
+    }
+    return result;
+  }
 }

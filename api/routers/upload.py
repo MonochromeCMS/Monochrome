@@ -250,6 +250,39 @@ async def commit_upload_session(
     return JSONResponse(status_code=(200 if edit else 201), content=content)
 
 
+delete_all_blobs_responses = {
+    **get_responses,
+    200: {
+        "description": "All the uploaded images were deleted",
+        "content": {
+            "application/json": {
+                "example": "OK",
+            },
+        },
+    },
+}
+
+
+@router.delete("/{session}/files", responses=delete_all_blobs_responses)
+async def delete_all_pages_from_upload_session(
+    session: UUID,
+    tasks: BackgroundTasks,
+    db_session: AsyncSession = Depends(get_db),
+):
+    session = await UploadSession.find_rel(
+        db_session, session, UploadSession.blobs, NotFoundHTTPException("Session not found")
+    )
+
+    session_images = (b.id for b in session.blobs)
+    tasks.add_task(delete_session_images, session_images)
+
+    for blob in session.blobs:
+        blob_id = blob.id
+        await blob.delete(db_session)
+
+    return "OK"
+
+
 delete_blob_responses = {
     **get_responses,
     400: {
@@ -257,7 +290,7 @@ delete_blob_responses = {
         **BadRequestHTTPException.open_api("The blob doesn't exist in the session"),
     },
     200: {
-        "description": "The upload session was deleted",
+        "description": "The uploaded image was deleted",
         "content": {
             "application/json": {
                 "example": "OK",
