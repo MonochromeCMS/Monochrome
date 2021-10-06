@@ -109,7 +109,7 @@ export default class Upload extends Base {
         result.data = response.data;
         break;
       case 400:
-        result.error = "One of the images provided isn't valid";
+        result.error = "One of the files provided isn't valid";
         break;
       case 401:
         result.error = 'Please log in again';

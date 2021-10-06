@@ -14,6 +14,7 @@ class Settings(BaseSettings):
     jwt_access_toke_expire_minutes: int = 60
 
     media_path: str = "/media"
+    temp_path: str = "/temp"
 
     max_page_limit: int = Field(50, gt=0)
 

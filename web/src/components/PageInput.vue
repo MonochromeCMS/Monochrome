@@ -36,6 +36,7 @@
     <div>
       <ul>
         <li>Supported image formats are JPEG, PNG, BMP and WebP.</li>
+        <li>Compressed files are also supported. They must not contain any folders.</li>
         <li>You can upload multiple images at the same time.</li>
       </ul>
     </div>

@@ -56,22 +56,22 @@ class Base:
         await self.save(db_session)
 
     @classmethod
-    async def find(cls, db_session: AsyncSession, _id: uuid.UUID, exception=NotFoundHTTPException):
+    async def find(cls, db_session: AsyncSession, _id: uuid.UUID, exception=NotFoundHTTPException()):
         stmt = select(cls).where(cls.id == _id)
         result = await db_session.execute(stmt)
         instance = result.scalars().first()
         if instance is None:
-            raise exception()
+            raise exception
         else:
             return instance
 
     @classmethod
-    async def find_rel(cls, db_session: AsyncSession, _id: uuid.UUID, relationship, exception=NotFoundHTTPException):
+    async def find_rel(cls, db_session: AsyncSession, _id: uuid.UUID, relationship, exception=NotFoundHTTPException()):
         stmt = select(cls).where(cls.id == _id).options(joinedload(relationship))
         result = await db_session.execute(stmt)
         instance = result.scalars().first()
         if instance is None:
-            raise exception()
+            raise exception
         else:
             return instance
 

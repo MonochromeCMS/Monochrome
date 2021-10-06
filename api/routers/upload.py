@@ -1,7 +1,9 @@
-import os
 import shutil
 
 from typing import List, Tuple, Iterable
+from os import path, makedirs, listdir, remove
+from aiofiles import open
+from pyunpack import Archive
 from PIL import Image
 
 from uuid import UUID
@@ -26,10 +28,10 @@ router = APIRouter(prefix="/upload", tags=["Upload"], dependencies=[Depends(is_c
 
 
 def copy_chapter_to_session(chapter: Chapter, blobs: List[UUID]):
-    chapter_path = os.path.join(global_settings.media_path, str(chapter.manga_id), str(chapter.id))
-    blob_path = os.path.join(global_settings.media_path, "blobs")
+    chapter_path = path.join(global_settings.media_path, str(chapter.manga_id), str(chapter.id))
+    blob_path = path.join(global_settings.media_path, "blobs")
     for i in range(chapter.length):
-        shutil.copy(os.path.join(chapter_path, f"{i + 1}.jpg"), os.path.join(blob_path, f"{blobs[i]}.jpg"))
+        shutil.copy(path.join(chapter_path, f"{i + 1}.jpg"), path.join(blob_path, f"{blobs[i]}.jpg"))
 
 
 post_responses = {
@@ -64,6 +66,10 @@ async def begin_upload_session(
 
     session = UploadSession(**payload.dict())
     await session.save(db_session)
+
+    session_path = path.join(global_settings.temp_path, str(session.id))
+    makedirs(path.join(session_path, "zip"))
+    makedirs(path.join(session_path, "files"))
 
     if payload.chapter_id:
         blobs = []
@@ -102,10 +108,11 @@ async def get_upload_session(
     return session
 
 
-def save_session_image(files: Iterable[Tuple[str, File]]):
+def save_session_image(files: Iterable[Tuple[str, str]]):
     for blob_id, file in files:
         im = Image.open(file)
-        im.convert("RGB").save(os.path.join(global_settings.media_path, "blobs", f"{blob_id}.jpg"))
+        im.convert("RGB").save(path.join(global_settings.media_path, "blobs", f"{blob_id}.jpg"))
+        remove(file)
 
 
 post_blobs_responses = {
@@ -122,6 +129,11 @@ post_blobs_responses = {
 }
 
 
+def validate_image_extension(name: str):
+    extensions = (".jpeg", ".jpg", ".png", ".bmp", ".webp")
+    return any((name.lower().endswith(ext) for ext in extensions))
+
+
 @router.post(
     "/{id}",
     status_code=status.HTTP_201_CREATED,
@@ -133,27 +145,62 @@ async def upload_pages_to_upload_session(
     payload: List[UploadFile] = File(...),
     db_session: AsyncSession = Depends(get_db),
 ):
+    compressed_formats = (
+        "application/x-7z-compressed",
+        "application/x-xz",
+        "application/zip",
+        "application/x-rar-compressed",
+        "application/vnd.rar",
+    )
+
     for file in payload:
-        if not file.content_type.startswith("image/"):
-            raise BadRequestHTTPException(f"'{file.filename}' is not an image")
+        if file.content_type not in compressed_formats and not file.content_type.startswith("image/"):
+            raise BadRequestHTTPException(f"'{file.filename}'s format is not supported")
 
     session = await UploadSession.find(db_session, id, NotFoundHTTPException("Session not found"))
+
+    session_path = path.join(global_settings.temp_path, str(id))
+
+    files_path = path.join(session_path, "files")
 
     blobs = []
 
     for file in payload:
-        file_blob = UploadedBlob(session_id=session.id, name=file.filename)
-        await file_blob.save(db_session)
-        blobs.append(file_blob)
+        files = []
+        file_blobs = []
+        if file.content_type in supported_formats:
+            zip_path = path.join(session_path, f"zip/{file.filename}")
+            async with open(zip_path, "wb") as out_file:
+                content = await file.read()
+                await out_file.write(content)
 
-    save_session_image(zip((b.id for b in blobs), (f.file for f in payload)))
+            Archive(zip_path).extractall(files_path, True)
+            remove(zip_path)
+            _files = listdir(files_path)
+            files = [
+                f for f in _files
+                if path.isfile(path.join(files_path, f)) and validate_image_extension(f)
+            ]
+        else:
+            async with open(path.join(files_path, file.filename), "wb") as out_file:
+                content = await file.read()
+                await out_file.write(content)
+            files = (file.filename, )
+
+        for f in files:
+            file_blob = UploadedBlob(session_id=session.id, name=f)
+            await file_blob.save(db_session)
+            blobs.append(file_blob)
+            file_blobs.append(file_blob.id)
+
+        save_session_image(zip(file_blobs, (path.join(files_path, f) for f in files)))
 
     return blobs
 
 
 def delete_session_images(ids: List[UUID]):
     for blob_id in ids:
-        os.remove(os.path.join(global_settings.media_path, "blobs", f"{blob_id}.jpg"))
+        remove(path.join(global_settings.media_path, "blobs", f"{blob_id}.jpg"))
 
 
 delete_responses = {
@@ -180,21 +227,23 @@ async def delete_upload_session(
     )
     session_images = (b.id for b in session.blobs)
     await session.delete(db_session)
+    session_path = path.join(global_settings.temp_path, str(session.id))
+    tasks.add_task(remove, session_path)
     tasks.add_task(delete_session_images, session_images)
     return "OK"
 
 
 def commit_session_images(chapter: Chapter, pages: List[UUID], edit: bool):
-    blob_path = os.path.join(global_settings.media_path, "blobs")
-    chapter_path = os.path.join(global_settings.media_path, str(chapter.manga_id), str(chapter.id))
+    blob_path = path.join(global_settings.media_path, "blobs")
+    chapter_path = path.join(global_settings.media_path, str(chapter.manga_id), str(chapter.id))
 
     if edit:
         shutil.rmtree(chapter_path, True)
-    os.mkdir(chapter_path)
+    makedirs(chapter_path, exist_ok=True)
 
     page_number = 1
     for page in pages:
-        shutil.move(os.path.join(blob_path, f"{page}.jpg"), os.path.join(chapter_path, f"{page_number}.jpg"))
+        shutil.move(path.join(blob_path, f"{page}.jpg"), path.join(chapter_path, f"{page_number}.jpg"))
         page_number += 1
 
 
@@ -274,6 +323,8 @@ async def delete_all_pages_from_upload_session(
     )
 
     session_images = (b.id for b in session.blobs)
+    session_path = path.join(global_settings.temp_path, str(session.id))
+    tasks.add_task(remove, session_path)
     tasks.add_task(delete_session_images, session_images)
 
     for blob in session.blobs:

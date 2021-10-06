@@ -119,6 +119,7 @@ export default class MangaChapters extends Vue {
 
     if (response.data) {
       this.chapters = response.data;
+      this.loading = false;
     } else {
       const notification = {
         context: 'Get manga chapters',
@@ -127,8 +128,6 @@ export default class MangaChapters extends Vue {
       };
       await this.$store.dispatch('pushNotification', notification);
     }
-
-    this.loading = false;
   }
 
   ago(val: number): string {

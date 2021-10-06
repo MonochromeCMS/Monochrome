@@ -1,5 +1,5 @@
 import logging
-import os
+from os import makedirs, path
 from shutil import rmtree
 
 from fastapi import FastAPI, Request
@@ -39,8 +39,8 @@ async def setup_media():
     async for session in get_db():
         await UploadSession.flush(session)
 
-    rmtree(os.path.join(global_settings.media_path, "blobs"), ignore_errors=True)
-    os.mkdir(os.path.join(global_settings.media_path, "blobs"))
+    rmtree(path.join(global_settings.media_path, "blobs"), ignore_errors=True)
+    makedirs(path.join(global_settings.media_path, "blobs"), exist_ok=True)
 
 
 async def stop_db():

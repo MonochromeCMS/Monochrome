@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-row v-if="loading" align="center">
+    <v-row v-if="loading || !manga" align="center">
       <v-col cols="12" md="3">
         <v-skeleton-loader type="image" />
       </v-col>
