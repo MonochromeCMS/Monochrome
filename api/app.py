@@ -16,7 +16,7 @@ global_settings = get_settings()
 
 log = logging.getLogger(__name__)
 
-app = FastAPI(title="Monochrome", version="1.1.5")
+app = FastAPI(title="Monochrome", version="1.2.0")
 
 
 def get_remote_address(request: Request):
