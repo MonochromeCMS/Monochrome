@@ -168,7 +168,7 @@ async def upload_pages_to_upload_session(
     for file in payload:
         files = []
         file_blobs = []
-        if file.content_type in supported_formats:
+        if file.content_type in compressed_formats:
             zip_path = path.join(session_path, f"zip/{file.filename}")
             async with open(zip_path, "wb") as out_file:
                 content = await file.read()

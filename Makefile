@@ -79,7 +79,7 @@ revision rev: up-db ## Create a new database revision
 
 .PHONY: secret
 secret: ## Generate a secret
-	@openssl rand -base16 30
+	@openssl rand -hex 30
 
 .PHONY: create_admin
 .ONESHELL: create_admin
