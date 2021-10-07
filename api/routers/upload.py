@@ -228,7 +228,7 @@ async def delete_upload_session(
     session_images = (b.id for b in session.blobs)
     await session.delete(db_session)
     session_path = path.join(global_settings.temp_path, str(session.id))
-    tasks.add_task(remove, session_path)
+    tasks.add_task(shutil.rmtree, session_path, True)
     tasks.add_task(delete_session_images, session_images)
     return "OK"
 
@@ -292,7 +292,11 @@ async def commit_upload_session(
         chapter = Chapter(manga_id=session.manga_id, length=len(payload.page_order), **payload.chapter_draft.dict())
         await chapter.save(db_session)
 
+    session_path = path.join(global_settings.temp_path, str(session.id))
+    tasks.add_task(shutil.rmtree, session_path, True)
+
     await session.delete(db_session)
+
     tasks.add_task(commit_session_images, chapter, payload.page_order, edit)
     tasks.add_task(delete_session_images, set(blobs).difference(payload.page_order))
     content = jsonable_encoder(ChapterResponse.from_orm(chapter))
@@ -323,8 +327,6 @@ async def delete_all_pages_from_upload_session(
     )
 
     session_images = (b.id for b in session.blobs)
-    session_path = path.join(global_settings.temp_path, str(session.id))
-    tasks.add_task(remove, session_path)
     tasks.add_task(delete_session_images, session_images)
 
     for blob in session.blobs:
