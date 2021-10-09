@@ -1,6 +1,18 @@
 from typing import Optional
 
-from fastapi import HTTPException, status
+from fastapi import HTTPException, status, Request, Response
+from slowapi.errors import RateLimitExceeded
+from fastapi.responses import JSONResponse
+
+
+def rate_limit_exceeded_handler(request: Request, exc: RateLimitExceeded) -> Response:
+    response = JSONResponse(
+        {"detail": f"Rate limit exceeded: {exc.detail}"}, status_code=429
+    )
+    response = request.app.state.limiter._inject_headers(
+        response, request.state.view_rate_limit
+    )
+    return response
 
 
 def _open_api(default: str, msg: Optional[str] = None):

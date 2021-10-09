@@ -177,15 +177,12 @@ async def upload_pages_to_upload_session(
             Archive(zip_path).extractall(files_path, True)
             remove(zip_path)
             _files = listdir(files_path)
-            files = [
-                f for f in _files
-                if path.isfile(path.join(files_path, f)) and validate_image_extension(f)
-            ]
+            files = [f for f in _files if path.isfile(path.join(files_path, f)) and validate_image_extension(f)]
         else:
             async with open(path.join(files_path, file.filename), "wb") as out_file:
                 content = await file.read()
                 await out_file.write(content)
-            files = (file.filename, )
+            files = (file.filename,)
 
         for f in files:
             file_blob = UploadedBlob(session_id=session.id, name=f)

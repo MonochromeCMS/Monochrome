@@ -3,12 +3,13 @@ from os import makedirs, path
 from shutil import rmtree
 
 from fastapi import FastAPI, Request
-from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi import Limiter
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
 
 from .models.upload import UploadSession
 
+from .exceptions import rate_limit_exceeded_handler
 from .db import engine, get_db
 from .config import get_settings
 
@@ -31,7 +32,7 @@ def get_remote_address(request: Request):
 
 limiter = Limiter(key_func=get_remote_address, default_limits=["60/minute"])
 app.state.limiter = limiter
-app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+app.add_exception_handler(RateLimitExceeded, rate_limit_exceeded_handler)
 app.add_middleware(SlowAPIMiddleware)
 
 
