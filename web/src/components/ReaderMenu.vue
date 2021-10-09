@@ -1,7 +1,7 @@
 <template>
   <v-dialog max-width="30rem" v-model="menu">
     <template v-slot:activator="{ on, attrs }">
-      <v-btn fab v-on="on" v-bind="attrs" class="reader-button" color="info">
+      <v-btn fab outlined v-on="on" v-bind="attrs" class="reader-button" color="primary">
         <v-icon>mdi-menu</v-icon>
       </v-btn>
     </template>
