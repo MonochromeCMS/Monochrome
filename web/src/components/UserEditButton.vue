@@ -12,7 +12,7 @@
 <script lang="ts">
 import { Vue, Component, Prop, Emit } from 'vue-property-decorator';
 import UserForm from './UserForm.vue';
-import { mdiPencil } from "@mdi/js";
+import { mdiPencil } from '@mdi/js';
 
 @Component({
   components: { UserForm },
@@ -22,7 +22,7 @@ export default class UserEditButton extends Vue {
 
   @Prop(Boolean) readonly ownUser!: boolean;
 
-  icons =  {
+  icons = {
     mdiPencil,
   };
 

@@ -19,7 +19,7 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator';
 import { debounce } from 'typescript-debounce-decorator';
-import { mdiMagnify } from "@mdi/js";
+import { mdiMagnify } from '@mdi/js';
 
 @Component
 export default class SearchBar extends Vue {

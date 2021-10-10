@@ -70,7 +70,7 @@
 import { Vue, Component, Prop, Watch, VModel } from 'vue-property-decorator';
 import ChapterDelete from '@/components/ChapterDelete.vue';
 import Manga from '@/api/Manga';
-import { mdiDotsVertical } from "@mdi/js";
+import { mdiDotsVertical } from '@mdi/js';
 import type { ChapterResponse } from '@/api/Chapter';
 
 @Component({

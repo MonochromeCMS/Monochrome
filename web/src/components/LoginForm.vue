@@ -33,7 +33,7 @@
 import { Vue, Component } from 'vue-property-decorator';
 import { required } from 'vee-validate/dist/rules';
 import { extend, ValidationProvider, setInteractionMode, ValidationObserver } from 'vee-validate';
-import { mdiEye, mdiEyeOff } from "@mdi/js";
+import { mdiEye, mdiEyeOff } from '@mdi/js';
 
 setInteractionMode('eager');
 

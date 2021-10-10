@@ -1,14 +1,15 @@
 include .env
 
+buildkit ?= 1
 test_exit ?= 0
 user ?= `id -u`
 
 compose_file ?= "docker-compose.yml"
 project ?= "Monochrome"
 
-DC = docker-compose -p $(project) -f $(compose_file)
+DC = DOCKER_BUILDKIT=$(buildkit) docker-compose -p $(project) -f $(compose_file)
 
-DC_TEST = docker-compose -p $(project)-test -f docker-compose.test.yml
+DC_TEST = DOCKER_BUILDKIT=$(buildkit) docker-compose -p $(project)-test -f docker-compose.test.yml
 
 .PHONY: help
 help: ## Show this help

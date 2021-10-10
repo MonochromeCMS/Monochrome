@@ -60,8 +60,12 @@
           <v-col class="text-body-1"> Page direction: </v-col>
           <v-col class="text-right pa-2">
             <v-btn-toggle v-model="direction" mandatory>
-              <v-btn color="background"><v-icon>{{ icons.mdiArrowLeft }}</v-icon></v-btn>
-              <v-btn color="background"><v-icon>{{ icons.mdiArrowRight }}</v-icon></v-btn>
+              <v-btn color="background"
+                ><v-icon>{{ icons.mdiArrowLeft }}</v-icon></v-btn
+              >
+              <v-btn color="background"
+                ><v-icon>{{ icons.mdiArrowRight }}</v-icon></v-btn
+              >
             </v-btn-toggle>
           </v-col>
         </v-row>
@@ -88,7 +92,7 @@ import {
   mdiArrowLeft,
   mdiArrowRight,
   mdiClose,
-  mdiMenu
+  mdiMenu,
 } from '@mdi/js';
 
 @Component
@@ -103,7 +107,7 @@ export default class ReaderMenu extends Vue {
     mdiArrowLeft,
     mdiArrowRight,
     mdiClose,
-    mdiMenu
+    mdiMenu,
   };
 
   menu = false;

@@ -58,7 +58,7 @@ import { required, email, max } from 'vee-validate/dist/rules';
 import { extend, ValidationProvider, setInteractionMode, ValidationObserver } from 'vee-validate';
 import { Vue, Component, Emit, Prop } from 'vue-property-decorator';
 import User from '@/api/User';
-import { mdiEye, mdiEyeOff } from "@mdi/js";
+import { mdiEye, mdiEyeOff } from '@mdi/js';
 import type { AxiosRequestConfig } from 'axios';
 import type { UserSchema } from '@/api/User';
 

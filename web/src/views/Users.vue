@@ -52,7 +52,7 @@ import { Vue, Component, Watch } from 'vue-property-decorator';
 import UsersList from '@/components/UsersList.vue';
 import UserForm from '@/components/UserForm.vue';
 import User from '@/api/User';
-import { mdiPlus } from "@mdi/js";
+import { mdiPlus } from '@mdi/js';
 import type { UserResponse } from '@/api/User';
 import type { AxiosRequestConfig } from 'axios';
 

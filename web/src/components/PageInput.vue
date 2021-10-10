@@ -47,7 +47,7 @@
 import { Vue, Component, Prop, VModel, Watch } from 'vue-property-decorator';
 import draggable from 'vuedraggable';
 import naturalCompare from 'natural-compare-lite';
-import { mdiClose, mdiPlus } from "@mdi/js";
+import { mdiClose, mdiPlus } from '@mdi/js';
 import Upload from '@/api/Upload';
 import type { UploadedBlobResponse } from '@/api/Upload';
 import type { AxiosRequestConfig } from 'axios';
