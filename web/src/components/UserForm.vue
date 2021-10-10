@@ -29,7 +29,7 @@
               v-model="password"
               :error-messages="errors"
               label="Password"
-              :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
+              :append-icon="showPass ? icons.mdiEye : icons.mdiEyeOff"
               @click:append="showPass = !showPass"
               required
               outlined
@@ -57,9 +57,10 @@
 import { required, email, max } from 'vee-validate/dist/rules';
 import { extend, ValidationProvider, setInteractionMode, ValidationObserver } from 'vee-validate';
 import { Vue, Component, Emit, Prop } from 'vue-property-decorator';
+import User from '@/api/User';
+import { mdiEye, mdiEyeOff } from "@mdi/js";
 import type { AxiosRequestConfig } from 'axios';
 import type { UserSchema } from '@/api/User';
-import User from '@/api/User';
 
 setInteractionMode('eager');
 
@@ -88,6 +89,11 @@ export default class UserForm extends Vue {
   @Prop() readonly user!: any;
 
   @Prop(Boolean) readonly ownUser!: boolean;
+
+  icons = {
+    mdiEye,
+    mdiEyeOff,
+  };
 
   username = '';
 

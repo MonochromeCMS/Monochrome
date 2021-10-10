@@ -10,7 +10,7 @@
         v-on="on"
         aria-label="Delete user"
       >
-        <v-icon>mdi-delete</v-icon>
+        <v-icon>{{ icons.mdiDelete }}</v-icon>
       </v-btn>
     </template>
     <v-card>
@@ -34,6 +34,7 @@
 <script lang="ts">
 import { Vue, Component, Prop, Emit } from 'vue-property-decorator';
 import User from '@/api/User';
+import { mdiDelete } from "@mdi/js";
 import type { AxiosRequestConfig } from 'axios';
 
 @Component
@@ -41,6 +42,10 @@ export default class UserDeleteButton extends Vue {
   @Prop() readonly user!: any;
 
   @Prop(Boolean) readonly disabled!: boolean;
+
+  icons = {
+    mdiDelete,
+  };
 
   loading = false;
 

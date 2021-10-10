@@ -19,7 +19,7 @@
                         v-bind="attrs"
                         v-on="on"
                       >
-                        <v-icon>mdi-plus</v-icon>
+                        <v-icon>{{ icons.mdiPlus }}</v-icon>
                       </v-btn>
                     </template>
                     <user-form
@@ -49,16 +49,21 @@
 
 <script lang="ts">
 import { Vue, Component, Watch } from 'vue-property-decorator';
-import type { AxiosRequestConfig } from 'axios';
 import UsersList from '@/components/UsersList.vue';
 import UserForm from '@/components/UserForm.vue';
-import type { UserResponse } from '@/api/User';
 import User from '@/api/User';
+import { mdiPlus } from "@mdi/js";
+import type { UserResponse } from '@/api/User';
+import type { AxiosRequestConfig } from 'axios';
 
 @Component({
   components: { UsersList, UserForm },
 })
 export default class About extends Vue {
+  icons = {
+    mdiPlus,
+  };
+
   page = 1;
 
   total = 0;

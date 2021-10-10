@@ -14,7 +14,7 @@
         offset-y="1rem"
       >
         <v-btn dark text v-bind="attrs" @click="close">
-          <v-icon>mdi-close</v-icon>
+          <v-icon>{{ icons.mdiClose }}</v-icon>
         </v-btn>
       </v-badge>
     </template>
@@ -23,10 +23,15 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
+import { mdiClose } from "@mdi/js";
 import type { Notification } from '@/store/notifications';
 
 @Component
 export default class ThemeToggler extends Vue {
+  icons = {
+    mdiClose,
+  };
+
   close(): void {
     this.$store.commit('closeNotification');
   }

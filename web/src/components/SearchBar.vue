@@ -8,7 +8,7 @@
       :value="value"
       color="primary"
       background-color="background"
-      prepend-inner-icon="mdi-magnify"
+      :prepend-inner-icon="icons.mdiMagnify"
       dense
       @input="searchInput"
     ></v-text-field>
@@ -19,10 +19,15 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator';
 import { debounce } from 'typescript-debounce-decorator';
+import { mdiMagnify } from "@mdi/js";
 
 @Component
 export default class SearchBar extends Vue {
   @Prop(String) value!: string;
+
+  icons = {
+    mdiMagnify,
+  };
 
   progress = false;
 

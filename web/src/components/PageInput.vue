@@ -12,7 +12,7 @@
                 class="background text--primary page-close"
                 @click="deletePage(index, item.id)"
               >
-                <v-icon>mdi-close</v-icon>
+                <v-icon>{{ icons.mdiClose }}</v-icon>
               </v-btn>
               <v-chip class="page-name">{{ item.name }}</v-chip>
             </v-img>
@@ -24,7 +24,7 @@
           <v-responsive :aspect-ratio="4 / 5">
             <div class="d-flex fill-height">
               <v-progress-circular v-if="loading" :value="progress" class="ma-auto d-block" />
-              <v-icon v-else x-large class="ma-auto d-block">mdi-plus</v-icon>
+              <v-icon v-else x-large class="ma-auto d-block">{{ icons.mdiPlus }}</v-icon>
             </div>
           </v-responsive>
         </v-card>
@@ -46,10 +46,11 @@
 <script lang="ts">
 import { Vue, Component, Prop, VModel, Watch } from 'vue-property-decorator';
 import draggable from 'vuedraggable';
-import type { AxiosRequestConfig } from 'axios';
 import naturalCompare from 'natural-compare-lite';
-import type { UploadedBlobResponse } from '@/api/Upload';
+import { mdiClose, mdiPlus } from "@mdi/js";
 import Upload from '@/api/Upload';
+import type { UploadedBlobResponse } from '@/api/Upload';
+import type { AxiosRequestConfig } from 'axios';
 
 @Component({
   components: { draggable },
@@ -62,6 +63,11 @@ export default class PageInput extends Vue {
   @Prop() readonly session!: any;
 
   @VModel() pageOrder!: any[];
+
+  icons = {
+    mdiClose,
+    mdiPlus,
+  };
 
   pages: UploadedBlobResponse[] = [];
 

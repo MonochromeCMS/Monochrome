@@ -2,7 +2,7 @@
   <v-dialog max-width="30rem" v-model="menu">
     <template v-slot:activator="{ on, attrs }">
       <v-btn fab outlined v-on="on" v-bind="attrs" class="reader-button" color="primary">
-        <v-icon>mdi-menu</v-icon>
+        <v-icon>{{ icons.mdiMenu }}</v-icon>
       </v-btn>
     </template>
     <v-card rounded="lg" color="backgroundAlt">
@@ -11,7 +11,7 @@
           {{ chapter.manga.title }}
         </router-link>
         <v-btn icon class="ml-auto" @click="menu = false">
-          <v-icon>mdi-close</v-icon>
+          <v-icon>{{ icons.mdiClose }}</v-icon>
         </v-btn>
       </v-card-title>
       <v-card-text>
@@ -46,11 +46,11 @@
           <v-col class="text-right pa-2">
             <v-btn-toggle v-model="fit" mandatory>
               <v-btn color="background">
-                <v-icon>mdi-arrow-expand-horizontal</v-icon>
+                <v-icon>{{ icons.mdiArrowExpandHorizontal }}</v-icon>
               </v-btn>
               <v-btn color="background"> Default </v-btn>
               <v-btn color="background">
-                <v-icon>mdi-arrow-expand-vertical</v-icon>
+                <v-icon>{{ icons.mdiArrowExpandVertical }}</v-icon>
               </v-btn>
             </v-btn-toggle>
           </v-col>
@@ -60,8 +60,8 @@
           <v-col class="text-body-1"> Page direction: </v-col>
           <v-col class="text-right pa-2">
             <v-btn-toggle v-model="direction" mandatory>
-              <v-btn color="background"><v-icon>mdi-arrow-left</v-icon></v-btn>
-              <v-btn color="background"><v-icon>mdi-arrow-right</v-icon></v-btn>
+              <v-btn color="background"><v-icon>{{ icons.mdiArrowLeft }}</v-icon></v-btn>
+              <v-btn color="background"><v-icon>{{ icons.mdiArrowRight }}</v-icon></v-btn>
             </v-btn-toggle>
           </v-col>
         </v-row>
@@ -82,12 +82,29 @@
 
 <script lang="ts">
 import { Vue, Component, Prop, Emit } from 'vue-property-decorator';
+import {
+  mdiArrowExpandHorizontal,
+  mdiArrowExpandVertical,
+  mdiArrowLeft,
+  mdiArrowRight,
+  mdiClose,
+  mdiMenu
+} from '@mdi/js';
 
 @Component
 export default class ReaderMenu extends Vue {
   @Prop() readonly chapter!: any;
 
   @Prop() readonly chapterItems!: any;
+
+  icons = {
+    mdiArrowExpandHorizontal,
+    mdiArrowExpandVertical,
+    mdiArrowLeft,
+    mdiArrowRight,
+    mdiClose,
+    mdiMenu
+  };
 
   menu = false;
 

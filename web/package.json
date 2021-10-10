@@ -29,6 +29,7 @@
     "xml-webpack-plugin": "^1.2.0"
   },
   "devDependencies": {
+    "@mdi/js": "^6.2.95",
     "@types/chai": "^4.2.11",
     "@types/marked": "^3.0.1",
     "@types/mocha": "^5.2.4",

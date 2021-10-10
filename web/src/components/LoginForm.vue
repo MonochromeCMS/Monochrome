@@ -15,7 +15,7 @@
           v-model="password"
           :error-messages="errors"
           label="Password"
-          :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
+          :append-icon="showPass ? icons.mdiEye : icons.mdiEyeOff"
           @click:append="showPass = !showPass"
           required
           outlined
@@ -33,6 +33,7 @@
 import { Vue, Component } from 'vue-property-decorator';
 import { required } from 'vee-validate/dist/rules';
 import { extend, ValidationProvider, setInteractionMode, ValidationObserver } from 'vee-validate';
+import { mdiEye, mdiEyeOff } from "@mdi/js";
 
 setInteractionMode('eager');
 
@@ -48,6 +49,11 @@ extend('required', {
   },
 })
 export default class LoginForm extends Vue {
+  icons = {
+    mdiEye,
+    mdiEyeOff,
+  };
+
   username = '';
 
   password = '';

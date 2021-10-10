@@ -1,5 +1,4 @@
 const path = require('path');
-const os = require('os');
 const XMLPlugin = require('xml-webpack-plugin');
 
 const protocol = process.env.VUE_APP_PROTOCOL || 'http';

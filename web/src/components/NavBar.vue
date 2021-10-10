@@ -33,7 +33,7 @@
           v-bind="attrs"
           aria-label="Navigation menu"
         >
-          <v-icon>mdi-menu</v-icon>
+          <v-icon>{{ icons.mdiMenu }}</v-icon>
         </v-btn>
       </template>
       <v-tabs vertical>
@@ -56,11 +56,16 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
 import AdminActions from '@/components/AdminActions.vue';
+import { mdiMenu } from '@mdi/js';
 
 @Component({
   components: { AdminActions },
 })
 export default class NavBar extends Vue {
+  icons = {
+    mdiMenu,
+  };
+
   tabs = '/';
 
   links = [

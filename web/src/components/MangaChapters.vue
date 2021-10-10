@@ -44,7 +44,7 @@
         <v-menu v-if="isConnected" offset-y close-on-content-click>
           <template v-slot:activator="{ on, attrs }">
             <v-btn icon v-on="on" v-bind="attrs" class="mr-1" aria-label="More options">
-              <v-icon>mdi-dots-vertical</v-icon>
+              <v-icon>{{ icons.mdiDotsVertical }}</v-icon>
             </v-btn>
           </template>
           <v-btn block color="background" :to="`/chapters/${item.id}/edit`"> Edit chapter </v-btn>
@@ -69,8 +69,9 @@
 <script lang="ts">
 import { Vue, Component, Prop, Watch, VModel } from 'vue-property-decorator';
 import ChapterDelete from '@/components/ChapterDelete.vue';
-import type { ChapterResponse } from '@/api/Chapter';
 import Manga from '@/api/Manga';
+import { mdiDotsVertical } from "@mdi/js";
+import type { ChapterResponse } from '@/api/Chapter';
 
 @Component({
   components: { ChapterDelete },
@@ -79,6 +80,10 @@ export default class MangaChapters extends Vue {
   @Prop() readonly mangaId!: string;
 
   @VModel({ type: String }) firstChapter!: string;
+
+  icons = {
+    mdiDotsVertical,
+  };
 
   chapters: ChapterResponse[] = [];
 
