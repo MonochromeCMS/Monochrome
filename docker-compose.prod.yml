@@ -4,9 +4,9 @@ services:
   db:
     image: postgres:13-alpine
     environment:
-      - POSTGRES_DB=${DB_NAME}
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASS}
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
     volumes:
       - postgres_data:/var/lib/postgresql/data
   api:
@@ -26,13 +26,13 @@ services:
     build:
       context: ./web
       args:
-        - VUE_APP_DOMAIN_NAME=${DOMAIN_NAME}
-        - VUE_APP_TITLE=${TITLE}
-        - VUE_APP_DESCRIPTION=${DESCRIPTION}
-        - VUE_APP_PROTOCOL=https
-        - VUE_APP_SECRET=${SESSION_SECRET_KEY}
-        - VUE_APP_MEDIA_PATH=https://${DOMAIN_NAME}/media
-        - VUE_APP_API_PATH=https://${DOMAIN_NAME}/api
+        VUE_APP_DOMAIN_NAME: ${DOMAIN_NAME}
+        VUE_APP_TITLE: ${TITLE}
+        VUE_APP_DESCRIPTION: ${DESCRIPTION}
+        VUE_APP_PROTOCOL: https
+        VUE_APP_SECRET: ${SESSION_SECRET_KEY}
+        VUE_APP_MEDIA_PATH: https://${DOMAIN_NAME}/media
+        VUE_APP_API_PATH: https://${DOMAIN_NAME}/api
     volumes:
     - ./media:/srv/media
     - caddy_data:/data
