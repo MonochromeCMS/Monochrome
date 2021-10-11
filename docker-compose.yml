@@ -21,6 +21,7 @@ services:
       JWT_SECRET_KEY: ${SECRET_KEY}
       JWT_ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES}
       MEDIA_PATH: /media
+      CORS_ORIGINS: http://${DOMAIN_NAME}
     depends_on:
       - db
   web-dev:

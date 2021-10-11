@@ -3,6 +3,7 @@ from os import makedirs, path
 from shutil import rmtree
 
 from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
 from slowapi import Limiter
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware

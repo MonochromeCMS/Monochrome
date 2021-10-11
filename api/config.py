@@ -8,6 +8,7 @@ log = logging.getLogger(__name__)
 
 class Settings(BaseSettings):
     db_url: AnyUrl
+    cors_origins: str = ""
 
     jwt_secret_key: str
     jwt_algorithm: str = "HS256"
