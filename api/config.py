@@ -12,7 +12,7 @@ class Settings(BaseSettings):
 
     jwt_secret_key: str
     jwt_algorithm: str = "HS256"
-    jwt_access_toke_expire_minutes: int = 60
+    jwt_access_token_expire_minutes: int = 60
 
     media_path: str = "/media"
     temp_path: str = "/temp"
