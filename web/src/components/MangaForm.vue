@@ -94,10 +94,11 @@
 import { Vue, Component, Prop } from 'vue-property-decorator';
 import { required, digits } from 'vee-validate/dist/rules';
 import { extend, ValidationProvider, setInteractionMode, ValidationObserver } from 'vee-validate';
-import type { AxiosRequestConfig } from 'axios';
 import MangaRow from '@/components/MangaRow.vue';
-import type { MangaResponse, MangaSchema, Status } from '@/api/Manga';
 import Manga from '@/api/Manga';
+import Media from '@/api/Media';
+import type { AxiosRequestConfig } from 'axios';
+import type { MangaResponse, MangaSchema, Status } from '@/api/Manga';
 
 setInteractionMode('eager');
 
@@ -162,7 +163,7 @@ export default class MangaForm extends Vue {
     if (blob) {
       return blob ? URL.createObjectURL(blob) : null;
     } else {
-      return this.manga ? `/media/${this.manga.id}/cover.jpg?version=${this.manga.version}` : null;
+      return this.manga ? Media.cover(this.manga.id, this.manga.version) : null;
     }
   }
 

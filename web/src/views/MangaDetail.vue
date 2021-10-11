@@ -61,11 +61,12 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
-import type { AxiosRequestConfig } from 'axios';
 import MangaRow from '@/components/MangaRow.vue';
 import MangaChapters from '@/components/MangaChapters.vue';
-import type { MangaResponse } from '@/api/Manga';
 import Manga from '@/api/Manga';
+import Media from '@/api/Media';
+import type { AxiosRequestConfig } from 'axios';
+import type { MangaResponse } from '@/api/Manga';
 
 @Component({
   components: { MangaChapters, MangaRow },
@@ -85,7 +86,7 @@ export default class MangaDetail extends Vue {
 
   get cover(): string | null {
     if (this.manga) {
-      return `/media/${this.manga?.id}/cover.jpg?version=${this.manga?.version}`;
+      return Media.cover(this.manga.id, this.manga.version);
     }
     return null;
   }

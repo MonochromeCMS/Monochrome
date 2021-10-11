@@ -2,12 +2,7 @@
   <v-row class="ma-0">
     <v-btn block text width="15rem" @click="previousChapter" class="mb-3"> Previous chapter </v-btn>
     <v-col :class="webtoon ? 'webtoon' : ''" cols="12" v-for="index in length" :key="index">
-      <v-img
-        contain
-        :class="fit"
-        :width="width"
-        :src="`/media/${manga}/${chapter}/${index}.jpg?version=${version}`"
-      >
+      <v-img contain :class="fit" :width="width" :src="page(index)">
         <template v-slot:placeholder>
           <v-row class="fill-height ma-0" align="center" justify="center">
             <v-progress-circular indeterminate />
@@ -21,6 +16,7 @@
 
 <script lang="ts">
 import { Vue, Component, Prop, Emit } from 'vue-property-decorator';
+import Media from '@/api/Media';
 
 @Component
 export default class VerticalReader extends Vue {
@@ -50,6 +46,10 @@ export default class VerticalReader extends Vue {
 
   get width(): string {
     return !this.webtoon ? null : this.$store.getters.getWidth;
+  }
+
+  page(index: number): string {
+    return Media.page(this.manga, this.chapter, index, this.version);
   }
 }
 </script>

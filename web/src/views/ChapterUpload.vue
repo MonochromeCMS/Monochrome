@@ -4,12 +4,7 @@
       <v-col cols="12" lg="10" class="mx-auto">
         <v-card rounded="lg" color="backgroundAlt" elevation="0" class="pa-4">
           <v-card-title class="justify-center lemon-milk"> UPLOAD CHAPTER </v-card-title>
-          <manga-row
-            :loading="!manga"
-            :manga="manga"
-            :cover="`/media/${mangaId}/cover.jpg`"
-            class="background rounded"
-          />
+          <manga-row :loading="!manga" :manga="manga" :cover="cover" class="background rounded" />
           <v-card-text>
             <upload-form v-if="manga" :chapter="null" :mangaId="mangaId" />
           </v-card-text>
@@ -25,6 +20,7 @@ import MangaRow from '@/components/MangaRow.vue';
 import UploadForm from '@/components/UploadForm.vue';
 import type { MangaResponse } from '@/api/Manga';
 import Manga from '@/api/Manga';
+import Media from '@/api/Media';
 
 @Component({
   components: { MangaRow, UploadForm },
@@ -34,6 +30,14 @@ export default class ChapterUpload extends Vue {
 
   get mangaId(): string {
     return this.$route.params.manga;
+  }
+
+  get cover(): string {
+    if (this.manga) {
+      return Media.cover(this.manga.id, this.manga.version);
+    } else {
+      return '';
+    }
   }
 
   get isConnected(): boolean {

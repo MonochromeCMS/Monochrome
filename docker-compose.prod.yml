@@ -31,6 +31,8 @@ services:
         - VUE_APP_DESCRIPTION=${DESCRIPTION}
         - VUE_APP_PROTOCOL=https
         - VUE_APP_SECRET=${SESSION_SECRET_KEY}
+        - VUE_APP_MEDIA_PATH=https://${DOMAIN_NAME}/media
+        - VUE_APP_API_PATH=https://${DOMAIN_NAME}/api
     volumes:
     - ./media:/srv/media
     - caddy_data:/data

@@ -33,6 +33,8 @@ services:
         - VUE_APP_DESCRIPTION=${DESCRIPTION}
         - VUE_APP_PROTOCOL=http
         - VUE_APP_SECRET=${SESSION_SECRET_KEY}
+        - VUE_APP_MEDIA_PATH=http://${DOMAIN_NAME}/media
+        - VUE_APP_API_PATH=http://${DOMAIN_NAME}/api
     volumes:
     - ./web:/app
     environment:
@@ -41,6 +43,8 @@ services:
       - VUE_APP_DESCRIPTION=${DESCRIPTION}
       - VUE_APP_PROTOCOL=http
       - VUE_APP_SECRET=${SESSION_SECRET_KEY}
+      - VUE_APP_MEDIA_PATH=http://${DOMAIN_NAME}/media
+      - VUE_APP_API_PATH=http://${DOMAIN_NAME}/api
 
   caddy:
     image: caddy:2-alpine

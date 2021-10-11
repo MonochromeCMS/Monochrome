@@ -38,8 +38,9 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
-import type { MangaResponse } from '@/api/Manga';
 import Manga from '@/api/Manga';
+import Media from '@/api/Media';
+import type { MangaResponse } from '@/api/Manga';
 
 @Component
 export default class LatestManga extends Vue {
@@ -57,7 +58,7 @@ export default class LatestManga extends Vue {
     let m = this.rawManga
       .map((el) => [
         {
-          avatar: `/media/${el.id}/cover.jpg?version=${el.version}`,
+          avatar: Media.cover(el.id, el.version),
           title: el.title,
           subtitle: el.description,
           to: `/manga/${el.id}`,

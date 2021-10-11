@@ -111,6 +111,7 @@
 
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator';
+import Media from '@/api/Media';
 
 @Component
 export default class PagedReader extends Vue {
@@ -159,10 +160,7 @@ export default class PagedReader extends Vue {
   }
 
   get urls(): (string | null)[] {
-    let result: (string | null)[] = Array.from(
-      { length: this.length },
-      (_, i) => `/media/${this.manga}/${this.chapter}/${i + 1}.jpg?version=${this.version}`,
-    );
+    let result: (string | null)[] = Array.from({ length: this.length }, this.page);
 
     if (this.double) {
       if (this.parity) {
@@ -175,6 +173,10 @@ export default class PagedReader extends Vue {
     }
 
     return this.reverse ? result.reverse() : result;
+  }
+
+  page(_, index: number) {
+    return Media.page(this.manga, this.chapter, index + 1, this.version);
   }
 
   @Watch('chapter')

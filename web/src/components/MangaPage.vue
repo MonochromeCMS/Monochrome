@@ -49,8 +49,9 @@
 <script lang="ts">
 import { Vue, Component, Watch } from 'vue-property-decorator';
 import SearchBar from '@/components/SearchBar.vue';
-import type { MangaResponse } from '@/api/Manga';
 import Manga from '@/api/Manga';
+import Media from '@/api/Media';
+import type { MangaResponse } from '@/api/Manga';
 
 @Component({
   components: { SearchBar },
@@ -84,7 +85,7 @@ export default class MangaPage extends Vue {
   }
 
   cover(manga: MangaResponse): string {
-    return `/media/${manga.id}/cover.jpg?version=${manga.version}`;
+    return Media.cover(manga.id, manga.version);
   }
 
   to(manga: MangaResponse): string {

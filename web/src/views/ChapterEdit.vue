@@ -4,12 +4,7 @@
       <v-col cols="12" lg="10" class="mx-auto">
         <v-card rounded="lg" color="backgroundAlt" elevation="0" class="pa-4">
           <v-card-title class="justify-center lemon-milk">EDIT CHAPTER</v-card-title>
-          <manga-row
-            :loading="!manga"
-            :manga="manga"
-            :cover="manga ? `/media/${manga.id}/cover.jpg` : ''"
-            class="background rounded"
-          />
+          <manga-row :loading="!manga" :manga="manga" :cover="cover" class="background rounded" />
           <v-card-text>
             <upload-form v-if="chapter && manga" :mangaId="manga.id" :chapter="chapter" />
           </v-card-text>
@@ -23,8 +18,9 @@
 import { Vue, Component } from 'vue-property-decorator';
 import MangaRow from '@/components/MangaRow.vue';
 import UploadForm from '@/components/UploadForm.vue';
-import type { DetailedChapterResponse } from '@/api/Chapter';
 import Chapter from '@/api/Chapter';
+import Media from '@/api/Media';
+import type { DetailedChapterResponse } from '@/api/Chapter';
 import type { MangaResponse } from '@/api/Manga';
 
 @Component({
@@ -41,6 +37,14 @@ export default class About extends Vue {
 
   get isConnected(): boolean {
     return this.$store.getters.isConnected;
+  }
+
+  get cover(): string {
+    if (this.manga) {
+      return Media.cover(this.manga.id, this.manga.version);
+    } else {
+      return '';
+    }
   }
 
   async getChapter(): Promise<void> {

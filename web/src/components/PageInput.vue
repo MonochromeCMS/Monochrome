@@ -5,7 +5,7 @@
       <template v-for="(item, index) in pages">
         <v-col cols="6" sm="4" md="3" xl="2" :key="index">
           <v-card color="background" class="page-card">
-            <v-img :src="`/media/blobs/${item.id}.jpg`" :aspect-ratio="4 / 5" position="relative">
+            <v-img :src="blob(item.id)" :aspect-ratio="4 / 5" position="relative">
               <v-btn
                 icon
                 :disabled="deleting"
@@ -49,6 +49,7 @@ import draggable from 'vuedraggable';
 import naturalCompare from 'natural-compare-lite';
 import { mdiClose, mdiPlus } from '@mdi/js';
 import Upload from '@/api/Upload';
+import Media from '@/api/Media';
 import type { UploadedBlobResponse } from '@/api/Upload';
 import type { AxiosRequestConfig } from 'axios';
 
@@ -81,6 +82,10 @@ export default class PageInput extends Vue {
 
   get authConfig(): AxiosRequestConfig {
     return this.$store.getters.authConfig;
+  }
+
+  blob(blobId: string): string {
+    return Media.blob(blobId);
   }
 
   mounted(): void {

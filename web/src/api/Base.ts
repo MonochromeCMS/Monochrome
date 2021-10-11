@@ -23,7 +23,7 @@ export interface ApiResponse<T> {
 }
 
 export default class Base {
-  public static readonly prefix: string = '/api';
+  public static readonly prefix: string = process.env.VUE_APP_API_PATH;
 
   public static _delay() {
     return new Promise((resolve) => {

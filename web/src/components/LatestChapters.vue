@@ -50,10 +50,7 @@
         <v-card color="background" class="px-4" :to="`/chapters/${chapter.id}`">
           <v-row align="center">
             <v-col cols="3">
-              <v-img
-                :src="`/media/${chapter.mangaId}/cover.jpg?version=${chapter.manga.version}`"
-                max-height="7rem"
-              />
+              <v-img :src="cover(chapter.mangaId, chapter.manga.version)" max-height="7rem" />
             </v-col>
             <v-col cols="8" class="d-flex flex-column justify-center">
               <h2 class="text-subtitle-1 ellipsis">
@@ -87,8 +84,9 @@
 
 <script lang="ts">
 import { Vue, Component, Watch } from 'vue-property-decorator';
-import type { DetailedChapterResponse } from '@/api/Chapter';
+import Media from '@/api/Media';
 import Chapter from '@/api/Chapter';
+import type { DetailedChapterResponse } from '@/api/Chapter';
 
 @Component
 export default class LatestChapters extends Vue {
@@ -117,6 +115,10 @@ export default class LatestChapters extends Vue {
   @Watch('page')
   async onPageChange(): Promise<void> {
     await this.getChapters();
+  }
+
+  cover(mangaId: string, version: number): string {
+    return Media.cover(mangaId, version);
   }
 
   async getChapters(): Promise<void> {

@@ -32,6 +32,8 @@ services:
         - VUE_APP_DESCRIPTION=${DESCRIPTION}
         - VUE_APP_PROTOCOL=http
         - VUE_APP_SECRET=${SESSION_SECRET_KEY}
+        - VUE_APP_MEDIA_PATH=http://${DOMAIN_NAME}/media
+        - VUE_APP_API_PATH=http://${DOMAIN_NAME}/api
     volumes:
       - ./media:/srv/media
     ports:
