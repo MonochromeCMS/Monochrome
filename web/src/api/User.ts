@@ -18,7 +18,7 @@ export interface UserResponse extends IUser {
 export type UsersResponse = Pagination<UserResponse>;
 
 export default class User extends Base {
-  public static readonly prefix: string = '/api/user';
+  public static readonly router: string = '/user';
 
   public static async get_all(auth: AxiosRequestConfig, limit = 10, offset = 0, delay = false) {
     const url = `?limit=${limit}&offset=${offset}`;

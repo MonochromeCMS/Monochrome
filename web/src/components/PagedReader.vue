@@ -175,7 +175,7 @@ export default class PagedReader extends Vue {
     return this.reverse ? result.reverse() : result;
   }
 
-  page(_, index: number) {
+  page(_: any, index: number) {
     return Media.page(this.manga, this.chapter, index + 1, this.version);
   }
 

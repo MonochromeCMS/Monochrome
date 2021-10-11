@@ -24,7 +24,7 @@ export interface CommitUploadSession {
 }
 
 export default class Upload extends Base {
-  public static readonly prefix: string = '/api/upload';
+  public static readonly router: string = '/upload';
 
   public static async begin(mangaId: string, chapterId: string | null, auth: AxiosRequestConfig) {
     const data = { mangaId, chapterId };

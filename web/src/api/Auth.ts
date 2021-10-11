@@ -7,7 +7,7 @@ export interface TokenResponse {
 }
 
 export default class Auth extends Base {
-  public static readonly prefix: string = '/api/auth';
+  public static readonly router: string = '/auth';
 
   public static async login(username: string, password: string) {
     const form = new FormData();

@@ -23,7 +23,7 @@ export interface MangaResponse extends MangaSchema {
 type MangaSearchResponse = Pagination<MangaResponse>;
 
 export default class Manga extends Base {
-  public static readonly prefix: string = '/api/manga';
+  public static readonly router: string = '/manga';
 
   public static async search(title: string | null = null, limit = 10, offset = 0, delay = false) {
     let url = `?limit=${limit}&offset=${offset}`;

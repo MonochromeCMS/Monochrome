@@ -9,7 +9,7 @@ export interface SettingsSchema {
 }
 
 export default class Settings extends Base {
-  public static readonly prefix: string = '/api/settings';
+  public static readonly router: string = '/settings';
 
   public static async get() {
     const response = await Settings._get('', {});

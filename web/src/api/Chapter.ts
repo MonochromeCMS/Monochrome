@@ -26,7 +26,7 @@ export interface DetailedChapterResponse extends ChapterResponse {
 type LatestChaptersResponse = Pagination<DetailedChapterResponse>;
 
 export default class Chapter extends Base {
-  public static readonly prefix: string = '/api/chapter';
+  public static readonly router: string = '/chapter';
 
   public static async latest(limit = 10, offset = 0, delay = false) {
     const url = `?limit=${limit}&offset=${offset}`;

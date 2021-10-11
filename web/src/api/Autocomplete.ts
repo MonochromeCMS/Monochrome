@@ -2,7 +2,7 @@ import type { ApiResponse } from './Base';
 import Base from './Base';
 
 export default class Autocomplete extends Base {
-  public static readonly prefix: string = '/api/autocomplete';
+  public static readonly router: string = '/autocomplete';
 
   public static async groups() {
     const response = await Autocomplete._get('/groups', {});

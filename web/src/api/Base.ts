@@ -25,6 +25,8 @@ export interface ApiResponse<T> {
 export default class Base {
   public static readonly prefix: string = process.env.VUE_APP_API_PATH;
 
+  public static readonly router: string = '';
+
   public static _delay() {
     return new Promise((resolve) => {
       setTimeout(() => resolve('done!'), 300);
@@ -37,7 +39,7 @@ export default class Base {
     delay = false,
   ): Promise<AxiosResponse> {
     try {
-      const response = await axios.get(this.prefix + url, config);
+      const response = await axios.get(this.prefix + this.router + url, config);
       if (delay) {
         await Base._delay();
       }
@@ -53,7 +55,7 @@ export default class Base {
 
   public static async _delete(url: string, config: AxiosRequestConfig): Promise<AxiosResponse> {
     try {
-      return await axios.delete(this.prefix + url, config);
+      return await axios.delete(this.prefix + this.router + url, config);
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response) {
         return error.response;
@@ -73,7 +75,7 @@ export default class Base {
     settings.headers['Content-Type'] = contentType || 'application/json';
 
     try {
-      return await axios.post(this.prefix + url, data, settings);
+      return await axios.post(this.prefix + this.router + url, data, settings);
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response) {
         return error.response;
@@ -93,7 +95,7 @@ export default class Base {
     settings.headers['Content-Type'] = contentType || 'application/json';
 
     try {
-      return await axios.put(this.prefix + url, data, settings);
+      return await axios.put(this.prefix + this.router + url, data, settings);
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response) {
         return error.response;
