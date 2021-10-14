@@ -6,39 +6,39 @@ services:
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_PASSWORD: ${DB_PWD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
   api:
-    image: monochrome-api
-    build: ./api
+    image: ghcr.io/monochromecms/monochrome-api-postgres:v1.2.2
     command: hypercorn api.main:app -b 0.0.0.0:3000 --root-path /api
     volumes:
       - ./media:/media
     environment:
-      DB_URL: postgresql+asyncpg://${DB_USER}:${DB_PASS}@db:5432/${DB_NAME}
+      DB_URL: postgresql+asyncpg://${DB_USER}:${DB_PWD}@db:5432/${DB_NAME}
       JWT_SECRET_KEY: ${SECRET_KEY}
       JWT_ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES}
       MEDIA_PATH: /media
-      CORS_ORIGINS: http://${DOMAIN_NAME}
+      CORS_ORIGINS: ${PROTOCOL}://${DOMAIN_NAME}
     depends_on:
       - db
   web:
     build:
-      context: ./web
-      dockerfile: ./Dockerfile.nginx
+      target: nginx
+      context: ./monochrome-webui
       args:
         VUE_APP_DOMAIN_NAME: ${DOMAIN_NAME}
         VUE_APP_TITLE: ${TITLE}
         VUE_APP_DESCRIPTION: ${DESCRIPTION}
-        VUE_APP_PROTOCOL: http
+        VUE_APP_PROTOCOL: ${PROTOCOL}
         VUE_APP_SECRET: ${SESSION_SECRET_KEY}
-        VUE_APP_MEDIA_PATH: http://${DOMAIN_NAME}/media
-        VUE_APP_API_PATH: http://${DOMAIN_NAME}/api
+        VUE_APP_MEDIA_PATH: ${PROTOCOL}://${DOMAIN_NAME}/media
+        VUE_APP_API_PATH: ${PROTOCOL}://${DOMAIN_NAME}/api
     volumes:
       - ./media:/srv/media
+      - ./nginx.conf:/etc/nginx/nginx.conf
     ports:
-      - 80:80
+      - "80:80"
 
 volumes:
   postgres_data:

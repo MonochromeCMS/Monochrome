@@ -1,0 +1,3 @@
+[submodule "monochrome-webui"]
+	path = monochrome-webui
+	url = https://github.com/MonochromeCMS/monochrome-webui.git
