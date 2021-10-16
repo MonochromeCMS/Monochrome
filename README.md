@@ -39,22 +39,80 @@ unique username and password is very recommended.*
 * `TITLE` Name of your website, used for stuff like the title of the tab when you open the website.
 * `DESCRIPTION` Description of your website.
 
-# Screenshots
-## Home page
+## Screenshots
+### Home page
 ![Screenshot 1](.github/assets/monochrome_1.png)
-## Responsive layout
+### Responsive layout
 ![Screenshot 2](.github/assets/monochrome_2.png)
-## Light and dark themes
+### Light and dark themes
 ![Screenshot 3](.github/assets/monochrome_3.png)
-## Chapter upload
+### Chapter upload
 ![Screenshot 4](.github/assets/monochrome_4.png)
-## Website customization
+### Website customization
 ![Screenshot 5](.github/assets/monochrome_5.png)
+
+## Cloud deployment
+The motivation behind the Deta implementation was to have a stateless full stack (the frontend being static already). This would allow us to to deploy Monochrome on the cloud, potentially for free. If you want to go down this route here's a not detailed list of the options you have to do so.
+### Backend
+All of this is possible because of Deta, which allows us to have a cloud database and file storage for free. To use the deta version of the API you'll need to create a Deta account and obtain a project key, that's all you need for the API to work.
+*Note: Deta is good, but if there's another free DB and file storage service out there, the API could be implemented easily enough with those as well.*
+### [Monochrome API](https://github.com/MonochromeCMS/monochrome-api-deta)
+The API is available as a docker image [`ghcr.io/monochromecms/monochrome-api-deta:latest`](https://github.com/MonochromeCMS/monochrome-api-deta/pkgs/container/monochrome-api-deta), so any service that allows us to run docker containers should be able to host the API.
+#### Deta Micros
+Actually, the first option doesn't use the docker image, but it fits within the Deta theme. You'll need `git` and [the Deta CLI](https://docs.deta.sh/docs/cli/install).
+[![Deploy on Deta](https://button.deta.dev/1/svg)](https://go.deta.dev/deploy?repo=https://github.com/MonochromeCMS/monochrome-api-deta)
+```
+git clone https://github.com/MonochromeCMS/monochrome-api-deta
+cd monochrome-api-deta
+
+deta login
+deta new .
+deta deploy
+deta auth disable
+# Set up the .env file ex: https://github.com/MonochromeCMS/monochrome-api-deta/blob/main/.env.example
+deta update -e .env
+# A deta cron job is available to clean up the lingering upload sessions, more info: https://docs.deta.sh/docs/micros/cron
+deta cron set "7 days"
+```
+You can then use the Deta UI to check the logs and the URL the API is hosted on.
+*NOTE: Micros are limited to 128MB per execution, this can be a problem when uploading big chapters, luckily a increase can be [requested](https://form.deta.dev/memory).*
+#### Heroku
+[![Deploy on Heroku](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/MonochromeCMS/monochrome-api-deta)
+#### Google Cloud Run
+This one is harder but the one that gives the best performance for free:
+- Create a Google Cloud free account (requires a credit card, but doesn't cost anythin): https://cloud.google.com
+- Copy the image from the GitHub registry into the Google registry: https://cloud.google.com/artifact-registry/docs/docker/pushing-and-pulling
+- How to create Cloud Run service: https://cloud.google.com/run/docs/deploying
+*Details:*
+- Set the container port to 3000
+- 128Mb can be short sometimes, so 256Mb memory is recommended 
+- Setting the min amount of instances to 1 increases the API reactivity
+
+### [Monochrome WebUI](https://github.com/MonochromeCMS/monochrome-webui)
+The frontend is built into static files, either inside a container `make build` or directly to a `dist` folder `make native=1 build`. So we can either use the same providers as the API and CDNs.
+#### Netlify
+- Set up the .env file
+- Create a Netlify account
+- Build the app localy with `make native=1 build`
+- Create a file `_redirects` file inside the `dist` folder
+```
+/*    /index.html   200
+```
+- Drag an drop the `dist` folder on the Netlify dashboard
+- This will give you a Netlify URL, change it to your liking and update the .env file to the new domain name.
+- Build the app again, recreate the `_redirects` file if needed and publish it again in Netlify.
+
+### Examples
+My production deployment is available on https://manga.d34d.one, it uses the Postgres API inside a VPS.
+
+A demo deployment is available on https://monochromecms.netlify.app, it uses the Deta API inside Google Cloud Run and the website on Netlify.
+You can test it out with the user `test:test`, please don't remove or edit it to allow other users to test it out. 
 
 ## Services used
 Check those, for more information on the services that make Monochrome:
 * [Monochrome WebUI](https://github.com/MonochromeCMS/monochrome-webui)
 * [Monochrome API - Postgres](https://github.com/MonochromeCMS/monochrome-api-postgres)
+* [Monochrome API - Deta](https://github.com/MonochromeCMS/monochrome-api-deta)
   
 Credits:
 * Base API template: https://github.com/grillazz/fastapi-sqlalchemy-asyncpg
