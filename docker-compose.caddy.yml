@@ -10,7 +10,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
   api:
-    image: ghcr.io/monochromecms/monochrome-api-postgres:v1.2.2
+    image: ghcr.io/monochromecms/monochrome-api-postgres:latest
     command: hypercorn api.main:app -b 0.0.0.0:3000 --root-path /api
     volumes:
       - ./media:/media

@@ -60,6 +60,7 @@ All of this is possible because of Deta, which allows us to have a cloud databas
 The API is available as a docker image [`ghcr.io/monochromecms/monochrome-api-deta:latest`](https://github.com/MonochromeCMS/monochrome-api-deta/pkgs/container/monochrome-api-deta), so any service that allows us to run docker containers should be able to host the API.
 #### Deta Micros
 Actually, the first option doesn't use the docker image, but it fits within the Deta theme. You'll need `git` and [the Deta CLI](https://docs.deta.sh/docs/cli/install).
+
 [![Deploy on Deta](https://button.deta.dev/1/svg)](https://go.deta.dev/deploy?repo=https://github.com/MonochromeCMS/monochrome-api-deta)
 ```
 git clone https://github.com/MonochromeCMS/monochrome-api-deta
@@ -75,6 +76,7 @@ deta update -e .env
 deta cron set "7 days"
 ```
 You can then use the Deta UI to check the logs and the URL the API is hosted on.
+
 *NOTE: Micros are limited to 128MB per execution, this can be a problem when uploading big chapters, luckily a increase can be [requested](https://form.deta.dev/memory).*
 #### Heroku
 [![Deploy on Heroku](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/MonochromeCMS/monochrome-api-deta)
@@ -98,7 +100,7 @@ The frontend is built into static files, either inside a container `make build` 
 ```
 /*    /index.html   200
 ```
-- Drag an drop the `dist` folder on the Netlify dashboard
+- Drag and drop the `dist` folder on the Netlify dashboard
 - This will give you a Netlify URL, change it to your liking and update the .env file to the new domain name.
 - Build the app again, recreate the `_redirects` file if needed and publish it again in Netlify.
 
