@@ -7,6 +7,12 @@
 		reverse_proxy api:3000
 	}
 
+	handle_path /media/* {
+	    root * /srv/media
+	    file_server
+	    header Cache-Control "max-age=1728000"
+	}
+
 	handle_path /* {
 	    root * /srv
         file_server

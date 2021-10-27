@@ -20,6 +20,7 @@ services:
       JWT_ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES}
       MEDIA_PATH: /media
       CORS_ORIGINS: ${PROTOCOL}://${DOMAIN_NAME}
+      ALLOW_REGISTRATION: "false"
     depends_on:
       - db
   web:

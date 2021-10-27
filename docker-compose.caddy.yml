@@ -19,6 +19,7 @@ services:
       JWT_SECRET_KEY: ${SECRET_KEY}
       JWT_ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES}
       CORS_ORIGINS: ${PROTOCOL}://${DOMAIN_NAME}
+      ALLOW_REGISTRATION: "false"
     depends_on:
       - db
   web:
