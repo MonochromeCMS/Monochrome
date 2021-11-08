@@ -22,6 +22,10 @@ flavors: ## List all the flavors available
 build:	## Build project with compose
 	$(DC) build
 
+.PHONY: build-webui
+build-webui:	## Build the webui static files to ./dist
+	docker run -v `pwd`:/vol -w /vol --env-file .env.webui node:lts-slim bash ./build-webui.sh
+
 .PHONY: up
 start up:	## Run project with compose
 	$(DC) up --remove-orphans -d

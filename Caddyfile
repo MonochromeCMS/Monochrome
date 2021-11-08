@@ -1,21 +1,21 @@
 {$PROTOCOL}://{$DOMAIN_NAME} {
-    encode zstd gzip
+	encode zstd gzip
 
-    header /opensearch.xml Content-Type "application/opensearchdescription+xml"
+	header /opensearch.xml Content-Type "application/opensearchdescription+xml"
 
-    handle_path /api/* {
+	handle_path /api/* {
 		reverse_proxy api:3000
 	}
 
 	handle_path /media/* {
-	    root * /srv/media
-	    file_server
-	    header Cache-Control "max-age=1728000"
+		root * /srv/media
+		file_server
+		header Cache-Control "max-age=1728000"
 	}
 
 	handle_path /* {
-	    root * /srv
-        file_server
-        try_files {path} /
+		root * /srv
+		file_server
+		try_files {path} /
 	}
 }
