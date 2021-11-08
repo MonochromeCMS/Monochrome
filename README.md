@@ -2,7 +2,7 @@
  My attempt at a generic manga CMS
 
 ## Usage
-Monochrome requires (at least for now) a copy of this repository, [docker](https://docs.docker.com/engine/install/) 
+Monochrome requires a copy of this repository, [docker](https://docs.docker.com/engine/install/) 
 and [docker-compose](https://docs.docker.com/compose/install/) to run.
 
 Once those requirements are fulfilled you need to set up your [.env](#environment-settings) and simply run 
@@ -54,10 +54,14 @@ unique username and password is very recommended.*
 ![Screenshot 6](.github/assets/monochrome_6.png)
 ![Screenshot 7](.github/assets/monochrome_7.png)
 
+## WebUI building
+In case you want to compile the WebUI static files, you simply have to edit the `.env.webui` file ([details](https://github.com/MonochromeCMS/monochrome-webui#environment-variables)) and run `make build-webui`. This will create the static files inside a `./dist` folder.
+
 ## Cloud deployment
 The motivation behind the Deta implementation was to have a stateless full stack (the frontend being static already). This would allow us to to deploy Monochrome on the cloud, potentially for free. If you want to go down this route here's a not detailed list of the options you have to do so.
 ### Backend
 All of this is possible because of Deta, which allows us to have a cloud database and file storage for free. To use the deta version of the API you'll need to create a Deta account and obtain a project key, that's all you need for the API to work.
+
 *Note: Deta is good, but if there's another free DB and file storage service out there, the API could be implemented easily enough with those as well.*
 ### [Monochrome API](https://github.com/MonochromeCMS/monochrome-api-deta)
 The API is available as a docker image [`ghcr.io/monochromecms/monochrome-api-deta:latest`](https://github.com/MonochromeCMS/monochrome-api-deta/pkgs/container/monochrome-api-deta), so any service that allows us to run docker containers should be able to host the API.
@@ -95,13 +99,13 @@ This one is harder but the one that gives the best performance for free:
 - 128Mb can be short sometimes, so 256Mb memory is recommended
 
 ### [Monochrome WebUI](https://github.com/MonochromeCMS/monochrome-webui)
-The frontend is built into static files, either inside a container `make build` or directly to a `dist` folder `make native=1 build`. So we can either use the same providers as the API and CDNs.
+The frontend is built into static files, either inside a container `make build` or directly to a `dist` folder ([details](https://github.com/MonochromeCMS/Monochrome#webui-building)). So we can either use the same providers as the API and CDNs.
 #### Netlify
-- Set up the .env file
+- Set up the .env.webui file
 - Create a Netlify account
-- Build the app localy with `make native=1 build`
+- Build the app with `make build-webui`
 - Drag and drop the `dist` folder on the Netlify dashboard
-- This will give you a Netlify URL, change it to your liking and update the .env file to the new domain name.
+- This will give you a Netlify URL, change it to your liking and update the .env.webui file to the new domain name.
 - Build the app again and publish it again in Netlify.
 
 ### Examples
