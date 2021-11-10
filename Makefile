@@ -24,7 +24,7 @@ build:	## Build project with compose
 
 .PHONY: build-webui
 build-webui:	## Build the webui static files to ./dist
-	docker run -v `pwd`:/vol -w /vol --env-file .env.webui node:lts-slim bash ./build-webui.sh
+	docker run --rm -v `pwd`:/vol -w /vol --env-file .env.webui node:lts-slim bash ./build-webui.sh
 
 .PHONY: up
 start up:	## Run project with compose

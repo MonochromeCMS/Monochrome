@@ -17,5 +17,7 @@
 		root * /srv
 		file_server
 		try_files {path} /
+		header Access-Control-Allow-Origin "*"
+		header Cache-Control "max-age=1728000"
 	}
 }

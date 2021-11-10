@@ -27,10 +27,10 @@ services:
       target: caddy
       context: ./monochrome-webui
       args:
-        VUE_APP_DOMAIN_NAME: ${DOMAIN_NAME}
-        VUE_APP_TITLE: ${TITLE}
-        VUE_APP_DESCRIPTION: ${DESCRIPTION}
-        VUE_APP_PROTOCOL: ${PROTOCOL}
+        DOMAIN_NAME: ${DOMAIN_NAME}
+        TITLE: ${TITLE}
+        DESCRIPTION: ${DESCRIPTION}
+        PROTOCOL: ${PROTOCOL}
         VUE_APP_SECRET: ${SESSION_SECRET_KEY}
         VUE_APP_MEDIA_PATH: ${PROTOCOL}://${DOMAIN_NAME}/media
         VUE_APP_API_PATH: ${PROTOCOL}://${DOMAIN_NAME}/api
