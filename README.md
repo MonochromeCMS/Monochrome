@@ -39,6 +39,9 @@ unique username and password is very recommended.*
 * `TITLE` Name of your website, used for stuff like the title of the tab when you open the website.
 * `DESCRIPTION` Description of your website.
 
+* `DEFAULT_LANG` Default language.
+* `LANGS` Comma separated list of available languages.
+
 ## Screenshots
 ### Home page
 ![Screenshot 1](.github/assets/monochrome_1.png)

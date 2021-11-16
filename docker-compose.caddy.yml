@@ -23,6 +23,7 @@ services:
     depends_on:
       - db
   web:
+    image: monochrome-webui-caddy
     build:
       target: caddy
       context: ./monochrome-webui
@@ -34,6 +35,8 @@ services:
         VUE_APP_SECRET: ${SESSION_SECRET_KEY}
         VUE_APP_MEDIA_PATH: ${PROTOCOL}://${DOMAIN_NAME}/media
         VUE_APP_API_PATH: ${PROTOCOL}://${DOMAIN_NAME}/api
+        VUE_APP_I18N_LOCALES: ${LANGS}
+        VUE_APP_I18N_LOCALE: ${DEFAULT_LANG}
     volumes:
     - ./media:/srv/media
     - ./Caddyfile:/etc/caddy/Caddyfile
