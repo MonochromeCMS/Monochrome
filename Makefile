@@ -5,7 +5,7 @@ test_exit ?= 0
 user ?= `id -u`
 
 flavor ?= caddy
-project ?= "Monochrome"
+project ?= "monochrome"
 
 DC = DOCKER_BUILDKIT=$(buildkit) docker-compose -p $(project) -f docker-compose.$(flavor).yml
 

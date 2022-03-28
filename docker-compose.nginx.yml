@@ -11,7 +11,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
   api:
     image: ghcr.io/monochromecms/monochrome-api-postgres:latest
-    command: hypercorn api.main:app -b 0.0.0.0:3000 --root-path /api
+    command: uvicorn api.main:app --host 0.0.0.0 --port $PORT --root-path /api
     volumes:
       - ./media:/media
     environment:
