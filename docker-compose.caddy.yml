@@ -15,6 +15,7 @@ services:
       - ./media:/media
     environment:
       MEDIA_BACKEND: FS
+      MEDIA_PATH: "/media"
       DB_BACKEND: POSTGRES
       PG_USER: ${DB_USER}
       PG_PASS: ${DB_PWD}
