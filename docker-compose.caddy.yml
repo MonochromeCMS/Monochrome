@@ -10,15 +10,17 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
   api:
-    image: ghcr.io/monochromecms/monochrome-api-postgres:latest
-    command: uvicorn api.main:app --host 0.0.0.0 --port 3000 --root-path "/api"
+    image: ghcr.io/monochromecms/monochrome-api:latest
     volumes:
       - ./media:/media
     environment:
-      DB_URL: postgresql+asyncpg://${DB_USER}:${DB_PWD}@db:5432/${DB_NAME}
+      MEDIA_BACKEND: FS
+      DB_BACKEND: POSTGRES
+      PG_USER: ${DB_USER}
+      PG_PASS: ${DB_PWD}
+      PG_DB: ${DB_NAME}
+      PG_HOST: db:5432
       JWT_SECRET_KEY: ${SECRET_KEY}
-      JWT_ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES}
-      CORS_ORIGINS: ${PROTOCOL}://${DOMAIN_NAME}
       ALLOW_REGISTRATION: ${ALLOW_REGISTRATION}
     depends_on:
       - db
@@ -33,8 +35,8 @@ services:
         DESCRIPTION: ${DESCRIPTION}
         PROTOCOL: ${PROTOCOL}
         VUE_APP_SECRET: ${SESSION_SECRET_KEY}
-        VUE_APP_MEDIA_PATH: ${PROTOCOL}://${DOMAIN_NAME}/media
-        VUE_APP_API_PATH: ${PROTOCOL}://${DOMAIN_NAME}/api
+        VUE_APP_MEDIA_PATH: /media
+        VUE_APP_API_PATH: /api
         VUE_APP_I18N_LOCALES: ${LANGS}
         VUE_APP_I18N_LOCALE: ${DEFAULT_LANG}
     volumes:
