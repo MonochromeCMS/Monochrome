@@ -104,10 +104,10 @@ for the API to work.
 *Note: Deta is good, but if there's another free DB and file storage service
 out there, the API could be implemented easily enough with those as well.*
 
-### [Monochrome API](https://github.com/MonochromeCMS/monochrome-api-deta)
+### [Monochrome API](https://github.com/MonochromeCMS/monochrome-api)
 
 The API is available as a docker image
-[`ghcr.io/monochromecms/monochrome-api-deta:latest`](https://github.com/MonochromeCMS/monochrome-api-deta/pkgs/container/monochrome-api-deta),
+[`ghcr.io/monochromecms/monochrome-api-deta:latest`](https://github.com/MonochromeCMS/monochrome-api/pkgs/container/monochrome-api),
 so any service that allows us to run docker containers should be able to host
 the API.
 
@@ -116,7 +116,7 @@ the API.
 Actually, the first option doesn't use the docker image, but it fits within the
 Deta theme. You'll need `git` and [the Deta CLI](https://docs.deta.sh/docs/cli/install).
 
-[![Deploy on Deta](https://button.deta.dev/1/svg)](https://go.deta.dev/deploy?repo=https://github.com/MonochromeCMS/monochrome-api-deta)
+[![Deploy on Deta](https://button.deta.dev/1/svg)](https://go.deta.dev/deploy?repo=https://github.com/MonochromeCMS/monochrome-api)
 
 ```bash
 # If you want to go the Deta CLI route:
@@ -141,7 +141,7 @@ uploading big chapters, luckily an increase can be [requested](https://form.deta
 
 #### Heroku
 
-[![Deploy on Heroku](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/MonochromeCMS/monochrome-api-deta)
+[![Deploy on Heroku](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/MonochromeCMS/monochrome-api)
 
 #### Google Cloud Run
 
