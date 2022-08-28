@@ -23,6 +23,7 @@ services:
       PG_DB: ${DB_NAME}
       PG_HOST: db:5432
       JWT_SECRET_KEY: ${SECRET_KEY}
+      JWT_COOKIE_SAMESITE: strict
       ALLOW_REGISTRATION: ${ALLOW_REGISTRATION}
     depends_on:
       - db
