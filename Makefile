@@ -7,7 +7,9 @@ user ?= `id -u`
 flavor ?= caddy
 project ?= "monochrome"
 
-DC = DOCKER_BUILDKIT=$(buildkit) docker-compose -p $(project) -f docker-compose.$(flavor).yml
+docker-compose := $(shell { [[ `command -v docker-compose` ]] && echo "docker-compose" || echo "docker compose"; } 2>/dev/null)
+
+DC = DOCKER_BUILDKIT=$(buildkit) $(docker-compose) -p $(project) -f docker-compose.$(flavor).yml
 
 .PHONY: help
 help: ## Show this help

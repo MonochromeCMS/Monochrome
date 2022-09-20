@@ -37,14 +37,11 @@ services:
         TITLE: ${TITLE}
         DESCRIPTION: ${DESCRIPTION}
         PROTOCOL: ${PROTOCOL}
-        VUE_APP_SECRET: ${SESSION_SECRET_KEY}
         VUE_APP_MEDIA_PATH: /media
         VUE_APP_API_PATH: /api
-        VUE_APP_I18N_LOCALES: ${LANGS}
-        VUE_APP_I18N_LOCALE: ${DEFAULT_LANG}
     volumes:
       - ./media:/srv/media
-      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
     ports:
       - "80:80"
 
