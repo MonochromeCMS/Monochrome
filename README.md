@@ -37,8 +37,6 @@ Monochrome API, however using unique username and password is very recommended.*
 * `DB_USER` User to connect the database with.
 * `DB_PWD` Password of that user.
 * `SECRET_KEY` Secret used to encrypt the connections, change it asap.
-* `SESSION_SECRET_KEY` Secret used to encrypt the session of the client,
-  change it as well.
 
 *Note: Those can and are recommended to be completely random, to generate them
 you can use* `make secret`
@@ -50,9 +48,6 @@ you can use* `make secret`
 * `TITLE` Name of your website, used for stuff like the title of the tab when
   you open the website.
 * `DESCRIPTION` Description of your website.
-
-* `DEFAULT_LANG` Default language.
-* `LANGS` Comma separated list of available languages.
 
 ## Screenshots
 
