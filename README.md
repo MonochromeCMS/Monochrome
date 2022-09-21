@@ -49,6 +49,10 @@ you can use* `make secret`
   you open the website.
 * `DESCRIPTION` Description of your website.
 
+## Video with installation and showcase
+
+[![Video with installation and showcase](https://img.youtube.com/vi/W64busecNDA/0.jpg)](https://www.youtube.com/watch?v=W64busecNDA)
+
 ## Screenshots
 
 ### Home page
