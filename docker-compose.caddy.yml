@@ -9,6 +9,12 @@ services:
       POSTGRES_PASSWORD: ${DB_PWD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   api:
     image: ghcr.io/monochromecms/monochrome-api:latest
     volumes:
@@ -26,7 +32,9 @@ services:
       JWT_COOKIE_SAMESITE: strict
       ALLOW_REGISTRATION: ${ALLOW_REGISTRATION}
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+
   web:
     image: monochrome-webui-caddy
     build:
