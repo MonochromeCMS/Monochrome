@@ -24,6 +24,11 @@ flavors: ## List all the flavors available
 build:	## Build project with compose
 	$(DC) build
 
+update upgrade:	## Update the project to the latest version
+	git pull
+	$(DC) build
+	$(DC) up --remove-orphans -d
+
 .PHONY: build-webui
 build-webui:	## Build the webui static files to ./dist
 	docker run --rm -v `pwd`:/vol -w /vol --env-file .env.webui node:lts-slim bash ./build-webui.sh

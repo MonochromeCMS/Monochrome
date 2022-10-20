@@ -53,6 +53,11 @@ you can use* `make secret`
 
 [![Video with installation and showcase](https://img.youtube.com/vi/W64busecNDA/0.jpg)](https://www.youtube.com/watch?v=W64busecNDA)
 
+## How to update
+
+Updating is as simple as running the `make update` command. Do keep in mind that major version updates may break some stuff
+so please read the version changelogs before updating.
+
 ## Screenshots
 
 ### Home page
