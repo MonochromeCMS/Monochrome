@@ -1,23 +1,25 @@
 {$PROTOCOL}://{$DOMAIN_NAME} {
-	encode zstd gzip
+    encode zstd gzip
 
-	header /opensearch.xml Content-Type "application/opensearchdescription+xml"
+    header /opensearch.xml Content-Type "application/opensearchdescription+xml"
+    header /manifest.webmanifest Content-Type "application/manifest+json"
+			
+    handle_path /api/* {
+        reverse_proxy api:3000
+    }
 
-	handle_path /api/* {
-		reverse_proxy api:3000
-	}
+    handle_path /* {
+        root * /srv
+        file_server
 
-	handle_path /media/* {
-		root * /srv/media
-		file_server
-		header Cache-Control "max-age=1728000"
-	}
+        header Access-Control-Allow-Origin "*"
+        try_files {path} /		
 
-	handle_path /* {
-		root * /srv
-		file_server
-		try_files {path} /
-		header Access-Control-Allow-Origin "*"
-		header Cache-Control "max-age=1728000"
-	}
+        route {
+            header Cache-Control "public,max-age=0,s-maxage=0,must-revalidate"
+            header /media/* Cache-Control "max-age=1728000"
+            header /workbox-* Cache-Control "public,max-age=31536000,s-maxage=31536000,immutable"
+            header /assets/* Cache-Control "public,max-age=31536000,s-maxage=31536000,immutable"
+        }
+    }
 }
